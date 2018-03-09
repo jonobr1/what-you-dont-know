@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Audio Loops Test</title>
+    <style>
+      #actions {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      #actions.enabled {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h2>
+        Available Audio Loops
+      </h2>
+      <select name="loops" value="01-intro.mp3">
+        <option value="01-intro.mp3">intro</option>
+        <option value="02-outro.mp3">outro</option>
+      </select>
+      <div id="actions">
+        <button id="toggle">
+          play
+        </button>
+      </div>
+    </div>
+    <div class="scripts">
+      <script src="../release/third-party/WebAudio.js"></script>
+      <script>
+
+        var audio = new WebAudio();
+        var select = document.querySelector('select');
+        var play = document.querySelector('#toggle');
+        var actions = document.querySelector('#actions');
+
+        audio.loop = true;
+        audio.onLoad = function() {
+          actions.classList.add('enabled');
+        };
+
+        select.onchange = function() {
+
+          audio.src = '../assets/loops/' + this.value;
+          actions.classList.remove('enabled');
+
+        };
+
+        play.onclick = function() {
+
+          if (audio.paused) {
+            audio.play();
+            play.textContent = 'pause';
+          } else {
+            audio.pause();
+            play.textContent = 'play';
+          }
+
+        };
+
+        select.onchange();
+
+      </script>
+    </div>
+  </body>
+</html>
