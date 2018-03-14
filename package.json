@@ -1,0 +1,32 @@
+{
+  "name": "what-you-dont-know",
+  "version": "1.0.0",
+  "description": "A WebVR interactive music video only on WITHIN",
+  "main": "./release/index.html",
+  "scripts": {
+    "test": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/within-unlimited/what-you-dont-know.git"
+  },
+  "keywords": [
+    "music",
+    "video",
+    "3d",
+    "webgl",
+    "three.js",
+    "webvr",
+    "frame.js"
+  ],
+  "author": "@jonobr1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/within-unlimited/what-you-dont-know/issues"
+  },
+  "homepage": "https://github.com/within-unlimited/what-you-dont-know#readme",
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "marked": "^0.3.17"
+  }
+}
