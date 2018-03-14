@@ -1,0 +1,49 @@
+{
+	"config": {},
+	"libraries": [],
+	"includes": [
+		[
+			"AudioManager",
+			[
+				"var AudioManager = {",
+				"\t",
+				"};",
+				"",
+				"resources.set( 'AudioManager', {",
+				"",
+				"\tstate: 0,",
+				"",
+				"} );"
+			]
+		]
+	],
+	"effects": [
+		[
+			"ManageAudio",
+			[
+				"var parameters = {};",
+				"var manager = resources.get( 'AudioManager' );",
+				"",
+				"function start() {",
+				"\tconsole.log( manager );",
+				"}",
+				"",
+				"function end() {",
+				"}",
+				"",
+				"function update( progress ) {",
+				"}"
+			]
+		]
+	],
+	"animations": [
+		[
+			"Audio",
+			0,
+			26.1875,
+			0,
+			0,
+			true
+		]
+	]
+}
