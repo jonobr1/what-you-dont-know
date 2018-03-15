@@ -2352,7 +2352,7 @@ SOFTWARE.
     /**
      * Interpret an SVG Node and add it to this instance's scene. The
      * distinction should be made that this doesn't `import` svg's, it solely
-     * interprets them into something compatible for Two.js — this is slightly
+     * interprets them into something compatible for Two.js — this is slightly
      * different than a direct transcription.
      *
      * @param {Object} svgNode - The node to be parsed
@@ -8151,8 +8151,9 @@ SOFTWARE.
   _.extend(Two.Text, {
 
     Properties: [
-      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style', 'className',
-      'weight', 'decoration', 'baseline', 'opacity', 'visible', 'fill', 'stroke'
+      'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
+      'className', 'weight', 'decoration', 'baseline', 'opacity', 'visible',
+      'fill', 'stroke'
     ],
 
     FlagFill: function() {
@@ -8167,7 +8168,7 @@ SOFTWARE.
 
       Two.Shape.MakeObservable(object);
 
-      _.each(Two.Text.Properties.slice(0, 12), Two.Utils.defineProperty, object);
+      _.each(Two.Text.Properties.slice(0, 13), Two.Utils.defineProperty, object);
 
       Object.defineProperty(object, 'fill', {
         enumerable: true,
