@@ -38,8 +38,13 @@
 
         timeline.load( query.substr( 6 ), function () {
 
+          var click = function(e) {
+            player.play();
+            window.removeEventListener('click', click, false);
+          };
+
           timeline.compile( resources, player );
-          player.play();
+          window.addEventListener('click', click, false);
           window.requestAnimationFrame( animate );
 
         } );
