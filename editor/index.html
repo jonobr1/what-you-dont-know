@@ -68,8 +68,10 @@
 			editor.signals.animationModified.add( saveState );
 			editor.signals.animationRemoved.add( saveState );
 			editor.signals.animationRenamed.add( saveState );
+			editor.signals.effectAdded.add( saveState );
 			editor.signals.effectCompiled.add( saveState );
 			editor.signals.effectRenamed.add( saveState );
+			editor.signals.effectRemoved.add( saveState );
 			editor.signals.includeChanged.add( saveState );
 			editor.signals.includeRemoved.add( saveState );
 			editor.signals.editorCleared.add( saveState );
