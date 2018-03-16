@@ -188,7 +188,7 @@ var FRAME = {
 	Effect: function ( name, source ) {
 
 		this.name = name;
-		this.source = source || 'var parameters = {\n\tvalue: new FRAME.Parameters.Float( \'Value\', 1.0 )\n};\n\nfunction start(){}\n\nfunction end(){}\n\nfunction update( progress ){}';
+		this.source = source || 'var parameters = {\n\tvalue: new FRAME.Parameters.Float( \'Value\', 1.0 )\n};\n\nfunction start( progress ){}\n\nfunction end( progress ){}\n\nfunction update( progress ){}';
 		this.program = null;
 		this.compile = function ( resources, player ) {
 
@@ -242,6 +242,12 @@ var FRAME = {
 
 			} );
 			request.send( null );
+
+		}
+
+		function progress( time, animation ) {
+
+			return ( time - animation.start ) / ( animation.end - animation.start );
 
 		}
 
@@ -424,7 +430,7 @@ var FRAME = {
 
 							if ( animation.effect.program.start ) {
 
-								animation.effect.program.start();
+								animation.effect.program.start( progress( time, animation ) );
 
 							}
 
@@ -450,7 +456,7 @@ var FRAME = {
 
 						if ( animation.effect.program.end ) {
 
-							animation.effect.program.end();
+							animation.effect.program.end( progress( time, animation ) );
 
 						}
 
@@ -478,7 +484,7 @@ var FRAME = {
 				for ( var i = 0, l = active.length; i < l; i ++ ) {
 
 					animation = active[ i ];
-					animation.effect.program.update( ( time - animation.start ) / ( animation.end - animation.start ), time - prevtime );
+					animation.effect.program.update( progress( time, animation ), time - prevtime );
 
 				}
 
