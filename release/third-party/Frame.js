@@ -287,7 +287,7 @@ var FRAME = {
 
 						var script = document.createElement( 'script' );
 						script.id = 'library-' + count;
-						script.textContent = '( function () { ' + content + '} )()';
+						script.textContent = content;
 						document.head.appendChild( script );
 
 						loadNext();
