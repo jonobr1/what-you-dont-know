@@ -39,7 +39,9 @@
         timeline.load( query.substr( 6 ), function () {
 
           var click = function(e) {
-            player.play();
+            if (!player.isPlaying) {
+              player.play();
+            }
             window.removeEventListener('click', click, false);
           };
 
