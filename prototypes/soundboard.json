@@ -329,7 +329,7 @@
 				"\t\t\tvar sid = intensity[ i ];",
 				"\t\t\tvar section = sections[ sid ];",
 				"\t\t\tvar url = [",
-				"\t\t\t\t'/assets/loops/',",
+				"\t\t\t\t'../assets/loops/',",
 				"\t\t\t\tf.toUpperCase(),",
 				"\t\t\t\t'-',",
 				"\t\t\t\tsection,",
