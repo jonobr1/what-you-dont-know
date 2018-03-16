@@ -16,6 +16,16 @@
       #container {
         height: 100%;
       }
+      #toggle {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        border-radius: 2px;
+        color: white;
+        min-width: 75px;
+        padding: 10px 20px;
+        margin-left: -57px;
+      }
     </style>
     <link href="../editor/css/main.css" rel="stylesheet" />
     <link href="../editor/css/dark.css" rel="stylesheet" />
@@ -40,15 +50,22 @@
 
         timeline.load( query.substr( 6 ), function () {
 
-          var click = function(e) {
-            if (!player.isPlaying) {
+          var button = document.createElement('button');
+          button.id = 'toggle';
+          button.textContent = 'Play';
+          button.addEventListener( 'click', function() {
+            if ( player.isPlaying ) {
+              player.pause();
+              button.textContent = 'Play';
+            } else {
               player.play();
+              button.textContent = 'Pause';
             }
-            window.removeEventListener('click', click, false);
-          };
+          }, false );
+
+          document.body.appendChild( button );
 
           timeline.compile( resources, player );
-          window.addEventListener('click', click, false);
           window.requestAnimationFrame( animate );
 
         } );
