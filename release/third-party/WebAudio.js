@@ -47,11 +47,13 @@ function WebAudio( context ) {
 
 	}
 
-	function decode() {
+	function decode( callback ) {
 
 		context.decodeAudioData( binary, function ( data ) {
 			buffer = data;
-			if ( paused === false ) play();
+			if ( callback ) {
+				callback();
+			}
 		} );
 
 	}
@@ -85,7 +87,7 @@ function WebAudio( context ) {
 			createVolume();
 
 			paused = false;
-			decode();
+			decode( play );
 
 		}
 
@@ -174,6 +176,17 @@ function WebAudio( context ) {
 		},
 		get duration() {
 			return buffer ? buffer.duration : 0;
+		},
+		decode: function ( callback ) {
+			if ( !buffer ) {
+				if ( !context ) {
+					context = WebAudio.getContext();
+					createVolume();
+				}
+				decode( callback );
+			} else if ( callback ) {
+				callback();
+			}
 		}
 	}
 

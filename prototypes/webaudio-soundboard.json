@@ -273,6 +273,7 @@
 				"\t\t\t// Activate clip",
 				"\t\t\tbutton.active = true;",
 				"\t\t\tmanager.current.clip = button.clip;",
+				"\t\t\tbutton.clip.decode();",
 				"\t\t} else {",
 				"\t\t\t// Deactivate clip",
 				"\t\t\tbutton.active = false;",
