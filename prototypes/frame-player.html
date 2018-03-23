@@ -19,7 +19,7 @@
       #toggle {
         position: absolute;
         bottom: 10px;
-        left: 50%;
+        left: 25%;
         border-radius: 2px;
         color: white;
         min-width: 75px;
@@ -66,7 +66,7 @@
           document.body.appendChild( button );
 
           timeline.compile( resources, player );
-          window.requestAnimationFrame( animate );
+          animate();
 
         } );
 
@@ -81,7 +81,12 @@
         timeline.update( player.currentTime );
         prevTime = time;
 
-        window.requestAnimationFrame( animate );
+        var renderer = resources.get( 'renderer' );
+        if ( renderer ) {
+          renderer.animate( animate );
+        } else {
+          window.requestAnimationFrame( animate );
+        }
 
       }
 
