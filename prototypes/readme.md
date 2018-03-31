@@ -6,3 +6,4 @@
 + [Clip Launcher](./frame-player.html?file=./webaudio-soundboard.json)
 + [Interaction Spheres](./interaction-spheres.html)
 + [Spinning Cube](./frame-player.html?file=./interaction-spin.json)
++ [Baked Model Test](./frame-player.html?file=./baked-model-test.json)
