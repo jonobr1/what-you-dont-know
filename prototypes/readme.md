@@ -8,3 +8,4 @@
 + [Spinning Cube](./frame-player.html?file=./interaction-spin.json)
 + [Baked Model Test](./frame-player.html?file=./baked-model-test.json)
 + [Interaction Fill Up](./frame-player.html?file=./interaction-fill.json)
++ [Transition Doll Expand](./frame-player.html?file=./transition-doll-expand.json)
