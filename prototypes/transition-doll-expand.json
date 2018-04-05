@@ -5,7 +5,8 @@
 		"../prototypes/js/three.js",
 		"../prototypes/js/VRController.js",
 		"../prototypes/js/WebVR.js",
-		"../release/third-party/FBXLoader.js"
+		"../release/third-party/FBXLoader.js",
+		"../release/third-party/tween.js"
 	],
 	"includes": [
 		[
@@ -158,10 +159,14 @@
 				"",
 				"function update( progress ) {",
 				"",
-				"\tvar t = Math.min( progress + 0.5, 1 );",
+				"\tvar t = Math.min( Math.max( ( progress - 0.33 ) / 0.25, 0.0 ), 1.0 );",
+				"\tt = TWEEN.Easing.Circular.InOut( t );",
+				"\tt = TWEEN.Easing.Circular.InOut( t );",
+				"//\tt = TWEEN.Easing.Circular.InOut( t );",
+				"//\tt = TWEEN.Easing.Circular.InOut( t );",
 				"\t",
 				"\tcamera.position.copy( origin )",
-				"\t\t.lerp( destination, Math.pow( t, 540 ) );",
+				"\t\t.lerp( destination, TWEEN.Easing.Circular.InOut( t ) );",
 				"",
 				"\tvar doll = groups.a.children[0];",
 				"",
@@ -172,7 +177,8 @@
 				"\tvar top = doll.children[0];",
 				"\tvar bot = doll.children[1];",
 				"",
-				"\tvar t = Math.pow( progress, 0.66 );",
+				"//\tvar t = Math.pow( progress, 0.66 );",
+				"\tvar t = TWEEN.Easing.Circular.Out( progress );",
 				"",
 				"\ttop.position.y = 2000 * t + 1174.382958078;",
 				"\tbot.position.y = - 2000 * t;",
