@@ -19,7 +19,7 @@
 				"",
 				"camera.near = 0.1;",
 				"camera.far = 10000;",
-				"renderer.vr.setPoseTarget( camera.parent );",
+				"renderer.vr.setPoseTarget( new THREE.Object3D() );",
 				"",
 				"var domElement = resources.get( 'dom' );",
 				"var controller = new THREE.VRController();",
