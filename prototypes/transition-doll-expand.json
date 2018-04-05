@@ -161,7 +161,7 @@
 				"",
 				"\tvar t = Math.min( Math.max( ( progress - 0.33 ) / 0.25, 0.0 ), 1.0 );",
 				"\tt = TWEEN.Easing.Circular.InOut( t );",
-				"\tt = TWEEN.Easing.Circular.InOut( t );",
+				"//\tt = TWEEN.Easing.Circular.InOut( t );",
 				"//\tt = TWEEN.Easing.Circular.InOut( t );",
 				"//\tt = TWEEN.Easing.Circular.InOut( t );",
 				"\t",
