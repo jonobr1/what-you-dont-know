@@ -192,7 +192,7 @@
 				"",
 				"\t\t// Gamepad Controller Controls",
 				"\t\t// Reset ray from potential mouse interaction",
-				"\t\tcontroller.userData.raycaster.ray.copy( ray );",
+				"\t\t// controller.userData.raycaster.ray.copy( ray );",
 				"\t\tintersections = controller.userData.raycaster.intersectObject( plane );",
 				"\t\tif ( intersections.length > 0 ) {",
 				"\t\t\tintersection = intersections[ 0 ].point;",
