@@ -8,7 +8,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>Touchpad</title>
+		<title>Touchpad Circle</title>
 
 		<style>
 			* { box-sizing: border-box; }
@@ -88,10 +88,27 @@
 
 			// --------------------------------------------------------------
 
-			var sphereGeo = new THREE.SphereBufferGeometry(0.5, 32, 32);
+			var shape = new THREE.Shape();
+			shape.moveTo( 0, 0 );
+			shape.absarc( 0, 0, 1, 0, Math.PI * 2 );
+
+			shape.autoClose = true;
+			var points = shape.getPoints();
+			var spacedPoints = shape.getSpacedPoints( 50 );
+			var geometryPoints = new THREE.BufferGeometry().setFromPoints( points );
+			var geometrySpacedPoints = new THREE.BufferGeometry().setFromPoints( spacedPoints );
+
+			var line = new THREE.Line( geometrySpacedPoints, new THREE.LineBasicMaterial( { color: 0x333333, linewidth: 3 } ) );
+			scene.add( line );
+
+			//
+
+			var sphereGeo = new THREE.SphereBufferGeometry( 0.1, 32, 32 );
 			var sphereMat = new THREE.MeshNormalMaterial();
 			var sphere = new THREE.Mesh( sphereGeo, sphereMat );
 			scene.add( sphere );
+
+			sphere.position.set( 0, 1, 0 );
 
 			// --------------------------------------------------------------
 
@@ -114,29 +131,28 @@
 				}
 			}
 
-			var touchIsDown = false;
+			// var touchIsDown = false;
 			var axes = new THREE.Vector2();
-			var axesOnDown = new THREE.Vector2();
-			var delta = new THREE.Vector2();
+			// var axesOnDown = new THREE.Vector2();
+			// var delta = new THREE.Vector2();
 
-			function primaryTouchDown(e){
-				var controller = e.target;
-				touchIsDown = true;
-				axesOnDown.fromArray( controller.getAxes('thumbpad').value );
-			}
+			// function primaryTouchDown(e){
+			// 	var controller = e.target;
+			// 	touchIsDown = true;
+			// 	axesOnDown.fromArray( controller.getAxes('thumbpad').value );
+			// }
 
-			function primaryTouchUp(e){
-				touchIsDown = false;
-			}
+			// function primaryTouchUp(e){
+			// 	touchIsDown = false;
+			// }
 
 			function axesChanged(e) {
 				var controller = e.target;
-				if ( touchIsDown ) {
-					axes.fromArray( controller.getAxes('thumbpad').value );
-					delta.subVectors( axes, axesOnDown );
-					sphere.position.z += delta.y * 0.1;
-					sphere.position.x += delta.x * 0.1;
-				}
+
+				axes.fromArray( controller.getAxes('thumbpad').value );
+				axes.normalize();
+				sphere.position.x = axes.x;
+				sphere.position.y = - axes.y;
 			}
 
 			var handGeo = new THREE.BoxBufferGeometry( 0.08, 0.08, 0.08 );
@@ -183,11 +199,11 @@
 
 				//
 
-				controller.addEventListener('primary press began', primaryDown);
-				controller.addEventListener('primary press ended', primaryUp);
+				// controller.addEventListener('primary press began', primaryDown);
+				// controller.addEventListener('primary press ended', primaryUp);
 
-				controller.addEventListener('primary touch began', primaryTouchDown);
-				controller.addEventListener('primary touch ended', primaryTouchUp);
+				// controller.addEventListener('primary touch began', primaryTouchDown);
+				// controller.addEventListener('primary touch ended', primaryTouchUp);
 
 				controller.addEventListener('thumbpad axes changed', axesChanged);
 
