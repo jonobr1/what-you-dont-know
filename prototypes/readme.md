@@ -10,8 +10,11 @@
 + [Interaction Fill Up](./frame-player.html?file=./interaction-fill.json)
 + [Transition Doll Expand](./frame-player.html?file=./transition-doll-expand.json)
 + [Noise Grid](./noise-grid.html)
-+ [Touchpad Move](./touchpad-move.html)
-+ [Touchpad Circle](./touchpad-circle.html)
-+ [Touchpad Segments](./touchpad-segments.html)
-+ [Touchpad Swipe](./touchpad-swipe.html)
++ [Equalizer](./equalizer-example.html)
 + [WebVR Template](./webvr-template.html)
+
+### Touchpad
++ [Move](./touchpad-move.html)
++ [Circle](./touchpad-circle.html)
++ [Segments](./touchpad-segments.html)
++ [Swipe](./touchpad-swipe.html)
