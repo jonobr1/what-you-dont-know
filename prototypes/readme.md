@@ -13,3 +13,5 @@
 + [Touchpad Move](./touchpad-move.html)
 + [Touchpad Circle](./touchpad-circle.html)
 + [Touchpad Segments](./touchpad-segments.html)
++ [Touchpad Swipe](./touchpad-swipe.html)
++ [WebVR Template](./webvr-template.html)
