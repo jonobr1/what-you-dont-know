@@ -57,7 +57,8 @@
 					<i id="play-icon" class="fas fa-play"></i>
 				</a>
 			</p>
-			<p><span id="avg">0</span></p>
+			<p>average: <span id="avg">0</span></p>
+			<p>beat scale: <span id="beat-scale">0</span></p>
 			<div id="equalizer"></div>
 		</div>
 
@@ -298,6 +299,7 @@
 			}
 
 			var avg = document.querySelector('#avg');
+			var beatScale = document.querySelector('#beat-scale');
 
 			renderer.animate( loop );
 
@@ -307,11 +309,15 @@
 
 				equalizer.update();
 
-				avg.innerText = Math.floor( equalizer.average.value );
 
 				var band = equalizer.bands[Math.floor(equalizer.bands.length / 2)];
 
-				sphere.scale.setScalar( equalizer.average.value / 256 * .2 + 1 );
+				avg.innerText = Math.floor( equalizer.average.value );
+				beatScale.innerText = Math.floor( band.beat.scale );
+
+				// sphere.scale.setScalar( equalizer.average.value / 256 * .2 + 1 );
+				sphere.scale.setScalar( band.beat.scale / 3 * .2 + 1 );
+
 				sphereMat.color = band.beat.updated ? blue : grey;
 
 				THREE.VRController.update();
