@@ -17,7 +17,9 @@
 			border-radius: .25rem;
 		}
 		.equalizer svg {
+			border: 1px solid #ccc;
 			box-sizing: initial;
+			margin-top: 10px;
 		}
 	</style>
 
@@ -31,8 +33,8 @@
 				<i id="play-icon" class="fas fa-play"></i>
 			</a>
 		</p>
-
 		<div id="callout"></div>
+		<div id="equalizer"></div>
 	</div>
 
 	<script src="https://cdn.rawgit.com/jonobr1/two.js/dev/build/two.js"></script>
@@ -51,7 +53,7 @@
 
 			// equalizer.analyze(sound);
 			equalizer.sound = sound;
-			equalizer.appendTo(document.body);
+			equalizer.appendTo( document.querySelector('#equalizer') );
 
 			loop();
 

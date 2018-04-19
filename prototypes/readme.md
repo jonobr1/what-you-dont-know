@@ -11,6 +11,7 @@
 + [Transition Doll Expand](./frame-player.html?file=./transition-doll-expand.json)
 + [Noise Grid](./noise-grid.html)
 + [Equalizer](./equalizer-example.html)
++ [Equalizer Sphere](./equalizer-3d.html)
 + [WebVR Template](./webvr-template.html)
 
 ### Touchpad
