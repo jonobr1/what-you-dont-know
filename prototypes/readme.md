@@ -13,6 +13,7 @@
 + [Equalizer](./equalizer-example.html)
 + [Equalizer Sphere](./equalizer-3d.html)
 + [WebVR Template](./webvr-template.html)
++ [WebVR Template FrameJS](./frame-player.html?file=./webvr-template.json)
 
 ### Touchpad
 + [Move](./touchpad-move.html)
