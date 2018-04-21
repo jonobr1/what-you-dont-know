@@ -8,7 +8,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>WebVR Template</title>
+		<title>Cube Roll</title>
 
 		<style>
 			* { box-sizing: border-box; }
@@ -77,98 +77,109 @@
 			var aLight = new THREE.AmbientLight( 0x404040 );
 			scene.add( aLight );
 
-			var dLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+			var dLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
 			dLight.position.set( -1, 1, -1 ).multiplyScalar( 1.5 );
 			scene.add( dLight );
+
+			var dLight2 = new THREE.DirectionalLight( 0xffffff, 0.5 );
+			dLight2.position.set( 1, 1, 1 ).multiplyScalar( 1.5 );
+			scene.add( dLight2 );
 
 			// var dlh = new THREE.DirectionalLightHelper( dLight, 0.2 );
 			// scene.add( dlh );
 
-			var gh = new THREE.GridHelper( 8, 16, 0x111111, 0x444444 );
-			gh.position.y = -0.01;
-			scene.add( gh );
+			// var gh = new THREE.GridHelper( 8, 16, 0x111111, 0x444444 );
+			// gh.position.y = -0.01;
+			// scene.add( gh );
 
 			var fbxLoader = new THREE.FBXLoader();
 
 			// --------------------------------------------------------------
 
-			var Cube = function( delay ){
+			fbxLoader.load('../assets/models/cube/cube.fbx', function(fbx){
+				var cubeMesh = fbx.children[0];
+				
+				var Cube = function( delay ){
 
-				var cubeWidth = 1;
+					// var cubeWidth = 1;
+					// var cubeGeo = new THREE.BoxBufferGeometry( cubeWidth, cubeWidth, cubeWidth );
+					// cubeGeo.applyMatrix( new THREE.Matrix4().makeTranslation( cubeWidth/2, cubeWidth/2, cubeWidth/2 ) );
+					// var cubeMat = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+					// var cube = new THREE.Mesh( cubeGeo, cubeMat );
+					// scene.add( cube );
+					// // cube.add( new THREE.AxesHelper(2) );
+					// var wireframe = new THREE.EdgesGeometry( cubeGeo );
+					// line = new THREE.LineSegments( wireframe );
+					// line.material.color.setHex( 0xffffff );
+					// cube.add( line );
 
-				var cubeGeo = new THREE.BoxBufferGeometry( cubeWidth, cubeWidth, cubeWidth );
-				cubeGeo.applyMatrix( new THREE.Matrix4().makeTranslation( cubeWidth/2, cubeWidth/2, cubeWidth/2 ) );
-				var cubeMat = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-				var cube = new THREE.Mesh( cubeGeo, cubeMat );
-				scene.add( cube );
+					var cube = cubeMesh.clone();
+					scene.add( cube );
 
-				// cube.add( new THREE.AxesHelper(2) );
+					var iterations = 0;
+					var duration = 1000;
 
-				var wireframe = new THREE.EdgesGeometry( cubeGeo );
-				line = new THREE.LineSegments( wireframe );
-				line.material.color.setHex( 0xffffff );
-				cube.add( line );
+					var start = function( startTime ) {
 
-				var iterations = 0;
+						var tween1 = new TWEEN.Tween( cube.rotation )
+							.to( { z: Math.PI / 2 }, duration )
+							.easing( TWEEN.Easing.Bounce.Out )
+							.onComplete(function(){
+								tween2.start( startTime + duration );
+							});
 
-				var start = function( startTime ) {
+						var tween2 = new TWEEN.Tween( cube.rotation )
+							.to( { x: - Math.PI / 2 }, duration )
+							.easing( TWEEN.Easing.Bounce.Out )
+							.onComplete(function(){
+								tween3.start( startTime + duration * 2 );
+							});
 
-					var duration = 4000;
+						var tween3 = new TWEEN.Tween( cube.rotation )
+							.to( { y: Math.PI / 2 }, duration )
+							.easing( TWEEN.Easing.Bounce.Out )
+							.onComplete(function(){
+								tween4.start( startTime + duration * 3 );
+							});
 
-					var tween1 = new TWEEN.Tween( cube.rotation )
-						.to( { z: Math.PI / 2 }, 1000 )
-						.easing( TWEEN.Easing.Bounce.Out )
-						.onComplete(function(){
-							tween2.start( startTime + 1000 );
-						});
+						var tween4 = new TWEEN.Tween( cube.rotation )
+							.to( { x: 0 }, duration )
+							.easing( TWEEN.Easing.Bounce.Out )
+							.onComplete(function(){
+								cube.rotation.set( 0,0,0 );
+								start( startTime + duration * 4 );
+							});
 
-					var tween2 = new TWEEN.Tween( cube.rotation )
-						.to( { x: - Math.PI / 2 }, 1000 )
-						.easing( TWEEN.Easing.Bounce.Out )
-						.onComplete(function(){
-							tween3.start( startTime + 2000 );
-						});
+							tween1.start( startTime );
+							iterations++;
 
-					var tween3 = new TWEEN.Tween( cube.rotation )
-						.to( { y: Math.PI / 2 }, 1000 )
-						.easing( TWEEN.Easing.Bounce.Out )
-						.onComplete(function(){
-							tween4.start( startTime + 3000 );
-						});
+					};
 
-					var tween4 = new TWEEN.Tween( cube.rotation )
-						.to( { x: 0 }, 1000 )
-						.easing( TWEEN.Easing.Bounce.Out )
-						.onComplete(function(){
-							cube.rotation.set( 0,0,0 );
-							start( startTime + duration );
-						});
+					start( TWEEN.now() + delay );
 
-						tween1.start( startTime );
-						iterations++;
-
-				};
-
-				start( TWEEN.now() + delay );
-
-				return cube;
-
-			}
-
-			var columns = 4;
-			var rows = 4;
-			var halfRows = rows * 3 / 2 - 1;
-			var halfColumns = columns * 2 / 2 - 1;
-
-			for( var i = 0; i < columns; i++) {
-				for ( var j = 0; j < rows; j++ ) {
-
-					var cube = new Cube( i * 400 );
-					cube.position.x = i * 2 - halfColumns;
-					cube.position.z = j * 3 - halfRows;
+					return cube;
 
 				}
-			}
+
+				var columns = 4;
+				var rows = 4;
+				var halfRows = rows * 3 / 2 - 1;
+				var halfColumns = columns * 2 / 2 - 1;
+
+				var offset = 400;
+
+				for( var c = 0; c < columns; c++) {
+					for ( var r = 0; r < rows; r++ ) {
+
+						var cube = new Cube( c * offset );
+						cube.position.x = c * 2 - halfColumns;
+						cube.position.z = r * 3 - halfRows;
+
+					}
+				}
+
+			});
+
 
 			// --------------------------------------------------------------
 
