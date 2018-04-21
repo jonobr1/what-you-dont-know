@@ -12,6 +12,7 @@
 + [Noise Grid](./noise-grid.html)
 + [Equalizer](./equalizer-example.html)
 + [Equalizer Sphere](./equalizer-3d.html)
++ [Cube Roll](./cube-roll.html)
 + [WebVR Template](./webvr-template.html)
 + [WebVR Template FrameJS](./frame-player.html?file=./webvr-template.json)
 
