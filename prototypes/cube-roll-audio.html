@@ -8,7 +8,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>Equalizer 3d</title>
+		<title>Cube Roll Audio</title>
 
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
@@ -34,7 +34,7 @@
 				top: 0;
 				margin: 20px;
 				padding: 20px;
-				background: rgba(255,255,255,0.5);
+				background: rgba(255,255,255,0.8);
 				border-radius: .25rem;
 			}
 
@@ -57,17 +57,15 @@
 					<i id="play-icon" class="fas fa-play"></i>
 				</a>
 			</p>
-			<p>average: <span id="avg">0</span></p>
-			<p>beat scale: <span id="beat-scale">0</span></p>
 			<div id="equalizer"></div>
 		</div>
 
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/build/three.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/vr/WebVR.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/build/three.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/vr/WebVR.js"></script>
 		<script src="https://cdn.rawgit.com/davidlyons/THREE.VRController/master/VRController.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/Detector.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/loaders/FBXLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/Detector.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/loaders/FBXLoader.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.0-0/dat.gui.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.1.1/Tween.min.js"></script>
 
@@ -86,12 +84,12 @@
 			var scene = new THREE.Scene();
 
 			var renderer = new THREE.WebGLRenderer( { antialias: true } );
-			renderer.setClearColor( 0xBBBBBB, 1 );
+			renderer.setClearColor( 0x333333, 1 );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
 
-			renderer.vr.enabled = true;
+			// renderer.vr.enabled = true;
 			document.body.appendChild( WEBVR.createButton( renderer ) );
 
 			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .01, 100000 );
@@ -99,43 +97,37 @@
 			
 			var camGroup = new THREE.Group();
 			// camGroup.position.z = 3;
-			camGroup.position.set( 0, 1.6, 3 );
+			camGroup.position.set( -1, 2.6, 3 );
 
 			camGroup.add( camera );
 			scene.add( camGroup );
 
-			// var controls = new THREE.OrbitControls( camera, renderer.domElement );
-			// controls.target.z = -3;
+			var controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.target.set(1, -2.6, -3);
 
 			var aLight = new THREE.AmbientLight( 0x404040 );
 			scene.add( aLight );
 
-			var dLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-			dLight.position.set( 0, 1, 1 );
+			var dLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+			dLight.position.set( -1, 1, -1 ).multiplyScalar( 1.5 );
 			scene.add( dLight );
 
-			var gh = new THREE.GridHelper( 2, 10, 0x000000, 0x808080 );
-			scene.add( gh );
+			var dLight2 = new THREE.DirectionalLight( 0xffffff, 0.5 );
+			dLight2.position.set( 1, 1, 1 ).multiplyScalar( 1.5 );
+			scene.add( dLight2 );
+
+			// var dlh = new THREE.DirectionalLightHelper( dLight, 0.2 );
+			// scene.add( dlh );
+
+			// var gh = new THREE.GridHelper( 8, 16, 0x111111, 0x444444 );
+			// gh.position.y = -0.01;
+			// scene.add( gh );
 
 			var fbxLoader = new THREE.FBXLoader();
 
 			// --------------------------------------------------------------
 
-			var blue = new THREE.Color(0x0c89c4);
-			var green = new THREE.Color(0x0cc437);
-			var grey = new THREE.Color(0xcccccc);
-
-			// --------------------------------------------------------------
-
-			var sphereGeo = new THREE.SphereBufferGeometry(0.5, 32, 32);
-			var sphereMat = new THREE.MeshPhongMaterial({ color: grey });
-			var sphere = new THREE.Mesh( sphereGeo, sphereMat );
-			sphere.position.y = 1;
-			scene.add( sphere );
-
-			// --------------------------------------------------------------
-
-			Equalizer.Resolution = 8;
+			Equalizer.Resolution = 16;
 
 			var equalizer = new Equalizer();
 			var div = document.querySelector('#callout');
@@ -160,9 +152,85 @@
 
 			});
 
+			// --------------------------------------------------
+
+			var cubes = [];
+
+			fbxLoader.load('../assets/models/cube/cube.fbx', function(fbx){
+				var cubeMesh = fbx.children[0];
+				
+				var Cube = function( delay ) {
+
+					// var cubeWidth = 1;
+					// var cubeGeo = new THREE.BoxBufferGeometry( cubeWidth, cubeWidth, cubeWidth );
+					// cubeGeo.applyMatrix( new THREE.Matrix4().makeTranslation( cubeWidth/2, cubeWidth/2, cubeWidth/2 ) );
+					// var cubeMat = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+					// var cube = new THREE.Mesh( cubeGeo, cubeMat );
+					// scene.add( cube );
+					// // cube.add( new THREE.AxesHelper(2) );
+					// var wireframe = new THREE.EdgesGeometry( cubeGeo );
+					// line = new THREE.LineSegments( wireframe );
+					// line.material.color.setHex( 0xffffff );
+					// cube.add( line );
+
+					var cube = cubeMesh.clone();
+					scene.add( cube );
+
+					var duration = 1000;
+
+					var tween1 = new TWEEN.Tween( cube.rotation )
+						.to( { z: Math.PI / 2 }, duration )
+						.easing( TWEEN.Easing.Bounce.Out );
+
+					var tween2 = new TWEEN.Tween( cube.rotation )
+						.to( { x: - Math.PI / 2 }, duration )
+						.easing( TWEEN.Easing.Bounce.Out );
+
+					var tween3 = new TWEEN.Tween( cube.rotation )
+						.to( { y: Math.PI / 2 }, duration )
+						.easing( TWEEN.Easing.Bounce.Out );
+
+					var tween4 = new TWEEN.Tween( cube.rotation )
+						.to( { x: 0 }, duration )
+						.easing( TWEEN.Easing.Bounce.Out )
+						.onComplete(function(){
+							cube.rotation.set( 0,0,0 );
+						});
+
+					cube.userData.tweens = [tween1,tween2,tween3,tween4];
+					cube.userData.currentTween = 0;
+
+					return cube;
+
+				}
+
+				var columns = 4;
+				var rows = 4;
+				var halfRows = rows * 3 / 2 - 1;
+				var halfColumns = columns * 2 / 2 - 1;
+
+				var offset = 400;
+
+				for( var c = 0; c < columns; c++) {
+					for ( var r = 0; r < rows; r++ ) {
+
+						var cube = new Cube( c * offset );
+						cube.position.x = c * 2 - halfColumns;
+						cube.position.z = r * 3 - halfRows;
+
+						cubes.push( cube );
+
+					}
+				}
+
+			});
+
 			// --------------------------------------------------------------
 
 			// VRController
+
+			var blue = new THREE.Color(0x0c89c4);
+			var green = new THREE.Color(0x0cc437);
 
 			function primaryDown(e) {
 				var controller = e.target;
@@ -298,40 +366,35 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 
-			var avg = document.querySelector('#avg');
-			var beatScale = document.querySelector('#beat-scale');
-
 			renderer.animate( loop );
 
 			function loop() {
-				// TWEEN.update();
-				// controls.update();
+				TWEEN.update();
 
 				equalizer.update();
 
+				if ( cubes.length ) {
+					for( var i = 0; i < cubes.length; i++ ) {
+						var band = equalizer.bands[i];
+						if ( band.beat.updated ) {
+							var cube = cubes[i];
+							var tween = cube.userData.tweens[ cube.userData.currentTween ];
+							// todo: this errors
+							try {
+								tween.start();
+							}
+							catch {
+								// console.log(i);
+							}
+							cube.userData.currentTween++;
+							if ( cube.userData.currentTween > 4 ) cube.userData.currentTween = 0;
+						}
+					}
+				}
 
-				var band = equalizer.bands[Math.floor(equalizer.bands.length / 2)];
-
-				avg.innerText = Math.floor( equalizer.average.value );
-				beatScale.innerText = Math.floor( band.beat.scale );
-
-				// sphere.scale.setScalar( equalizer.average.value / 256 * .2 + 1 );
-				sphere.scale.setScalar( band.beat.scale / 3 * .3 + 1 );
-
-				sphereMat.color = band.beat.updated ? blue : grey;
-
-				THREE.VRController.update();
+				controls.update();
+				// THREE.VRController.update();
 				renderer.render( scene, camera );
-			}
-
-			function tweenProp( obj, prop, targetValue ) {
-				var target = {};
-				target[prop] = targetValue;
-
-				var tween = new TWEEN.Tween( obj )
-					.to( target, 800 )
-					.easing( TWEEN.Easing.Linear )
-					.start();
 			}
 
 		</script>
