@@ -99,7 +99,7 @@
 			fbxLoader.load('../assets/models/cube/cube.fbx', function(fbx){
 				var cubeMesh = fbx.children[0];
 				
-				var Cube = function( delay ){
+				var Cube = function( delay ) {
 
 					// var cubeWidth = 1;
 					// var cubeGeo = new THREE.BoxBufferGeometry( cubeWidth, cubeWidth, cubeWidth );
@@ -179,7 +179,6 @@
 				}
 
 			});
-
 
 			// --------------------------------------------------------------
 
@@ -329,19 +328,6 @@
 				controls.update();
 				// THREE.VRController.update();
 				renderer.render( scene, camera );
-			}
-
-			function tweenProp( obj, prop, targetValue ) {
-				var target = {};
-				target[prop] = targetValue;
-
-				var tween = new TWEEN.Tween( obj )
-					.to( target, 800 )
-					.easing( TWEEN.Easing.Elastic.Out )
-					.yoyo( true )
-					.delay( 800 )
-					.repeat( Infinity )
-					.start();
 			}
 
 		</script>
