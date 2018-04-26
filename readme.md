@@ -4,7 +4,8 @@ A WebVR interactive music video only on WITHIN. With music by Matthew Dear.
 ## Environment
 
 There are three main resources for this project:
-+ [/release](./release/): The current build for the project
++ [/inspiration](./inspiration): Visual inspiration links for the project
++ [/release](./release): The current build for the project
 + [/editor](./editor): A WYSIWYG timeline editor for the project
 + [/prototypes](./prototypes): All interaction prototypes
 
@@ -12,7 +13,7 @@ These folders all require you run a local server on your computer. A good cross-
 
 Below are more details for each of the pages and how to use them.
 
-### /release
+### /release (Not Available at the moment)
 [http://localhost:8080/release/](http://localhost:8080/release/) is the most current place to see our current build of the project.
 
 ### /editor

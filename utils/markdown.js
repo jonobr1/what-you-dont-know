@@ -4,7 +4,8 @@ var fs = require('fs');
 
 [
   '../readme.md',
-  '../prototypes/readme.md'
+  '../prototypes/readme.md',
+  '../inspiration/readme.md'
 ].forEach(function(filepath, i) {
 
   fs.readFile(path.resolve(__dirname, filepath), { encoding: 'utf8'}, function(err, contents) {
