@@ -123,7 +123,7 @@
 
 			function primaryTouchDown(e){
 				var controller = e.target;
-				axesOnDown.fromArray( controller.getAxes('thumbpad').value );
+				axesOnDown.fromArray( controller.getAxes('touchpad').value );
 				axes.copy( axesOnDown );
 			}
 
@@ -152,7 +152,7 @@
 
 			function axesChanged(e) {
 				var controller = e.target;
-				axes.fromArray( controller.getAxes('thumbpad').value );
+				axes.fromArray( controller.getAxes('touchpad').value );
 				delta.subVectors( axes, axesOnDown );
 				cube.rotation.z = - delta.x / 2 * THREE.Math.degToRad( 80 );
 			}
@@ -231,7 +231,7 @@
 				controller.addEventListener('primary touch began', primaryTouchDown);
 				controller.addEventListener('primary touch ended', primaryTouchUp);
 
-				controller.addEventListener('thumbpad axes changed', axesChanged);
+				controller.addEventListener('touchpad axes changed', axesChanged);
 
 				controller.addEventListener( 'disconnected', function( event ) {
 					// console.log('controller disconnected');

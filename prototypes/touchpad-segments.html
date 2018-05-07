@@ -154,7 +154,7 @@
 			// function primaryTouchDown(e){
 			// 	var controller = e.target;
 			// 	touchIsDown = true;
-			// 	axesOnDown.fromArray( controller.getAxes('thumbpad').value );
+			// 	axesOnDown.fromArray( controller.getAxes('touchpad').value );
 			// }
 
 			// function primaryTouchUp(e){
@@ -164,7 +164,7 @@
 			function axesChanged(e) {
 				var controller = e.target;
 
-				axes.fromArray( controller.getAxes('thumbpad').value );
+				axes.fromArray( controller.getAxes('touchpad').value );
 				axes.y *= -1;
 				
 				var angle = axes.angle();
@@ -231,7 +231,7 @@
 				// controller.addEventListener('primary touch began', primaryTouchDown);
 				// controller.addEventListener('primary touch ended', primaryTouchUp);
 
-				controller.addEventListener('thumbpad axes changed', axesChanged);
+				controller.addEventListener('touchpad axes changed', axesChanged);
 
 				controller.addEventListener( 'disconnected', function( event ) {
 					console.log('controller disconnected');
