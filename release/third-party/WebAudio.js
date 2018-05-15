@@ -66,7 +66,10 @@ function WebAudio( context ) {
 			context.volume.gain.value = 1;
 		}
 
-		volume = context.createGain();
+		if ( !volume ) {
+			volume = context.createGain();
+		}
+
 		volume.connect( context.volume );
 		volume.gain.value = 1;
 
@@ -88,6 +91,11 @@ function WebAudio( context ) {
 
 			paused = false;
 			decode( play );
+			return;
+
+		} else if ( /suspended/i.test( context.state ) ) {
+
+			context.resume();
 
 		}
 
@@ -124,6 +132,13 @@ function WebAudio( context ) {
 		pause: function () {
 			if ( paused === false ) {
 				stop(); paused = true;
+			}
+		},
+		connect: function ( node ) {
+			node.gain.value = volume.gain.value;
+			volume = node;
+			if ( context.volume ) {
+				volume.connect( context.volume );
 			}
 		},
 		get volume() {
