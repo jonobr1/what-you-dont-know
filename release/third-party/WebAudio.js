@@ -116,8 +116,12 @@ function WebAudio( context ) {
 
 		if ( buffer === undefined ) return;
 
-		source.stop();
-		source.disconnect( volume );
+		if ( source ) {
+
+			source.stop();
+			source.disconnect( volume );
+
+		}
 
 		currentTime = getCurrentTime();
 
