@@ -88,7 +88,7 @@
 				"\t\troughness: 1.0,",
 				"\t\tmetalness: 1.0,",
 				"\t\troughnessMap: texture1,",
-				"\t\tmetalMap: texture2,",
+				"\t\tmetalnessMap: texture2,",
 				"\t\tenvMap: texture3",
 				"\t} )",
 				");",
