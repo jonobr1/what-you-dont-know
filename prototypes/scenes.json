@@ -1,0 +1,194 @@
+{
+	"config": {},
+	"libraries": [
+		"../prototypes/js/three.js"
+	],
+	"includes": [
+		[
+			"Renderer",
+			[
+				"var dom = resources.get( 'dom' );",
+				"",
+				"var renderer = new THREE.WebGLRenderer( { antialias: true } );",
+				"renderer.setPixelRatio( window.devicePixelRatio );",
+				"renderer.setSize( dom.clientWidth, dom.clientHeight );",
+				"renderer.shadowMap.enabled = true;",
+				"renderer.gammaInput = true;",
+				"renderer.gammaOutput = true;",
+				"dom.appendChild( renderer.domElement );",
+				"",
+				"window.addEventListener( 'resize', function () {",
+				"\t",
+				"\trenderer.setSize( dom.clientWidth, dom.clientHeight );",
+				"\t",
+				"} );",
+				"",
+				"resources.set( 'renderer', renderer );"
+			]
+		],
+		[
+			"Scene",
+			[
+				"var scene = new THREE.Scene();",
+				"scene.background = new THREE.Color( 0xE8E8E8 );",
+				"",
+				"var ambient = new THREE.HemisphereLight( 0xFEFCFF, 0xB0ADAA, 0.9 );",
+				"scene.add( ambient );",
+				"",
+				"var light = new THREE.DirectionalLight( 0xFFFFFF, 0.35 );",
+				"light.position.set( 2.5, 5.0, 2.5 );",
+				"light.castShadow = true;",
+				"light.shadow.radius = 10;",
+				"scene.add( light );",
+				"",
+				"resources.set( 'scene', scene );"
+			]
+		],
+		[
+			"Camera",
+			[
+				"var dom = resources.get( 'dom' );",
+				"",
+				"var camera = new THREE.PerspectiveCamera( 50, dom.clientWidth / dom.clientHeight, 0.1, 100 );",
+				"",
+				"window.addEventListener( 'resize', function () {",
+				"\tcamera.aspect = dom.clientWidth / dom.clientHeight;",
+				"\tcamera.updateProjectionMatrix();",
+				"} );",
+				"",
+				"resources.set( 'camera', camera );"
+			]
+		]
+	],
+	"effects": [
+		[
+			"Scene 1",
+			[
+				"var scene = resources.get( 'scene' );",
+				"",
+				"var loader = new THREE.TextureLoader();",
+				"var texture = loader.load( '../prototypes/textures/noise.png' );",
+				"texture.anisotropy = 16;",
+				"",
+				"var group = new THREE.Group();",
+				"",
+				"var mesh = new THREE.Mesh(",
+				"\tnew THREE.SphereBufferGeometry( 1, 64, 32 ),",
+				"\tnew THREE.MeshStandardMaterial( {",
+				"\t\tcolor: 0xD4D4D4,",
+				"\t\tmap: texture,",
+				"\t\troughness: 1.0,",
+				"\t\tmetalness: 0.0",
+				"\t} )",
+				");",
+				"mesh.position.y = 2.0;",
+				"mesh.castShadow = true;",
+				"mesh.receiveShadow = true;",
+				"group.add( mesh );",
+				"",
+				"var texture = loader.load( '../prototypes/textures/noise.png' );",
+				"texture.anisotropy = 16;",
+				"texture.wrapS = THREE.RepeatWrap;",
+				"texture.wrapT = THREE.RepeatWrap;",
+				"texture.repeat.set( 4, 4 );",
+				"",
+				"var floor = new THREE.Mesh(",
+				"\tnew THREE.PlaneBufferGeometry( 40, 40 ),",
+				"\tnew THREE.MeshStandardMaterial( {",
+				"\t\tcolor: 0xD4D4D4,",
+				"\t\tmap: texture,",
+				"\t\troughness: 1.0,",
+				"\t\tmetalness: 0.0",
+				"\t} )",
+				");",
+				"floor.rotation.x = - Math.PI / 2;",
+				"floor.receiveShadow = true;",
+				"group.add( floor );",
+				"",
+				"//",
+				"",
+				"function start( progress ) {",
+				"",
+				"\tscene.add( group );",
+				"",
+				"}",
+				"",
+				"function end( progress ) {",
+				"\t",
+				"\tscene.remove( group );",
+				"\t",
+				"}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\t// mesh.rotation.x = progress * Math.PI * 2;",
+				"",
+				"}"
+			]
+		],
+		[
+			"Orbit Camera",
+			[
+				"var camera = resources.get( 'camera' );",
+				"var target = new THREE.Vector3( 0, 2.0, 0 );",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){",
+				"\t",
+				"\tcamera.position.y = 2.0;",
+				"\tcamera.position.x = Math.cos( progress * 2.0 ) * Math.PI;",
+				"\tcamera.position.z = Math.sin( progress * 2.0 ) * Math.PI;",
+				"\tcamera.lookAt( target );",
+				"",
+				"}"
+			]
+		],
+		[
+			"Render",
+			[
+				"var renderer = resources.get( 'renderer' );",
+				"var scene = resources.get( 'scene' );",
+				"var camera = resources.get( 'camera' );",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){",
+				"",
+				"\trenderer.render( scene, camera );",
+				"",
+				"}"
+			]
+		]
+	],
+	"animations": [
+		[
+			"",
+			0,
+			16,
+			0,
+			1,
+			true
+		],
+		[
+			"",
+			0,
+			16,
+			1,
+			0,
+			true
+		],
+		[
+			"",
+			0,
+			16,
+			2,
+			2,
+			true
+		]
+	]
+}
