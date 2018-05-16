@@ -1,10 +1,10 @@
 {
 	"config": {},
 	"libraries": [
-		"https://cdn.rawgit.com/mrdoob/three.js/r91/build/three.js",
+		"https://cdn.rawgit.com/mrdoob/three.js/r92/build/three.js",
 		"https://cdn.rawgit.com/davidlyons/THREE.VRController/master/VRController.js",
-		"https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/vr/WebVR.js",
-		"https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/loaders/FBXLoader.js",
+		"https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/vr/WebVR.js",
+		"https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/loaders/FBXLoader.js",
 		"https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.1.1/Tween.min.js"
 	],
 	"includes": [
@@ -13,7 +13,7 @@
 			[
 				"var scene = new THREE.Scene();",
 				"",
-				"var renderer = new THREE.WebGLRenderer( { antialias: true } );",
+				"var renderer = new THREE.WebGLRenderer( { antialias: true, preserveDrawingBuffer: true } );",
 				"renderer.setClearColor( 0xBBBBBB, 1 );",
 				"renderer.setPixelRatio( window.devicePixelRatio );",
 				"renderer.setSize( window.innerWidth, window.innerHeight );",
