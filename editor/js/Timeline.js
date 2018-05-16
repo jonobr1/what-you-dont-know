@@ -210,6 +210,7 @@ var Timeline = function ( editor ) {
 
 		var loop = player.getLoop();
 		if ( !loop || loop.length <= 0 ) {
+			loopMark.style.width = 0;
 			return;
 		}
 

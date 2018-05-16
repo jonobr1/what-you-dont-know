@@ -16,35 +16,45 @@
       #container {
         height: 100%;
       }
+      #play {
+        position: absolute;
+        display: block;
+        top: 20px;
+        left: 20px;
+      }
     </style>
   </head>
   <body>
     <div id="container"></div>
 
-    <script src="../third-party/Frame.js"></script>
+    <script src="../release/third-party/Frame.js"></script>
 
     <script>
 
       var resources = new FRAME.Resources();
-      resources.set( 'dom', document.getElementById( 'container' ) );
+      var container = document.getElementById( 'container' );
+      resources.set( 'dom', container );
 
       var timeline = new FRAME.Timeline();
       var player = new FRAME.Player();
 
+      var playButton = document.createElement( 'button' );
+      playButton.id = 'play';
+      playButton.textContent = 'Start Experience';
+      playButton.addEventListener( 'click', function() {
+        player.play();
+        document.body.removeChild( playButton );
+      }, false );
+      document.body.appendChild( playButton );
+
       //
 
-      // var query = window.location.search;
-      // if ( query.substr( 1, 5 ) === 'file=' ) {
-      //
-      //   timeline.load( query.substr( 6 ), function () {
-      //
-      //     timeline.compile( resources, player );
-      //     player.play();
-      //     window.requestAnimationFrame( animate );
-      //
-      //   } );
-      //
-      // }
+      timeline.load( './what-you-dont-know.json', function () {
+
+        timeline.compile( resources, player );
+        window.requestAnimationFrame( animate );
+
+      } );
 
       //
 
@@ -55,7 +65,12 @@
         timeline.update( player.currentTime );
         prevTime = time;
 
-        window.requestAnimationFrame( animate );
+        var renderer = resources.get( 'renderer' );
+        if ( renderer ) {
+          renderer.animate( animate );
+        } else {
+          window.requestAnimationFrame( animate );
+        }
 
       }
 
