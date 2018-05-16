@@ -66,7 +66,10 @@ function WebAudio( context ) {
 			context.volume.gain.value = 1;
 		}
 
-		volume = context.createGain();
+		if ( !volume ) {
+			volume = context.createGain();
+		}
+
 		volume.connect( context.volume );
 		volume.gain.value = 1;
 
@@ -79,7 +82,7 @@ function WebAudio( context ) {
 
 	}
 
-	function play() {
+	function play( startTime ) {
 
 		if ( context === undefined ) {
 
@@ -88,6 +91,11 @@ function WebAudio( context ) {
 
 			paused = false;
 			decode( play );
+			return;
+
+		} else if ( /suspended/i.test( context.state ) ) {
+
+			context.resume();
 
 		}
 
@@ -97,25 +105,43 @@ function WebAudio( context ) {
 		source.buffer = buffer;
 		source.loop = loop;
 		source.playbackRate.value = playbackRate;
-		source.start( 0, currentTime );
+		source.start( startTime || 0, currentTime );
 		source.connect( volume );
 
 		startAt = context.currentTime;
 
 	}
 
-	function stop() {
+	function stop( endTime ) {
 
 		if ( buffer === undefined ) return;
 
-		source.stop();
-		source.disconnect( volume );
+		if ( source ) {
+			source.stop( endTime || 0 );
+		}
 
 		currentTime = getCurrentTime();
 
 	}
 
 	return {
+		cue: function( time, action ) {
+			switch ( action ) {
+				case 'pause':
+				case 'stop':
+					if ( !paused ) {
+						stop( time );
+						paused = true;
+					}
+					break;
+				case 'play':
+				default:
+					if ( paused ) {
+						play( time );
+						paused = false;
+					}
+			}
+		},
 		play: function () {
 			if ( paused ) {
 				play(); paused = false;
@@ -125,6 +151,15 @@ function WebAudio( context ) {
 			if ( paused === false ) {
 				stop(); paused = true;
 			}
+		},
+		connect: function ( node ) {
+			if ( volume ) {
+				node.gain.value = volume.gain.value;
+				if ( context.volume ) {
+					volume.disconnect( context.volume );
+				}
+			}
+			volume = node;
 		},
 		get volume() {
 			return volume.gain.value;

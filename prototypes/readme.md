@@ -18,6 +18,10 @@
 + [WebVR Template FrameJS](./frame-player.html?file=./webvr-template.json)
 + [Half Sphere Grid UI](./frame-player.html?file=./half-sphere-grid.json)
 
+## Visuals
+
++ [Scenes](./frame-player.html?file=./scenes.json)
+
 ### Touchpad
 + [Move](./touchpad-move.html)
 + [Circle](./touchpad-circle.html)
