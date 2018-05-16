@@ -261,6 +261,7 @@
 				"}",
 				"",
 				"function end( progress ) { ",
+				"\tplayer.setLoop( [ 0, 10 ] );",
 				"}",
 				"",
 				"function update( progress ) {",
@@ -296,15 +297,22 @@
 		[
 			"Effect",
 			[
-				"var parameters = {",
-				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"var dom = resources.get( 'dom' );",
+				"",
+				"var elem = document.createElement( 'button' );",
+				"elem.textContent = 'Next Stage';",
+				"elem.onclick = function () {",
+				"\tplayer.setLoop( [ 10, 20 ] );",
 				"};",
 				"",
 				"function start( progress ) {",
 				"\tplayer.setLoop( [ 0, 10 ] );",
+				"\tdom.appendChild( elem );",
 				"}",
 				"",
-				"function end( progress ){}",
+				"function end( progress ) {",
+				"\tdom.removeChild( elem );",
+				"}",
 				"",
 				"function update( progress ){}"
 			]
