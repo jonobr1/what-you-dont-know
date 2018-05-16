@@ -271,6 +271,7 @@
 				"",
 				"var texture = new THREE.Texture( resources.get( 'assets/images/noise1' ) );",
 				"texture.anisotropy = 16;",
+				"texture.repeat.set( 0.2, 0.5 );",
 				"texture.needsUpdate = true;",
 				"",
 				"var mesh = new THREE.Mesh(",
