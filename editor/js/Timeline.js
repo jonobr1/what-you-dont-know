@@ -190,7 +190,7 @@ var Timeline = function ( editor ) {
 	loopMark.style.left = - 8 + 'px';
 	loopMark.style.height = 100 + '%';
 	loopMark.style.width = 0;
-	loopMark.style.background = 'rgba( 255, 255, 255, 0.2 )';
+	loopMark.style.background = 'rgba( 255, 255, 255, 0.1 )';
 	loopMark.style.pointerEvents = 'none';
 	timeline.dom.appendChild( loopMark );
 
