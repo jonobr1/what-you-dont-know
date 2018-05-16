@@ -61,6 +61,9 @@ var FRAME = {
 			setLoop: function ( value ) {
 				loop = value;
 			},
+			getLoop: function() {
+				return loop;
+			},
 			play: function () {
 				if ( audio ) audio.play();
 				isPlaying = true;

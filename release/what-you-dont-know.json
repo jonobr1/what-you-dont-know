@@ -300,7 +300,9 @@
 				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
 				"};",
 				"",
-				"function start( progress ){}",
+				"function start( progress ) {",
+				"\tplayer.setLoop( [ 0, 10 ] );",
+				"}",
 				"",
 				"function end( progress ){}",
 				"",
@@ -312,7 +314,7 @@
 		[
 			"AudioManager",
 			0,
-			186.857419,
+			70,
 			0,
 			0,
 			true
@@ -320,55 +322,55 @@
 		[
 			"Stage 1",
 			0,
-			26.693917,
+			10,
 			1,
 			2,
 			true
 		],
 		[
 			"Stage 2",
-			26.693917,
-			53.387834,
+			10,
+			20,
 			2,
 			1,
 			true
 		],
 		[
 			"Stage 3",
-			53.387834,
-			80.081751,
+			20,
+			30,
 			1,
 			1,
 			true
 		],
 		[
 			"Stage 4",
-			80.081751,
-			106.775668,
+			30,
+			40,
 			2,
 			1,
 			true
 		],
 		[
 			"Stage 5",
-			106.775668,
-			133.469585,
+			40,
+			50,
 			1,
 			1,
 			true
 		],
 		[
 			"Stage 6",
-			133.469585,
-			160.163502,
+			50,
+			60,
 			2,
 			1,
 			true
 		],
 		[
 			"Stage 7",
-			160.163502,
-			186.857419,
+			60,
+			70,
 			1,
 			1,
 			true
