@@ -451,10 +451,6 @@
 			"Initialize Audio",
 			[
 				"var manager = resources.get( 'audio-manager' );",
-				"for ( var i = 0; i < manager.tracks.length; i++ ) {",
-				"\tvar track = manager.tracks[ i ];",
-				"\ttrack.node.gain.value = 0;",
-				"}",
 				"",
 				"player.onplay = function() {",
 				"\tmanager.start();",
@@ -465,6 +461,10 @@
 				"};",
 				"",
 				"function start ( progress ) {",
+				"\tfor ( var i = 0; i < manager.tracks.length; i++ ) {",
+				"\t\tvar track = manager.tracks[ i ];",
+				"\t\ttrack.node.gain.value = 0;",
+				"\t}",
 				"}",
 				"",
 				"function end( progress ) { ",
@@ -502,7 +502,7 @@
 			]
 		],
 		[
-			"Effect",
+			"Boxes Stage",
 			[
 				"var interaction = resources.get( 'interaction' );",
 				"var scene = resources.get( 'scene' );",
@@ -552,24 +552,6 @@
 			]
 		],
 		[
-			"Render",
-			[
-				"var renderer = resources.get( 'renderer' );",
-				"var scene = resources.get( 'scene' );",
-				"var camera = resources.get( 'camera' );",
-				"var controller = resources.get( 'controller' );",
-				"",
-				"function start( progress ){}",
-				"",
-				"function end( progress ){}",
-				"",
-				"function update( progress ) {",
-				"\tcontroller.userData.update();",
-				"\trenderer.render( scene, camera );",
-				"}"
-			]
-		],
-		[
 			"render",
 			[
 				"var renderer = resources.get( 'renderer' );",
@@ -590,20 +572,6 @@
 			]
 		],
 		[
-			"Effect",
-			[
-				"var parameters = {",
-				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
-				"};",
-				"",
-				"function start( progress ){}",
-				"",
-				"function end( progress ){}",
-				"",
-				"function update( progress ){}"
-			]
-		],
-		[
 			"Animate In",
 			[
 				"var stage = resources.get( 'stage-1' );",
@@ -621,20 +589,6 @@
 				"\titem.scale.y = t + 0.001;",
 				"",
 				"}"
-			]
-		],
-		[
-			"Effect",
-			[
-				"var parameters = {",
-				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
-				"};",
-				"",
-				"function start( progress ){}",
-				"",
-				"function end( progress ){}",
-				"",
-				"function update( progress ){}"
 			]
 		],
 		[
@@ -659,7 +613,9 @@
 				"\telement.removeEventListener( 'primary-down', select );",
 				"}",
 				"",
-				"function update ( progress ) {}",
+				"function update ( progress ) {",
+				"\t// manager.tracks[ 1 ].node.gain.value = 1;",
+				"}",
 				"",
 				"function over () {",
 				"\telement.material.color.setStyle( 'red' );",
@@ -672,8 +628,14 @@
 				"function select ( event ) {",
 				"\tvar controller = event.controller;",
 				"\tmanager.tracks[ 0 ].node.gain.value = 1;",
-				"\telement.material.color.setStyle( 'red' );",
-				"}"
+				"}",
+				"",
+				"",
+				"",
+				"",
+				"",
+				"",
+				""
 			]
 		]
 	],
@@ -699,7 +661,7 @@
 			0,
 			2,
 			2,
-			6,
+			4,
 			true
 		],
 		[
@@ -707,7 +669,7 @@
 			0,
 			70,
 			6,
-			4,
+			3,
 			true
 		],
 		[
@@ -715,7 +677,7 @@
 			2,
 			4,
 			3,
-			8,
+			5,
 			true
 		],
 		[
