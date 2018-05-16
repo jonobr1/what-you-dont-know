@@ -82,7 +82,7 @@ function WebAudio( context ) {
 
 	}
 
-	function play() {
+	function play( startTime ) {
 
 		if ( context === undefined ) {
 
@@ -105,22 +105,19 @@ function WebAudio( context ) {
 		source.buffer = buffer;
 		source.loop = loop;
 		source.playbackRate.value = playbackRate;
-		source.start( 0, currentTime );
+		source.start( startTime || 0, currentTime );
 		source.connect( volume );
 
 		startAt = context.currentTime;
 
 	}
 
-	function stop() {
+	function stop( endTime ) {
 
 		if ( buffer === undefined ) return;
 
 		if ( source ) {
-
-			source.stop();
-			source.disconnect( volume );
-
+			source.stop( endTime || 0 );
 		}
 
 		currentTime = getCurrentTime();
@@ -128,6 +125,23 @@ function WebAudio( context ) {
 	}
 
 	return {
+		cue: function( time, action ) {
+			switch ( action ) {
+				case 'pause':
+				case 'stop':
+					if ( !paused ) {
+						stop( time );
+						paused = true;
+					}
+					break;
+				case 'play':
+				default:
+					if ( paused ) {
+						play( time );
+						paused = false;
+					}
+			}
+		},
 		play: function () {
 			if ( paused ) {
 				play(); paused = false;
@@ -139,11 +153,13 @@ function WebAudio( context ) {
 			}
 		},
 		connect: function ( node ) {
-			node.gain.value = volume.gain.value;
-			volume = node;
-			if ( context.volume ) {
-				volume.connect( context.volume );
+			if ( volume ) {
+				node.gain.value = volume.gain.value;
+				if ( context.volume ) {
+					volume.disconnect( context.volume );
+				}
 			}
+			volume = node;
 		},
 		get volume() {
 			return volume.gain.value;

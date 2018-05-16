@@ -17,6 +17,10 @@ var FRAME = {
 
 		var loop = null;
 
+		// Callbacks
+		var onPlay = null;
+		var onPause = null;
+
 		return {
 			get isPlaying() {
 				return isPlaying;
@@ -37,6 +41,12 @@ var FRAME = {
 				playbackRate = value;
 				if ( audio ) audio.playbackRate = value;
 			},
+			set onplay( func ) {
+				onPlay = func;
+			},
+			set onpause( func ) {
+				onPause = func;
+			},
 			getAudio: function () {
 				return audio;
 			},
@@ -54,10 +64,12 @@ var FRAME = {
 			play: function () {
 				if ( audio ) audio.play();
 				isPlaying = true;
+				if ( onPlay ) onPlay();
 			},
 			pause: function () {
 				if ( audio ) audio.pause();
 				isPlaying = false;
+				if ( onPause ) onPause();
 			},
 			tick: function ( delta ) {
 				if ( audio ) {
