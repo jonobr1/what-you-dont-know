@@ -627,7 +627,7 @@
 				"",
 				"function select ( event ) {",
 				"\tvar controller = event.controller;",
-				"\tmanager.tracks[ 0 ].node.gain.value = 1;",
+				"\tmanager.tracks[ 1 ].node.gain.value = 1;",
 				"}",
 				"",
 				"",
