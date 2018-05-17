@@ -380,6 +380,8 @@
 				"renderer.domElement.addEventListener( 'mousedown', mousedown, false );",
 				"renderer.domElement.addEventListener( 'mousemove', mousemove, false );",
 				"renderer.domElement.addEventListener( 'mouseup', mouseup, false );",
+				"",
+				"resize();",
 				"window.addEventListener( 'resize', resize, false );",
 				"",
 				"function resize() {",
@@ -391,6 +393,7 @@
 				"\tcamera.aspect = width / height;",
 				"\tcamera.updateProjectionMatrix();",
 				"\trenderer.setSize( width, height );",
+				"",
 				"}",
 				"",
 				"function mousedown ( event ) {",
@@ -711,8 +714,9 @@
 				"}",
 				"",
 				"function select ( event ) {",
-				"\tvar controller = event.controller;",
+				"",
 				"\tvar track = manager.tracks[ 1 ];",
+				"",
 				"\tif ( track.node.gain.value ) {",
 				"\t\ttrack.node.gain.value = 0;",
 				"\t\telement.material.opacity = 0.5;",
@@ -721,6 +725,7 @@
 				"\t\telement.material.opacity = 1;",
 				"\t\tplayer.setLoop( null );",
 				"\t}",
+				"",
 				"}",
 				"",
 				"",
@@ -742,7 +747,7 @@
 				"",
 				"function start ( progress ) {",
 				"",
-				"\tplayer.setLoop( [ 4, 6 ] );",
+				"\tplayer.setLoop( [ 6, 8 ] );",
 				"\tinteraction.userData.listen( element );",
 				"",
 				"\telement.addEventListener( 'over', over );",
@@ -780,7 +785,7 @@
 				"\t} else {",
 				"\t\ttrack.node.gain.value = 1;",
 				"\t\telement.material.opacity = 1;",
-				"\t\tplayer.setsLoop( null );",
+				"\t\tplayer.setLoop( null );",
 				"\t}",
 				"}",
 				"",
@@ -790,6 +795,26 @@
 				"",
 				"",
 				""
+			]
+		],
+		[
+			"Animate In",
+			[
+				"var stage = resources.get( 'stage-1' );",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar floor = stage.userData.floor;",
+				"\tvar item = floor.children[ 8 ];",
+				"\tvar t = TWEEN.Easing.Circular.InOut( progress );",
+				"",
+				"\titem.scale.y = t + 0.001;",
+				"",
+				"}"
 			]
 		]
 	],
@@ -835,10 +860,18 @@
 			true
 		],
 		[
-			"Track 2 Loop",
+			"Second Pillar",
 			4,
 			6,
 			2,
+			7,
+			true
+		],
+		[
+			"Track 2 Loop",
+			6,
+			8,
+			3,
 			6,
 			true
 		],
