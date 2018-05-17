@@ -600,7 +600,7 @@
 				"var scene = resources.get( 'scene' );",
 				"var stage = new THREE.Group();",
 				"",
-				"var fog = new THREE.Fog( renderer.getClearColor(), 5, 24 );",
+				"var fog = new THREE.Fog( renderer.getClearColor(), 5, 16 );",
 				"",
 				"var dlight = new THREE.DirectionalLight( 0xffffff, 0.8 );",
 				"dlight.position.set( 1, 1, 1 );",
