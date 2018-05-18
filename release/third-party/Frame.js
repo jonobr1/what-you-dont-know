@@ -99,7 +99,7 @@ var FRAME = {
 		function complete () {
 
 			loaded++;
-			console.log( loaded );
+
 			if ( loaded >= queued && callbacks.length > 0 ) {
 				for ( var i = 0; i < callbacks.length; i++ ) {
 					callbacks[ i ]();
