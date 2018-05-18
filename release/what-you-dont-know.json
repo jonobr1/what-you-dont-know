@@ -238,6 +238,7 @@
 				"\t\tvar url = '../assets/v1/' + section + '-' + name + '.' + extension;",
 				"\t\tvar sound = new WebAudio();",
 				"\t\tif ( section ) {",
+				"\t\t\tsound.onLoad = resources.queue();",
 				"\t\t\tsound.src = url;",
 				"\t\t}",
 				"\t\tsound.loop = true;",

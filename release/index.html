@@ -45,13 +45,15 @@
         player.play();
         document.body.removeChild( playButton );
       }, false );
-      document.body.appendChild( playButton );
 
       //
 
       timeline.load( './what-you-dont-know.json', function () {
 
         timeline.compile( resources, player );
+        resources.onLoad( function () {
+          document.body.appendChild( playButton );
+        } );
         window.requestAnimationFrame( animate );
 
       } );
