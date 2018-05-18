@@ -125,17 +125,25 @@
 			// line.visible = false;
 
 			var options = {
-				pct: 0,
-				speed: 0.002
+				pct: 1
 			};
 
 			var setPercent = function( pct ){
 				cylinder.position.copy( curve.getPoint( pct ) );
 
-				cylinder.lookAt( curve.getPoint( pct+0.01 ) )
+				cylinder.lookAt( curve.getPoint( pct-0.01 ) );
 			}
 
-			setPercent(0);
+			setPercent(1);
+
+			var tween = new TWEEN.Tween( options )
+				.to( { pct: 0.01 }, 4000 )
+				.easing( TWEEN.Easing.Quartic.Out )
+				.repeat( Infinity )
+				.onUpdate(function(){
+					setPercent( options.pct )
+				})
+				.start();
 
 			// --------------------------------------------------------------
 
@@ -281,28 +289,10 @@
 			renderer.animate( loop );
 
 			function loop() {
-				// TWEEN.update();
+				TWEEN.update();
 				// controls.update();
 				THREE.VRController.update();
-
-				options.pct += options.speed;
-				if ( options.pct > 1 ) options.pct = 0;
-				setPercent( options.pct );
-
 				renderer.render( scene, camera );
-			}
-
-			function tweenProp( obj, prop, targetValue ) {
-				var target = {};
-				target[prop] = targetValue;
-
-				var tween = new TWEEN.Tween( obj )
-					.to( target, 800 )
-					.easing( TWEEN.Easing.Elastic.Out )
-					.yoyo( true )
-					.delay( 800 )
-					.repeat( Infinity )
-					.start();
 			}
 
 		</script>
