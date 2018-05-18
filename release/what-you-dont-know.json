@@ -170,7 +170,7 @@
 			]
 		],
 		[
-			"AudioSetup",
+			"audio-manager",
 			[
 				"var AudioManager = resources.get( 'AudioManager' );",
 				"",
@@ -254,9 +254,32 @@
 			]
 		],
 		[
-			"Setup",
+			"Scene",
 			[
 				"var scene = new THREE.Scene();",
+				"",
+				"resources.set( 'scene', scene );"
+			]
+		],
+		[
+			"Camera",
+			[
+				"var scene = resources.get( 'scene' );",
+				"",
+				"var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .01, 100000 );",
+				"var group = new THREE.Group();",
+				"group.position.set( 0, 1.6, 3 );",
+				"",
+				"group.add( camera );",
+				"scene.add( group );",
+				"",
+				"resources.set( 'camera', camera );"
+			]
+		],
+		[
+			"Renderer",
+			[
+				"var camera = resources.get( 'camera' );",
 				"",
 				"var renderer = new THREE.WebGLRenderer( { antialias: true, preserveDrawingBuffer: true } );",
 				"renderer.setClearColor( 0xBBBBBB, 1 );",
@@ -269,12 +292,29 @@
 				"renderer.vr.enabled = true;",
 				"domElement.appendChild( WEBVR.createButton( renderer ) );",
 				"",
-				"var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .01, 100000 );",
-				"var camGroup = new THREE.Group();",
-				"camGroup.position.set( 0, 1.6, 3 );",
+				"resize();",
+				"window.addEventListener( 'resize', resize, false );",
 				"",
-				"camGroup.add( camera );",
-				"scene.add( camGroup );",
+				"function resize() {",
+				"",
+				"\tvar rect = domElement.getBoundingClientRect();",
+				"\tvar width = rect.width;",
+				"\tvar height = rect.height;",
+				"",
+				"\tcamera.aspect = width / height;",
+				"\tcamera.updateProjectionMatrix();",
+				"\trenderer.setSize( width, height );",
+				"",
+				"}",
+				"",
+				"resources.set( 'renderer', renderer );"
+			]
+		],
+		[
+			"Interaction",
+			[
+				"var renderer = resources.get( 'renderer' );",
+				"var camera = resources.get( 'camera' );",
 				"",
 				"var interaction = new THREE.Group();",
 				"var mouse = new THREE.Vector2();",
@@ -378,32 +418,14 @@
 				"};",
 				"",
 				"interaction.userData.raycaster = new THREE.Raycaster();",
-				"camGroup.add( interaction );",
-				"window.addEventListener( 'vr controller connected', connectController );",
 				"",
-				"resources.set( 'scene', scene );",
-				"resources.set( 'renderer', renderer );",
-				"resources.set( 'camera', camera );",
-				"resources.set( 'interaction', interaction );",
+				"camera.parent.add( interaction );",
+				"",
+				"window.addEventListener( 'vr controller connected', connectController );",
 				"",
 				"renderer.domElement.addEventListener( 'mousedown', mousedown, false );",
 				"renderer.domElement.addEventListener( 'mousemove', mousemove, false );",
 				"renderer.domElement.addEventListener( 'mouseup', mouseup, false );",
-				"",
-				"resize();",
-				"window.addEventListener( 'resize', resize, false );",
-				"",
-				"function resize() {",
-				"",
-				"\tvar rect = domElement.getBoundingClientRect();",
-				"\tvar width = rect.width;",
-				"\tvar height = rect.height;",
-				"",
-				"\tcamera.aspect = width / height;",
-				"\tcamera.updateProjectionMatrix();",
-				"\trenderer.setSize( width, height );",
-				"",
-				"}",
 				"",
 				"function mousedown ( event ) {",
 				"\tvar item = interaction.userData.intersection;",
@@ -531,7 +553,9 @@
 				"\t\t}",
 				"\t});",
 				"",
-				"}"
+				"}",
+				"",
+				"resources.set( 'interaction', interaction );"
 			]
 		]
 	],
@@ -640,7 +664,7 @@
 				"var grid = new THREE.Group();",
 				"stage.add( grid );",
 				"",
-				"amount = 1024;",
+				"amount = 256;",
 				"var size = Math.sqrt( amount );",
 				"",
 				"for ( var i = 0; i < amount; i++ ) {",
@@ -654,6 +678,8 @@
 				"\tmesh.position.x = radius * ( col - 0.5 );",
 				"\tmesh.position.z = radius * ( row - 0.5 );",
 				"\tmesh.scale.y = 0.001;",
+				"\tmesh.scale.x = 3;",
+				"\tmesh.scale.z = 3;",
 				"\t",
 				"\tmesh.userData.scaleY = mesh.scale.y;",
 				"",
