@@ -33,12 +33,12 @@
 
 		<div id="container"></div>
 
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/build/three.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/vr/WebVR.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/build/three.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/vr/WebVR.js"></script>
 		<script src="https://cdn.rawgit.com/davidlyons/THREE.VRController/master/VRController.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/Detector.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r91/examples/js/loaders/FBXLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/Detector.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/loaders/FBXLoader.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.0-0/dat.gui.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.1.1/Tween.min.js"></script>
 
@@ -54,7 +54,10 @@
 
 			var scene = new THREE.Scene();
 
-			var renderer = new THREE.WebGLRenderer( { antialias: true } );
+			var renderer = new THREE.WebGLRenderer( {
+				antialias: true,
+				preserveDrawingBuffer: true
+			} );
 			renderer.setClearColor( 0xBBBBBB, 1 );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
