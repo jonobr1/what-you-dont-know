@@ -8,7 +8,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>Touchpad Circle</title>
+		<title>WebVR Template</title>
 
 		<style>
 			* { box-sizing: border-box; }
@@ -44,8 +44,6 @@
 
 		<script>
 
-			// alert('test 1');
-
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 			// var gui = new dat.GUI();
@@ -54,10 +52,10 @@
 
 			var scene = new THREE.Scene();
 
-			var renderer = new THREE.WebGLRenderer( {
+			var renderer = new THREE.WebGLRenderer({
 				antialias: true,
 				preserveDrawingBuffer: true
-			} );
+			});
 			renderer.setClearColor( 0xBBBBBB, 1 );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
@@ -66,12 +64,12 @@
 			renderer.vr.enabled = true;
 			document.body.appendChild( WEBVR.createButton( renderer ) );
 
-			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .1, 100000 );
+			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .01, 100000 );
 			// camera.position.y = 1.6;
 			
 			var camGroup = new THREE.Group();
 			// camGroup.position.z = 3;
-			camGroup.position.set( 0, 0, 3 );
+			camGroup.position.set( 0, 1.6, 3 );
 
 			camGroup.add( camera );
 			scene.add( camGroup );
@@ -89,29 +87,47 @@
 			var gh = new THREE.GridHelper( 2, 10, 0x000000, 0x808080 );
 			scene.add( gh );
 
+			var fbxLoader = new THREE.FBXLoader();
+
 			// --------------------------------------------------------------
 
-			var shape = new THREE.Shape();
-			shape.moveTo( 0, 0 );
-			shape.absarc( 0, 0, 1, 0, Math.PI * 2 );
+			var group = new THREE.Group();
+			scene.add( group );
+			group.position.y = 0.5;
 
-			shape.autoClose = true;
-			var points = shape.getPoints();
-			var spacedPoints = shape.getSpacedPoints( 50 );
-			var geometryPoints = new THREE.BufferGeometry().setFromPoints( points );
-			var geometrySpacedPoints = new THREE.BufferGeometry().setFromPoints( spacedPoints );
-
-			var line = new THREE.Line( geometrySpacedPoints, new THREE.LineBasicMaterial( { color: 0x333333, linewidth: 3 } ) );
-			scene.add( line );
-
-			//
-
-			var sphereGeo = new THREE.SphereBufferGeometry( 0.1, 32, 32 );
+			var sphereGeo = new THREE.SphereBufferGeometry(0.1, 32, 32);
 			var sphereMat = new THREE.MeshNormalMaterial();
 			var sphere = new THREE.Mesh( sphereGeo, sphereMat );
-			scene.add( sphere );
+			group.add( sphere );
+			sphere.add( new THREE.AxesHelper(0.4) );
 
-			sphere.position.set( 0, 1, 0 );
+			var points = [];
+			for (var i = 0; i < 26; i++) {
+				var point = new THREE.Vector3();
+				point.x = Math.cos( i );
+				point.z = Math.sin( i );
+				point.y = i * 0.1;
+				points.push(point);
+			}
+
+			var curve = new THREE.CatmullRomCurve3( points, true );
+
+			// visualize curve
+			var lineGeo = new THREE.BufferGeometry().setFromPoints( curve.getPoints( 120 ) );
+			var lineMat = new THREE.LineBasicMaterial({ color : 0xff0000 });
+			var line = new THREE.Line( lineGeo, lineMat );
+			group.add( line );
+
+			var options = {
+				pct: 0,
+				speed: 0.004
+			};
+
+			var setPercent = function( pct ){
+				sphere.position.copy( curve.getPoint( pct ) );
+			}
+
+			setPercent(0);
 
 			// --------------------------------------------------------------
 
@@ -134,39 +150,36 @@
 				}
 			}
 
-			// var touchIsDown = false;
+			var touchIsDown = false;
 			var axes = new THREE.Vector2();
-			// var axesOnDown = new THREE.Vector2();
-			// var delta = new THREE.Vector2();
+			var axesOnDown = new THREE.Vector2();
+			var delta = new THREE.Vector2();
 
-			// function primaryTouchDown(e){
-			// 	var controller = e.target;
-			// 	touchIsDown = true;
-			// 	axesOnDown.fromArray( controller.getAxes('touchpad').value );
-			// }
+			function primaryTouchDown(e){
+				var controller = e.target;
+				touchIsDown = true;
+				axesOnDown.fromArray( controller.getAxes('touchpad').value );
+			}
 
-			// function primaryTouchUp(e){
-			// 	touchIsDown = false;
-			// }
+			function primaryTouchUp(e){
+				touchIsDown = false;
+			}
 
 			function axesChanged(e) {
 				var controller = e.target;
-
-				axes.fromArray( controller.getAxes('touchpad').value );
-				axes.normalize();
-				sphere.position.x = axes.x;
-				sphere.position.y = - axes.y;
+				if ( touchIsDown ) {
+					axes.fromArray( controller.getAxes('touchpad').value );
+					delta.subVectors( axes, axesOnDown );
+					// console.log( delta );
+				}
 			}
-
-			var handGeo = new THREE.BoxBufferGeometry( 0.08, 0.08, 0.08 );
-			var handMat = new THREE.MeshPhongMaterial({ color: blue });
 
 			var controllerConnected = function( event ) {
 
 				var controller = event.detail;
-				camGroup.add( controller );
+				camera.parent.add( controller );
 
-				console.log('controller connected');
+				// console.log('controller connected, dof: ' + controller.dof);
 
 				controller.standingMatrix = renderer.vr.getStandingMatrix();
 				// controller.head = camera;
@@ -194,24 +207,51 @@
 
 					//
 
-					var handMesh = new THREE.Mesh( handGeo, handMat.clone() );
-					controller.userData.mesh = handMesh;
-					controller.add( handMesh );
+					switch ( controller.style ) {
+
+						case 'daydream':
+							fbxLoader.load( '../assets/models/daydream-controller/daydream.fbx', function ( fbx ) {
+								var daydream = fbx.children[0];
+								controller.add( daydream );
+
+								var pointPose = new THREE.Group();
+								pointPose.position.z = -0.053;
+								daydream.add( pointPose );
+								pointPose.add( controller.userData.laser );
+							});
+							break;
+
+						case 'oculus-go':
+							fbxLoader.load('../assets/models/oculus-go/pacific_lp.fbx', function( fbx ) {
+								var goController = fbx.children[0];
+								controller.add( goController );
+							});
+							break;
+
+						default:
+							var handGeo = new THREE.BoxBufferGeometry( 0.08, 0.08, 0.08 );
+							var handMat = new THREE.MeshPhongMaterial({ color: blue });
+							var handMesh = new THREE.Mesh( handGeo, handMat );
+							controller.userData.mesh = handMesh;
+							controller.add( handMesh );
+							break;
+
+					}
 
 				// }
 
 				//
 
-				// controller.addEventListener('primary press began', primaryDown);
-				// controller.addEventListener('primary press ended', primaryUp);
+				controller.addEventListener('primary press began', primaryDown);
+				controller.addEventListener('primary press ended', primaryUp);
 
-				// controller.addEventListener('primary touch began', primaryTouchDown);
-				// controller.addEventListener('primary touch ended', primaryTouchUp);
+				controller.addEventListener('primary touch began', primaryTouchDown);
+				controller.addEventListener('primary touch ended', primaryTouchUp);
 
 				controller.addEventListener('touchpad axes changed', axesChanged);
 
 				controller.addEventListener( 'disconnected', function( event ) {
-					console.log('controller disconnected');
+					// console.log('controller disconnected');
 					if ( controller.parent ) {
 						controller.parent.remove( controller );
 					}
@@ -236,6 +276,11 @@
 				// TWEEN.update();
 				// controls.update();
 				THREE.VRController.update();
+
+				options.pct += options.speed;
+				if ( options.pct > 1 ) options.pct = 0;
+				setPercent( options.pct );
+
 				renderer.render( scene, camera );
 			}
 

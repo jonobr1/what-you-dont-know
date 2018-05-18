@@ -52,7 +52,10 @@
 
 			var scene = new THREE.Scene();
 
-			var renderer = new THREE.WebGLRenderer( { antialias: true } );
+			var renderer = new THREE.WebGLRenderer({
+				antialias: true,
+				preserveDrawingBuffer: true
+			});
 			renderer.setClearColor( 0x333333, 1 );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );

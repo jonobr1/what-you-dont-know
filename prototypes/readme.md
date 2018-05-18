@@ -14,9 +14,10 @@
 + [Equalizer Sphere](./equalizer-3d.html)
 + [Cube Roll](./cube-roll.html)
 + [Cube Roll Audio](./cube-roll-audio.html)
++ [Half Sphere Grid UI](./frame-player.html?file=./half-sphere-grid.json)
++ [Curve Spline Path](./spline.html)
 + [WebVR Template](./webvr-template.html)
 + [WebVR Template FrameJS](./frame-player.html?file=./webvr-template.json)
-+ [Half Sphere Grid UI](./frame-player.html?file=./half-sphere-grid.json)
 
 ## Visuals
 
