@@ -8,7 +8,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>WebVR Template</title>
+		<title>Spline</title>
 
 		<style>
 			* { box-sizing: border-box; }
@@ -93,7 +93,7 @@
 
 			var group = new THREE.Group();
 			scene.add( group );
-			group.position.y = 0.5;
+			// group.position.y = 0.5;
 
 			var cylinderGeo = new THREE.CylinderBufferGeometry( 0.1, 0.1, 0.3, 16 );
 			cylinderGeo.rotateX( Math.PI / 2 );
@@ -103,7 +103,7 @@
 			// cylinder.add( new THREE.AxesHelper(0.4) );
 
 			var points = [];
-			for (var i = 0; i < 26; i++) {
+			for (var i = 0; i < 20; i++) {
 				var point = new THREE.Vector3();
 				point.x = Math.cos( i );
 				point.z = Math.sin( i );
@@ -112,13 +112,16 @@
 			}
 
 			var curve = new THREE.CatmullRomCurve3( points, false );
+			curve.userData = {
+				points: curve.getSpacedPoints( 120 )
+			};
 
 			// visualize curve
-			var lineGeo = new THREE.BufferGeometry().setFromPoints( curve.getPoints( 120 ) );
+			var lineGeo = new THREE.BufferGeometry().setFromPoints( curve.userData.points );
 			var lineMat = new THREE.LineBasicMaterial({
 				color : 0xff0000,
 				transparent: true,
-				opacity: 0.2
+				opacity: 0.3
 			});
 			var line = new THREE.Line( lineGeo, lineMat );
 			group.add( line );
@@ -129,10 +132,27 @@
 			};
 
 			var setPercent = function( pct ){
-				cylinder.position.copy( curve.getPoint( pct ) );
-
+				curve.getPoint( pct, cylinder.position );
 				cylinder.lookAt( curve.getPoint( pct-0.01 ) );
 			}
+
+			var getPercentageFromTarget = function( v ) {
+
+				var distSquared = Infinity;
+				var t = null;
+
+				for ( var i = 0; i < curve.userData.points.length; i++ ) {
+					var point = curve.userData.points[ i ];
+					var ds = v.distanceToSquared( point );
+					if ( ds < distSquared ) {
+						distSquared = ds;
+						t = i / curve.userData.points.length;
+					}
+				}
+
+				return t;
+
+			};
 
 			setPercent(1);
 
@@ -143,7 +163,32 @@
 				.onUpdate(function(){
 					setPercent( options.pct )
 				})
-				.start();
+				// .start();
+
+			// --------------------------------------------------------------
+
+			// https://threejs.org/examples/webgl_interactive_lines
+
+			var raycaster = new THREE.Raycaster();
+			raycaster.linePrecision = 0.1;
+
+			var mouse = new THREE.Vector2();
+
+			var currentIntersected;
+
+			var geo = new THREE.SphereBufferGeometry( 0.03 );
+			var mat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+			var sphereInter = new THREE.Mesh( geo, mat );
+			sphereInter.visible = false;
+			group.add( sphereInter );
+
+			document.addEventListener( 'mousemove', mousemove, false );
+
+			function mousemove( event ) {
+				event.preventDefault();
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+			}
 
 			// --------------------------------------------------------------
 
@@ -288,10 +333,63 @@
 
 			renderer.animate( loop );
 
+			var destinationPCT = 0;
+			var pct = 0;
+
 			function loop() {
 				TWEEN.update();
 				// controls.update();
 				THREE.VRController.update();
+
+				// --------------------------------------------------
+
+				// find intersections
+
+				if ( renderer.vr.getDevice() && renderer.vr.getDevice().isPresenting ) {
+					for ( var i = 0; i < THREE.VRController.controllers.length; i++ ) {
+						var controller = THREE.VRController.controllers[ i ];
+						if ( !controller ) continue;
+						raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
+						raycaster.ray.direction.set( 0, 0, - 1 ).transformDirection( controller.matrixWorld );
+					}
+				} else {
+					raycaster.setFromCamera( mouse, camera );
+				}
+
+				var intersects = raycaster.intersectObject( line );
+
+				if ( intersects.length > 0 ) {
+
+					// if ( currentIntersected !== undefined ) // reset
+
+					currentIntersected = intersects[ 0 ].object;
+					sphereInter.visible = true;
+					sphereInter.position.copy( intersects[ 0 ].point );
+
+					destinationPCT = getPercentageFromTarget( intersects[ 0 ].point );
+					// setPercent( pct );
+
+				} else {
+
+					// if ( currentIntersected !== undefined ) // reset
+
+					currentIntersected = undefined;
+					sphereInter.visible = false;
+
+				}
+
+				if ( destinationPCT !== pct ) {
+					if ( Math.abs( destinationPCT - pct ) < 0.001 ) {
+						pct = destinationPCT;
+						setPercent( pct );
+					} else {
+						pct += ( destinationPCT - pct) * 0.125;
+						setPercent( pct );
+					}
+				}
+
+				// --------------------------------------------------
+
 				renderer.render( scene, camera );
 			}
 
