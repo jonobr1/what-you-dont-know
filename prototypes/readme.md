@@ -16,6 +16,7 @@
 + [Cube Roll Audio](./cube-roll-audio.html)
 + [Half Sphere Grid UI](./frame-player.html?file=./half-sphere-grid.json)
 + [Object on Curve](./curve.html)
++ [Box Ring](./box-ring.html)
 + [WebVR Template](./webvr-template.html)
 + [WebVR Template FrameJS](./frame-player.html?file=./webvr-template.json)
 
