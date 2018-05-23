@@ -150,17 +150,43 @@
 
 			function raycast() {
 
-				raycaster.setFromCamera( mouse, camera );
-				var intersects = raycaster.intersectObjects( boxes );
+				raycaster.setFromCamera( mouse, camera )
+;				var intersects = raycaster.intersectObjects( boxes );
 				if ( intersects.length > 0 ) {
 					if ( INTERSECTED != intersects[ 0 ].object ) {
-						if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+						if ( INTERSECTED ) {
+							INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+							// INTERSECTED.scale.setScalar(1);
+
+							// for ( var i = 0; i < boxes; i++ ) {
+							// 	boxes[i].scale.setScalar(1);
+							// }
+						}
 						INTERSECTED = intersects[ 0 ].object;
 						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
 						INTERSECTED.material.emissive.setHex( 0xff0000 );
+
+						// INTERSECTED.scale.setScalar(1.1);
+
+						// var index = boxes.indexOf( INTERSECTED );
+						// var range = 8;
+						// for (var i = 1; i < range; i++) {
+						// 	var s = 1 + (.4 * 1 - i/range);
+						// 	boxes[mod(index+i,numBoxes)].scale.setScalar(s);
+						// 	boxes[mod(index-i,numBoxes)].scale.setScalar(s);
+						// }
 					}
 				} else {
-					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+					if ( INTERSECTED ) {
+						INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+						// INTERSECTED.scale.setScalar(1);
+
+						// for ( var i = 0; i < boxes; i++ ) {
+						// 	boxes[i].scale.setScalar(1);
+						// }
+					}
 					INTERSECTED = null;
 				}
 
@@ -326,6 +352,13 @@
 				// controls.update();
 				THREE.VRController.update();
 				renderer.render( scene, camera );
+			}
+
+			function mod(v, l) {
+				while (v < 0) {
+					v += l;
+				}
+				return v % l;
 			}
 
 		</script>
