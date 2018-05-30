@@ -150,8 +150,8 @@
 
 			function raycast() {
 
-				raycaster.setFromCamera( mouse, camera )
-;				var intersects = raycaster.intersectObjects( boxes );
+				raycaster.setFromCamera( mouse, camera );
+				var intersects = raycaster.intersectObjects( boxes );
 				if ( intersects.length > 0 ) {
 					if ( INTERSECTED != intersects[ 0 ].object ) {
 						if ( INTERSECTED ) {
