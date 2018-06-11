@@ -33,12 +33,12 @@
 
 		<div id="container"></div>
 
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/build/three.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/vr/WebVR.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/build/three.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/vr/WebVR.js"></script>
 		<script src="https://cdn.rawgit.com/davidlyons/THREE.VRController/master/VRController.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/Detector.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r92/examples/js/loaders/FBXLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/Detector.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/loaders/FBXLoader.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.0-0/dat.gui.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/Tween.min.js"></script>
 
@@ -61,7 +61,6 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
 
-			renderer.vr.enabled = true;
 			document.body.appendChild( WEBVR.createButton( renderer ) );
 
 			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .01, 100000 );
@@ -74,8 +73,17 @@
 			camGroup.add( camera );
 			scene.add( camGroup );
 
-			// var controls = new THREE.OrbitControls( camera, renderer.domElement );
-			// controls.target.z = -3;
+			var controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.screenSpacePanning = true;
+			controls.target.z = -3;
+
+			window.addEventListener( 'vrdisplaypresentchange', function ( event ) {
+				camera.position.set(0,0,0);
+				camera.quaternion.set(0,0,0,0);
+				var isPresenting = event.display.isPresenting;
+				renderer.vr.enabled = isPresenting;
+				controls.enabled = !isPresenting;
+			});
 
 			var aLight = new THREE.AmbientLight( 0x404040 );
 			scene.add( aLight );
@@ -240,8 +248,10 @@
 			renderer.animate( loop );
 
 			function loop() {
+				if ( controls.enabled ) {
+					controls.update();
+				}
 				// TWEEN.update();
-				// controls.update();
 				THREE.VRController.update();
 				renderer.render( scene, camera );
 			}
@@ -251,11 +261,8 @@
 				target[prop] = targetValue;
 
 				var tween = new TWEEN.Tween( obj )
-					.to( target, 800 )
-					.easing( TWEEN.Easing.Elastic.Out )
-					.yoyo( true )
-					.delay( 800 )
-					.repeat( Infinity )
+					.to( target, 400 )
+					.easing( TWEEN.Easing.Quadratic.Out )
 					.start();
 			}
 
