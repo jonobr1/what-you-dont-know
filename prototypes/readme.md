@@ -19,6 +19,7 @@
 + [Box Ring](./box-ring.html)
 + [WebVR Template](./webvr-template.html)
 + [WebVR Template FrameJS](./frame-player.html?file=./webvr-template.json)
++ [Metronome](./metronome.html)
 
 ## Visuals
 

@@ -30,7 +30,7 @@
 
 				THREE.Group.call( this );
 
-				var baseHeight = 0.05 + Math.random() * 0.025 - 0.0125;
+				var baseHeight = 0.025 + Math.random() * 0.0125 - 0.00625;
 				var stemLength = 2.5 + Math.random() * 1 - 0.5;
 				var plateSize = 0.5 + Math.random() * 0.25 - 0.125;
 
@@ -74,15 +74,15 @@
 			}
 
 			Metronome.Geometries = {
-				Base: new THREE.CylinderBufferGeometry( 0.5, 0.5, 1, 16 ),
+				Base: new THREE.CylinderBufferGeometry( 0.5, 0.5, 1, 32 ),
 				Pivot: new THREE.CylinderBufferGeometry( 0.1, 0.1, 0.1, 8, 1, false, Math.PI / 2, Math.PI ),
 				Stem: new THREE.CylinderBufferGeometry( 0.025, 0.025, 1, 8, 1 ),
 				Plate: new THREE.CylinderBufferGeometry( 1, 1, 0.025, 32, 1)
 			};
 			Metronome.Materials = {
-				Porcelain: new THREE.MeshBasicMaterial({
+				Porcelain: new THREE.MeshLambertMaterial({
 				}),
-				Brass: new THREE.MeshBasicMaterial({
+				Brass: new THREE.MeshLambertMaterial({
 					color: 'red'
 				})
 			};
@@ -129,10 +129,10 @@
 				document.body.appendChild( container );
 
 				scene = new THREE.Scene();
-				scene.background = new THREE.Color( 0x505050 );
+				scene.background = new THREE.Color( 0x333333 );
 
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
-				// camera.position.y = 2;
+				camera.position.y = 2;
 
 				room = new THREE.Mesh(
 					new THREE.BoxGeometry( 6, 6, 6, 8, 8, 8 ),
