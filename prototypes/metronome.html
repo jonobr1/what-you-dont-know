@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>webvr</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #101010;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			a {
+				color: #f00;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="js/three.js"></script>
+
+		<script src="js/VRController.js"></script>
+		<script src="js/WebVR.js"></script>
+
+		<script>
+
+			function Metronome() {
+
+				THREE.Group.call( this );
+
+				var baseHeight = 0.05 + Math.random() * 0.025 - 0.0125;
+				var stemLength = 2.5 + Math.random() * 1 - 0.5;
+				var plateSize = 0.5 + Math.random() * 0.25 - 0.125;
+
+				this.base = new THREE.Mesh(
+					Metronome.Geometries.Base, Metronome.Materials.Porcelain );
+
+				this.base.scale.x = 1;
+				this.base.scale.y = baseHeight;
+				this.base.scale.z = 1;
+
+				this.hinge = new THREE.Mesh(
+					Metronome.Geometries.Pivot, Metronome.Materials.Brass );
+
+				this.hinge.position.y = baseHeight;
+				this.hinge.rotation.x = Math.PI / 2;
+
+				this.stem = new THREE.Mesh(
+					Metronome.Geometries.Stem, Metronome.Materials.Porcelain );
+
+				this.stem.scale.y = stemLength;
+
+				this.plate = new THREE.Mesh(
+					Metronome.Geometries.Plate, Metronome.Materials.Brass );
+
+				this.plate.position.y = stemLength;
+				this.plate.rotation.x = Math.PI / 2;
+				this.plate.scale.z = plateSize;
+				this.plate.scale.x = plateSize;
+
+				this.pivot = new THREE.Group();
+				this.pivot.position.y = baseHeight;
+				this.add( this.pivot );
+
+				this.add( this.base );
+				this.add( this.hinge );
+				this.add( this.pivot );
+
+				this.pivot.add( this.stem );
+				this.pivot.add( this.plate );
+
+			}
+
+			Metronome.Geometries = {
+				Base: new THREE.CylinderBufferGeometry( 0.5, 0.5, 1, 16 ),
+				Pivot: new THREE.CylinderBufferGeometry( 0.1, 0.1, 0.1, 8, 1, false, Math.PI / 2, Math.PI ),
+				Stem: new THREE.CylinderBufferGeometry( 0.025, 0.025, 1, 8, 1 ),
+				Plate: new THREE.CylinderBufferGeometry( 1, 1, 0.025, 32, 1)
+			};
+			Metronome.Materials = {
+				Porcelain: new THREE.MeshBasicMaterial({
+				}),
+				Brass: new THREE.MeshBasicMaterial({
+					color: 'red'
+				})
+			};
+
+			Metronome.Geometries.Base.translate( 0, 0.5, 0 );
+			Metronome.Geometries.Pivot.translate( 0, 0.05, 0 );
+			Metronome.Geometries.Stem.translate( 0, 0.5, 0 );
+
+			Metronome.prototype = Object.create( THREE.Group.prototype );
+			Metronome.prototype.constructor = Metronome;
+
+			Object.defineProperty( Metronome.prototype, 'swing', {
+
+				enumerable: true,
+
+				get: function() {
+					return this.pivot.rotation.z;
+				},
+
+				set: function( rad ) {
+					this.pivot.rotation.z = rad;
+				}
+
+			} );
+
+		</script>
+
+		<script>
+
+			var container;
+			var camera, scene, renderer;
+			var controller;
+
+			var room, metronome;
+
+			var triggerIsDown = false;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0x505050 );
+
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
+				// camera.position.y = 2;
+
+				room = new THREE.Mesh(
+					new THREE.BoxGeometry( 6, 6, 6, 8, 8, 8 ),
+					new THREE.MeshBasicMaterial( { color: 0x404040, wireframe: true } )
+				);
+				room.position.y = 3;
+				scene.add( room );
+
+				metronome = new Metronome();
+				metronome.position.z = - 5;
+				scene.add( metronome );
+
+				scene.add( new THREE.HemisphereLight( 0x606060, 0x404040 ) );
+
+				var light = new THREE.DirectionalLight( 0xffffff );
+				light.position.set( 1, 1, 1 ).normalize();
+				scene.add( light );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.vr.enabled = true;
+				container.appendChild( renderer.domElement );
+
+				document.body.appendChild( WEBVR.createButton( renderer ) );
+
+				controller = new THREE.VRController();
+				controller.position.set( 0.25, 0.75, 0 );
+				scene.add( controller );
+
+				var geometry = new THREE.BoxGeometry( 0.05, 0.05, 0.8 );
+				geometry.translate( 0, 0, - 0.4 );
+				var box = new THREE.Mesh( geometry );
+				controller.add( box );
+
+				controller.addEventListener( 'selectstart', function () {
+
+					triggerIsDown = true;
+					box.material.color.setHex( Math.random() * 0xffffff );
+
+				} );
+
+				controller.addEventListener( 'selectend', function () {
+
+					triggerIsDown = false;
+
+				} );
+
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				renderer.animate( render );
+
+			}
+
+			function render( millis ) {
+
+				controller.update();
+
+				metronome.swing = Math.PI * Math.sin( millis / 1000 ) / 2;
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	</body>
+</html>
