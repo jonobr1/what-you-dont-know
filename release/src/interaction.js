@@ -15,8 +15,6 @@ function Interaction ( renderer, camera ) {
 
 	this.mousedown = function ( event ) {
 
-		console.log( 'mousedown' );
-
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse ;
 
@@ -38,8 +36,6 @@ function Interaction ( renderer, camera ) {
 
 	this.touchstart = function ( event ) {
 
-		console.log( 'touchstart' );
-
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse;
 
@@ -47,6 +43,7 @@ function Interaction ( renderer, camera ) {
 		var touch = event.touches[ 0 ];
 
 		touching = true;
+		event.preventDefault();
 
 		if ( touch ) {
 
@@ -78,8 +75,6 @@ function Interaction ( renderer, camera ) {
 
 	this.mousemove = function ( event ) {
 
-		console.log( 'mousemove' );
-
 		var mouse = scope.mouse;
 		var rect = renderer.domElement.getBoundingClientRect();
 
@@ -95,13 +90,13 @@ function Interaction ( renderer, camera ) {
 
 	this.touchmove = function ( event ) {
 
-		console.log( 'touchmove' );
-
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse;
 
 		var rect = renderer.domElement.getBoundingClientRect();
 		var touch = event.touches[ 0 ];
+
+		event.preventDefault();
 
 		if ( touching && touch ) {
 
@@ -118,8 +113,6 @@ function Interaction ( renderer, camera ) {
 	};
 
 	this.mouseup = function ( event ) {
-
-		console.log( 'mouseup' );
 
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse;
@@ -142,8 +135,6 @@ function Interaction ( renderer, camera ) {
 
 	this.touchend = function ( event ) {
 
-		console.log( 'touchend' );
-
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse;
 
@@ -151,6 +142,7 @@ function Interaction ( renderer, camera ) {
 		var touch = event.touches[ 0 ];
 
 		touching = false;
+		event.preventDefault();
 
 		if ( touch ) {
 
