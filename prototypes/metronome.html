@@ -78,6 +78,7 @@
 				interaction.connect();
 				interaction.listen( metronome.plate );
 
+				// TODO: Swap out mesh for THREE.Plane
 				plane = new THREE.Mesh(
 					new THREE.PlaneBufferGeometry( 50, 50, 50, 50 ),
 					new THREE.MeshBasicMaterial( {
@@ -149,9 +150,11 @@
 				if ( cursor.visible ) {
 
 					// Do plane intersection detection here.
-					for ( var controller in interaction.intersections ) {
+					for ( var id in interaction.intersections ) {
 
-						var intersection = interaction.intersections[ controller ];
+						var controller = interaction.controllers[ id ];
+						var intersection = interaction.intersections[ id ];
+
 						if ( intersection ) {
 							cursor.position.copy( intersection.point );
 							var angle = Math.atan2( cursor.position.y, cursor.position.x );

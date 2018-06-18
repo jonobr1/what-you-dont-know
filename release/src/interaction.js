@@ -11,12 +11,13 @@ function Interaction ( renderer, camera ) {
 	this.mouse = new THREE.Vector2().copy( Interaction.Offscreen );
 	this.searchables = [];
 	this.intersections = {};
+	this.controllers = { mouse: this.mouse };
 	this.raycaster = new THREE.Raycaster();
 
 	this.mousedown = function ( event ) {
 
 		var mouse = scope.mouse;
-		var item = scope.intersections.mouse ;
+		var item = scope.intersections.mouse;
 
 		if ( item ) {
 			item.object.dispatchEvent( {
@@ -40,6 +41,7 @@ function Interaction ( renderer, camera ) {
 		var rect = renderer.domElement.getBoundingClientRect();
 		var touch = event.touches[ 0 ];
 
+		mouse.isTouch = true;
 		touching = true;
 		event.preventDefault();
 
@@ -143,6 +145,7 @@ function Interaction ( renderer, camera ) {
 		var rect = renderer.domElement.getBoundingClientRect();
 		var touch = event.touches[ 0 ];
 
+		mouse.isTouch = false;
 		touching = false;
 		event.preventDefault();
 
@@ -182,6 +185,7 @@ function Interaction ( renderer, camera ) {
 		scope.add( controller );
 
 		controller.standingMatrix = renderer.vr.getStandingMatrix();
+		scope.controllers[ controller.uuid ] = controller;
 
 		var laser = Interaction.Laser.clone();
 		controller.add( laser );
@@ -262,6 +266,8 @@ function Interaction ( renderer, camera ) {
 
 			controller.removeEventListener( 'primary touch began', primaryTouchBegan );
 			controller.removeEventListener( 'primary touch ended', primaryTouchEnded );
+
+			delete scope.controllers[ controller.uuid ];
 
 		} );
 
