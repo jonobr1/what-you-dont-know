@@ -21,10 +21,13 @@
 
 		<script src="js/three.js"></script>
 
-		<script src="js/VRController.js"></script>
+		<script src="/release/third-party/vr-controller.js"></script>
 		<script src="js/WebVR.js"></script>
+		<script src="/release/src/interaction.js"></script>
 
 		<script>
+
+			// TODO: Move the "interaction" object from the Editor to its own library.
 
 			function Metronome() {
 
@@ -53,7 +56,7 @@
 				this.stem.scale.y = stemLength;
 
 				this.plate = new THREE.Mesh(
-					Metronome.Geometries.Plate, Metronome.Materials.Brass );
+					Metronome.Geometries.Plate, Metronome.Materials.Brass.clone() );
 
 				this.plate.position.y = stemLength;
 				this.plate.rotation.x = Math.PI / 2;
@@ -94,6 +97,24 @@
 			Metronome.prototype = Object.create( THREE.Group.prototype );
 			Metronome.prototype.constructor = Metronome;
 
+			Metronome.prototype._distance = 0;
+			Metronome.prototype.velocity = 0;
+
+			Metronome.prototype.dragging = false;
+
+			Metronome.prototype.update = function() {
+
+				if ( this.dragging ) {
+					this._distance = 2 * this.pivot.rotation.z; // TODO: Check this. Should be reverse of the else statement.
+				} else {
+					this._distance += this.velocity;
+					this.pivot.rotation.z = Math.PI * Math.sin( this._distance / Math.PI ) / 2;
+				}
+
+				return this;
+
+			};
+
 			Object.defineProperty( Metronome.prototype, 'swing', {
 
 				enumerable: true,
@@ -114,11 +135,8 @@
 
 			var container;
 			var camera, scene, renderer;
-			var controller;
 
-			var room, metronome;
-
-			var triggerIsDown = false;
+			var room, metronome, interaction;
 
 			init();
 			animate();
@@ -132,7 +150,8 @@
 				scene.background = new THREE.Color( 0x333333 );
 
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
-				camera.position.y = 2;
+				scene.add( ( new THREE.Group() ).add( camera ) );
+				camera.parent.position.y = 2;
 
 				room = new THREE.Mesh(
 					new THREE.BoxGeometry( 6, 6, 6, 8, 8, 8 ),
@@ -157,30 +176,17 @@
 				renderer.vr.enabled = true;
 				container.appendChild( renderer.domElement );
 
+				interaction = new Interaction( renderer, camera );
+				interaction.connect();
+				interaction.listen( metronome.plate );
+				metronome.plate.addEventListener( 'over', function () {
+					metronome.plate.material.color.setStyle( 'yellow' );
+				} );
+				metronome.plate.addEventListener( 'out', function () {
+					metronome.plate.material.color.setStyle( 'red' );
+				} );
+
 				document.body.appendChild( WEBVR.createButton( renderer ) );
-
-				controller = new THREE.VRController();
-				controller.position.set( 0.25, 0.75, 0 );
-				scene.add( controller );
-
-				var geometry = new THREE.BoxGeometry( 0.05, 0.05, 0.8 );
-				geometry.translate( 0, 0, - 0.4 );
-				var box = new THREE.Mesh( geometry );
-				controller.add( box );
-
-				controller.addEventListener( 'selectstart', function () {
-
-					triggerIsDown = true;
-					box.material.color.setHex( Math.random() * 0xffffff );
-
-				} );
-
-				controller.addEventListener( 'selectend', function () {
-
-					triggerIsDown = false;
-
-				} );
-
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
@@ -203,9 +209,11 @@
 
 			function render( millis ) {
 
-				controller.update();
+				THREE.VRController.update();
 
-				metronome.swing = Math.PI * Math.sin( millis / 1000 ) / 2;
+				interaction.update();
+
+				metronome.update();
 
 				renderer.render( scene, camera );
 
