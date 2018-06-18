@@ -34,7 +34,7 @@
 
 			var room, metronome, interaction;
 
-			var plane, cursor;
+			var plane, cursor, swing = 0;
 
 			init();
 			animate();
@@ -112,8 +112,12 @@
 					interaction.listen( plane );
 				} );
 				interaction.addEventListener( 'primary-up', function () {
+					if ( cursor.visible ) {
+						metronome.range = Math.abs( metronome.swing * 2 );
+						metronome.velocity = 0.5 * ( metronome.swing > 0 ? - 1 : 1 );
+						metronome.velocity -= metronome.swing - swing;
+					}
 					cursor.visible = false;
-					metronome.velocity = - metronome.swing / 12;
 					scene.remove( plane );
 					interaction.ignore( plane );
 				} );
@@ -156,6 +160,7 @@
 						var intersection = interaction.intersections[ id ];
 
 						if ( intersection ) {
+							swing = metronome.swing;
 							cursor.position.copy( intersection.point );
 							var angle = Math.atan2( cursor.position.y, cursor.position.x );
 							while ( angle < - Math.PI / 2 ) {

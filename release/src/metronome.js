@@ -66,18 +66,23 @@ Metronome.Geometries.Stem.translate( 0, 0.5, 0 );
 Metronome.prototype = Object.create( THREE.Group.prototype );
 Metronome.prototype.constructor = Metronome;
 
-Metronome.prototype._distance = 0;
+Metronome.prototype.elapsed = 0;
 Metronome.prototype.velocity = 0;
+Metronome.prototype.range = Math.PI;
+Metronome.prototype.offset = 0;
 
 Metronome.prototype.dragging = false;
 
 Metronome.prototype.update = function() {
 
   if ( this.dragging ) {
-    this._distance = 2 * this.pivot.rotation.z; // TODO: Check this. Should be reverse of the else statement.
+    this.offset = this.pivot.rotation.z;
+    this.elapsed = 0;
   } else {
-    this._distance += this.velocity;
-    this.pivot.rotation.z = Math.PI * Math.sin( this._distance / Math.PI ) / 2;
+    this.elapsed += this.velocity;
+    this.pivot.rotation.z = this.range * Math.sin( this.elapsed / 10 ) / 2;
+    this.pivot.rotation.z += this.offset;
+    this.offset -= this.offset * 0.0125;
   }
 
   return this;
