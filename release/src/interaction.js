@@ -37,8 +37,6 @@ function Interaction ( renderer, camera ) {
 	this.touchstart = function ( event ) {
 
 		var mouse = scope.mouse;
-		var item = scope.intersections.mouse;
-
 		var rect = renderer.domElement.getBoundingClientRect();
 		var touch = event.touches[ 0 ];
 
@@ -54,6 +52,10 @@ function Interaction ( renderer, camera ) {
 			mouse.y = - 2 * mouse.y + 1;
 
 		}
+
+		scope.update();
+
+		var item = scope.intersections.mouse;
 
 		if ( item ) {
 			item.object.dispatchEvent( {
