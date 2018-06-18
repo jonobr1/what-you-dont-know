@@ -31,9 +31,10 @@
 
 			var container;
 			var camera, scene, renderer;
-			var isTriggerDown = false;
 
 			var room, metronome, interaction;
+
+			var plane, cursor;
 
 			init();
 			animate();
@@ -76,6 +77,25 @@
 				interaction = new Interaction( renderer, camera );
 				interaction.connect();
 				interaction.listen( metronome.plate );
+
+				plane = new THREE.Mesh(
+					new THREE.PlaneBufferGeometry( 50, 50, 50, 50 ),
+					new THREE.MeshBasicMaterial( {
+						transparent: true,
+						opacity: 0
+					} )
+				);
+
+				cursor = new THREE.Mesh(
+					new THREE.SphereBufferGeometry( 0.05, 32, 32 ),
+					new THREE.MeshBasicMaterial( {
+						color: 'rgb( 255, 150, 50 )'
+					} )
+				);
+
+				cursor.visible = false;
+				scene.add( cursor );
+
 				metronome.plate.addEventListener( 'over', function () {
 					metronome.plate.material.color.setStyle( 'yellow' );
 				} );
@@ -83,12 +103,16 @@
 					metronome.plate.material.color.setStyle( 'red' );
 				} );
 				metronome.plate.addEventListener( 'primary-down', function () {
-					isTriggerDown = true;
-					console.log( 'stick' );
+					cursor.visible = true;
+					metronome.plate.getWorldPosition( plane.position );
+					scene.add( plane );
+					interaction.listen( plane );
 				} );
 				interaction.addEventListener( 'primary-up', function () {
-					isTriggerDown = false;
-					console.log( 'unstick!' );
+					cursor.visible = false;
+					metronome.velocity = - metronome.swing / 12;
+					scene.remove( plane );
+					interaction.ignore( plane );
 				} );
 
 				document.body.appendChild( WEBVR.createButton( renderer ) );
@@ -117,6 +141,27 @@
 				THREE.VRController.update();
 
 				interaction.update();
+
+				metronome.dragging = cursor.visible;
+
+				if ( cursor.visible ) {
+
+					// Do plane intersection detection here.
+					for ( var controller in interaction.intersections ) {
+
+						var intersection = interaction.intersections[ controller ];
+						if ( intersection ) {
+							cursor.position.copy( intersection.point );
+							var angle = Math.atan2( cursor.position.y, cursor.position.x );
+							while ( angle < - Math.PI / 2 ) {
+								angle += Math.PI * 2;
+							}
+							metronome.swing = angle - Math.PI / 2;
+						}
+
+					}
+
+				}
 
 				metronome.update();
 

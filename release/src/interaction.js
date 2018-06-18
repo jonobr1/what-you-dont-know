@@ -344,6 +344,8 @@ Interaction.prototype.update = function() {
 		}
 
 		if ( this.intersections.mouse !== intersects[ 0 ] ) {
+			// intersects[ 0 ] can be a null or undefined value.
+			// ...and that's okay!
 			this.intersections.mouse = intersects[ 0 ];
 			if ( !!intersects[ 0 ] ) {
 				this.intersections.mouse.object.dispatchEvent( {

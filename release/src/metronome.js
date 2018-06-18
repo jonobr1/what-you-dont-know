@@ -93,6 +93,11 @@ Object.defineProperty( Metronome.prototype, 'swing', {
   },
 
   set: function( rad ) {
+    if ( rad > Math.PI / 2 ) {
+      rad = Math.PI / 2;
+    } else if ( rad < - Math.PI / 2 ) {
+      rad = - Math.PI / 2;
+    }
     this.pivot.rotation.z = rad;
   }
 
