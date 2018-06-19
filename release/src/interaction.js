@@ -311,6 +311,11 @@ Interaction.prototype.update = function() {
 				continue;
 			}
 
+			// TODO: David found an error in Oculus Touch ( though this is presumably
+			// with any device that supports more than on controller at a time )
+			// Interactions can start with a specific hand.., but position always
+			// falls on the same hand.
+
 			raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
 			raycaster.ray.direction.set( 0, 0, - 1 )
 				.transformDirection( controller.matrixWorld );
