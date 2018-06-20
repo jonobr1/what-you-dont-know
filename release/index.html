@@ -60,7 +60,7 @@
         resources.onLoad( function () {
           document.body.removeChild( document.getElementById( 'loading' ) );
           document.body.appendChild( playButton );
-          window.requestAnimationFrame( animate );
+          resources.get( 'renderer' ).setAnimationLoop( animate );
         } );
 
       } );
@@ -77,13 +77,6 @@
         player.tick( time - prevTime );
         timeline.update( player.currentTime );
         prevTime = time;
-
-        var renderer = resources.get( 'renderer' );
-        if ( renderer ) {
-          renderer.animate( animate );
-        } else {
-          window.requestAnimationFrame( animate );
-        }
 
       }
 
