@@ -23,9 +23,15 @@
         left: 20px;
       }
     </style>
+    <link rel="stylesheet" type="text/css" href="styles/spinner.css">
   </head>
   <body>
     <div id="container"></div>
+    <div id="loading" class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
 
     <script src="../release/third-party/Frame.js"></script>
 
@@ -52,16 +58,21 @@
 
         timeline.compile( resources, player );
         resources.onLoad( function () {
+          document.body.removeChild( document.getElementById( 'loading' ) );
           document.body.appendChild( playButton );
+          window.requestAnimationFrame( animate );
         } );
-        window.requestAnimationFrame( animate );
 
       } );
 
       //
 
-      var prevTime = 0;
+      var prevTime = null;
       function animate( time ) {
+
+        if ( prevTime === null ) {
+          prevTime = time;
+        }
 
         player.tick( time - prevTime );
         timeline.update( player.currentTime );
