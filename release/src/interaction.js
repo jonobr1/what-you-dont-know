@@ -100,7 +100,7 @@ function Interaction ( renderer, camera ) {
 		var rect = renderer.domElement.getBoundingClientRect();
 		var touch = event.touches[ 0 ];
 
-		event.preventDefault();
+		// event.preventDefault();
 
 		if ( touching && touch ) {
 
