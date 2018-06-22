@@ -21,6 +21,7 @@
 + [WebVR Template FrameJS](./frame-player.html?file=./webvr-template.json)
 + [Metronome](./metronome.html)
 + [Interaction Transforms](./interaction-transforms.html)
++ [Interaction Dragging](./interaction-dragging.html)
 
 ## Visuals
 

@@ -8,7 +8,7 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>Interaction Test</title>
+		<title>Interaction Dragging</title>
 
 		<style>
 			* { box-sizing: border-box; }
@@ -61,6 +61,9 @@
 			renderer.setClearColor( 0xBBBBBB, 1 );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.shadowMap.enabled = true;
+			renderer.gammaInput = true;
+			renderer.gammaOutput = true;
 			container.appendChild( renderer.domElement );
 
 			document.body.appendChild( WEBVR.createButton( renderer ) );
@@ -92,10 +95,15 @@
 
 			var dLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
 			dLight.position.set( 0, 1, 1 );
+			dLight.castShadow = true;
+			dLight.shadow.mapSize.set( 4096, 4096 );
 			scene.add( dLight );
 
-			var gh = new THREE.GridHelper( 2, 10, 0x000000, 0x808080 );
-			scene.add( gh );
+			var hLight = new THREE.HemisphereLight( 0x808080, 0x606060 );
+			scene.add( hLight );
+
+			// var gh = new THREE.GridHelper( 2, 10, 0x000000, 0x808080 );
+			// scene.add( gh );
 
 			// var fbxLoader = new THREE.FBXLoader();
 
@@ -105,120 +113,134 @@
 			var green = new THREE.Color(0x0cc437);
 			var purple = new THREE.Color(0x7d37cc);
 			var red = new THREE.Color(0xd62323);
-			var grey = new THREE.Color(0xcccccc);
+			var grey = new THREE.Color(0xaaaaaa);
 
-			interaction = new Interaction( renderer, camera );
+			var interaction = new Interaction( renderer, camera );
 			interaction.connect();
 
 			// ----------------
 
-			// move a sphere
-
-			var sphereGeo = new THREE.SphereBufferGeometry(0.4, 32, 32);
-			var sphereMat = new THREE.MeshPhongMaterial({ color: grey });
-			var sphere = new THREE.Mesh( sphereGeo, sphereMat );
-			sphere.position.x = -1.2;
-			sphere.userData.on = false;
-			scene.add( sphere );
-
-			interaction.listen( sphere );
-
-			sphere.addEventListener( 'over', function () {
-				sphere.material.color = green;
-			});
-
-			sphere.addEventListener( 'out', function () {
-				sphere.material.color = grey;
-			});
-
-			sphere.addEventListener( 'primary-down', function () {
-				var tween = new TWEEN.Tween( sphere.position )
-					.to( { y: sphere.userData.on ? 0 : 1 }, 400 )
-					.easing( TWEEN.Easing.Quadratic.Out )
-					.start();
-
-				sphere.userData.on = !sphere.userData.on;
-			});
+			var floorGeo = new THREE.PlaneBufferGeometry( 4, 4 );
+			var floorMat = new THREE.MeshStandardMaterial( {
+				color: 0x999999,
+				roughness: 1.0,
+				metalness: 0.0
+			} );
+			var floor = new THREE.Mesh( floorGeo, floorMat );
+			floor.rotation.x = - Math.PI / 2;
+			floor.receiveShadow = true;
+			scene.add( floor );
 
 			// ----------------
 
-			// rotate a cylinder
+			var group = new THREE.Group();
+			scene.add( group );
 
-			var cylGeo = new THREE.CylinderBufferGeometry(0.4, 0.4, 0.6, 32);
-			var cylMat = new THREE.MeshPhongMaterial({ color: grey });
-			var cylinder = new THREE.Mesh( cylGeo, cylMat );
-			cylinder.position.x = 0;
-			cylinder.userData.on = false;
-			scene.add( cylinder );
+			var geometries = [
+				new THREE.BoxBufferGeometry( 0.2, 0.2, 0.2 ),
+				new THREE.ConeBufferGeometry( 0.2, 0.2, 64 ),
+				new THREE.CylinderBufferGeometry( 0.2, 0.2, 0.2, 64 ),
+				new THREE.IcosahedronBufferGeometry( 0.2, 3 ),
+				new THREE.TorusBufferGeometry( 0.2, 0.04, 64, 32 )
+			];
 
-			interaction.listen( cylinder );
+			for ( var i = 0; i < 50; i ++ ) {
 
-			cylinder.addEventListener( 'over', function () {
-				cylinder.material.color = purple;
-			});
+				var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
+				var material = new THREE.MeshStandardMaterial({
+					// color: Math.random() * 0xffffff,
+					color: grey,
+					roughness: 0.7,
+					metalness: 0.0
+				});
 
-			cylinder.addEventListener( 'out', function () {
-				cylinder.material.color = grey;
-			});
+				var object = new THREE.Mesh( geometry, material );
 
-			cylinder.addEventListener( 'primary-down', function () {
-				var tween = new TWEEN.Tween( cylinder.rotation )
-					.to( { x: cylinder.userData.on ? 0 : Math.PI / 2 }, 400 )
-					.easing( TWEEN.Easing.Quadratic.Out )
-					.start();
+				object.position.x = Math.random() * 4 - 2;
+				object.position.y = Math.random() * 2;
+				object.position.z = Math.random() * 4 - 2;
 
-				cylinder.userData.on = !cylinder.userData.on;
-			});
+				object.rotation.x = Math.random() * 2 * Math.PI;
+				object.rotation.y = Math.random() * 2 * Math.PI;
+				object.rotation.z = Math.random() * 2 * Math.PI;
 
-			// ----------------
+				object.scale.setScalar( Math.random() + 0.5 );
 
-			// scale a cube
+				object.castShadow = true;
+				object.receiveShadow = true;
 
-			var cubeGeo = new THREE.BoxBufferGeometry(0.5, 0.5, 0.5);
-			var cubeMat = new THREE.MeshPhongMaterial({ color: grey });
-			var cube = new THREE.Mesh( cubeGeo, cubeMat );
-			cube.position.x = 1.2;
-			cube.userData.scale = 1;
-			cube.userData.on = false;
-			scene.add( cube );
+				group.add( object );
 
-			interaction.listen( cube );
+				interaction.listen( object );
 
-			cube.addEventListener( 'over', function () {
-				cube.material.color = red;
-			});
+				object.addEventListener( 'over', over( object ) );
 
-			cube.addEventListener( 'out', function () {
-				cube.material.color = grey;
-			});
+				object.addEventListener( 'out', out( object ) );
 
-			cube.addEventListener( 'primary-down', function () {
-				var tween = new TWEEN.Tween( cube.userData )
-					.to( { scale: cube.userData.on ? 1 : 2 }, 400 )
-					.easing( TWEEN.Easing.Quadratic.Out )
-					.onUpdate(function(){
-						cube.scale.setScalar( cube.userData.scale )
-					})
-					.start();
+			}
 
-				cube.userData.on = !cube.userData.on;
-			});
+			function over( object ) {
+				return function() {
+					object.material.color = green;
+				}
+			}
+
+			function out( object ) {
+				return function() {
+					object.material.color = grey;
+				}
+			}
 
 			// --------------------------------------------------------------
 
 			// VRController
+
+			var tempMatrix = new THREE.Matrix4();
 
 			function primaryDown(e) {
 				var controller = e.target;
 				if ( controller.userData.mesh ) {
 					controller.userData.mesh.material.color = green;
 				}
+
+				//
+
+				var intersection = interaction.intersections[ controller.uuid ];
+
+				if ( intersection ) {
+					tempMatrix.getInverse( controller.matrixWorld );
+
+					var object = intersection.object;
+					object.matrix.premultiply( tempMatrix );
+					object.matrix.decompose( object.position, object.quaternion, object.scale );
+					// object.material.emissive.b = 1;
+					object.material.emissive.g = 0.1;
+					controller.add( object );
+
+					controller.userData.selected = object;
+				}
+
 			}
 
 			function primaryUp(e) {
 				var controller = e.target;
 				if ( controller.userData.mesh ) {
 					controller.userData.mesh.material.color = blue;
+				}
+
+				//
+
+				if ( controller.userData.selected !== undefined ) {
+
+					var object = controller.userData.selected;
+					object.matrix.premultiply( controller.matrixWorld );
+					object.matrix.decompose( object.position, object.quaternion, object.scale );
+					// object.material.emissive.b = 0;
+					object.material.emissive.g = 0;
+					group.add( object );
+
+					controller.userData.selected = undefined;
+
 				}
 			}
 
@@ -352,7 +374,7 @@
 				if ( controls.enabled ) {
 					controls.update();
 				}
-				TWEEN.update();
+				// TWEEN.update();
 				THREE.VRController.update();
 				interaction.update();
 				renderer.render( scene, camera );
