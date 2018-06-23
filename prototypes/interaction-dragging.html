@@ -207,7 +207,7 @@
 
 				var intersection = interaction.intersections[ controller.uuid ];
 
-				if ( intersection ) {
+				if ( intersection && !intersection.object.userData.selected ) {
 					tempMatrix.getInverse( controller.matrixWorld );
 
 					var object = intersection.object;
@@ -218,6 +218,7 @@
 					controller.add( object );
 
 					controller.userData.selected = object;
+					object.userData.selected = true;
 				}
 
 			}
@@ -240,7 +241,7 @@
 					group.add( object );
 
 					controller.userData.selected = undefined;
-
+					object.userData.selected = false;
 				}
 			}
 
