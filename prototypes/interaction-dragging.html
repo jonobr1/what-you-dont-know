@@ -245,6 +245,24 @@
 				}
 			}
 
+			function dDownDown(e){
+				var controller = e.target;
+
+				if ( controller.userData.selected !== undefined ) {
+					var object = controller.userData.selected;
+					object.position.z += 0.1;
+				}
+			}
+
+			function dUpDown(e){
+				var controller = e.target;
+
+				if ( controller.userData.selected !== undefined ) {
+					var object = controller.userData.selected;
+					object.position.z -= 0.1;
+				}
+			}
+
 			var touchIsDown = false;
 			var axes = new THREE.Vector2();
 			var axesOnDown = new THREE.Vector2();
@@ -349,6 +367,9 @@
 
 				controller.addEventListener('touchpad axes changed', touchpadAxesChanged);
 
+				// controller.addEventListener('thumbstick down press began', dDownDown);
+				// controller.addEventListener('thumbstick up press began', dUpDown);
+
 				controller.addEventListener( 'disconnected', function( event ) {
 					// console.log('controller disconnected');
 					if ( controller.parent ) {
@@ -378,6 +399,19 @@
 				// TWEEN.update();
 				THREE.VRController.update();
 				interaction.update();
+
+				for ( c in THREE.VRController.controllers ) {
+					var controller = THREE.VRController.controllers[c];
+					if ( controller && controller.userData.selected && controller.getAxes('thumbstick') ) {
+						var dpad = controller.getAxes('thumbstick').dpad;
+						if ( dpad.down.isPressed ) {
+							controller.userData.selected.position.z += 0.02;
+						} else if ( dpad.up.isPressed ) {
+							controller.userData.selected.position.z -= 0.02;
+						}
+					}
+				}
+
 				renderer.render( scene, camera );
 			}
 
