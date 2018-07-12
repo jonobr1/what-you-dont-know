@@ -33,12 +33,12 @@
 
 		<div id="container"></div>
 
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/build/three.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/vr/WebVR.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r94/build/three.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r94/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r94/examples/js/vr/WebVR.js"></script>
 		<script src="https://cdn.rawgit.com/davidlyons/THREE.VRController/master/VRController.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/Detector.js"></script>
-		<script src="https://cdn.rawgit.com/mrdoob/three.js/r93/examples/js/loaders/FBXLoader.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r94/examples/js/Detector.js"></script>
+		<script src="https://cdn.rawgit.com/mrdoob/three.js/r94/examples/js/loaders/FBXLoader.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.0-0/dat.gui.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/Tween.min.js"></script>
 
@@ -130,17 +130,17 @@
 			var axesOnDown = new THREE.Vector2();
 			var delta = new THREE.Vector2();
 
-			function primaryTouchDown(e){
+			function touchpadTouchDown(e){
 				var controller = e.target;
 				touchIsDown = true;
 				axesOnDown.fromArray( controller.getAxes('touchpad').value );
 			}
 
-			function primaryTouchUp(e){
+			function touchpadTouchUp(e){
 				touchIsDown = false;
 			}
 
-			function axesChanged(e) {
+			function touchpadAxesChanged(e) {
 				var controller = e.target;
 				if ( touchIsDown ) {
 					axes.fromArray( controller.getAxes('touchpad').value );
@@ -220,10 +220,12 @@
 				controller.addEventListener('primary press began', primaryDown);
 				controller.addEventListener('primary press ended', primaryUp);
 
-				controller.addEventListener('primary touch began', primaryTouchDown);
-				controller.addEventListener('primary touch ended', primaryTouchUp);
+				controller.addEventListener('touchpad axes changed', touchpadAxesChanged);
 
-				controller.addEventListener('touchpad axes changed', axesChanged);
+				// if ( controller.style != 'gearvr-touchpad' && controller.style != 'daydream') {
+					controller.addEventListener('touchpad touch began', touchpadTouchDown);
+					controller.addEventListener('touchpad touch ended', touchpadTouchUp);
+				// }
 
 				controller.addEventListener( 'disconnected', function( event ) {
 					// console.log('controller disconnected');
