@@ -296,6 +296,7 @@ Interaction.prototype.update = function() {
 	var list = this.searchables;
 	var raycaster = this.raycaster;
 	var mouse = this.mouse;
+	var camera = this.camera;
 
 	if ( list.length <= 0 ) {
 		return;
@@ -322,21 +323,39 @@ Interaction.prototype.update = function() {
 
 			var intersects = raycaster.intersectObjects( list );
 
-			if ( this.intersections[ controller.uuid ] ) {
-				this.intersections[ controller.uuid ].object.dispatchEvent( {
-					type: 'out',
-					controller: controller
-				} );
-			}
+			if ( !!intersects[ 0 ] ) {
 
-			if ( this.intersections[ controller.uuid ] !== intersects[ 0 ] ) {
-				this.intersections[ controller.uuid ] = intersects[ 0 ];
-				if ( !!intersects[ 0 ] ) {
+				if ( !this.intersections[ controller.uuid ] || this.intersections[ controller.uuid ].object !== intersects[ 0 ].object ) {
+
+					if ( this.intersections[ controller.uuid ] ) {
+						this.intersections[ controller.uuid ].object.dispatchEvent( {
+							type: 'out',
+							controller: controller
+						} );
+						controller.userData.laser.scale.y = Interaction.Laser.scale.y;
+					}
+
+					this.intersections[ controller.uuid ] = intersects[ 0 ];
 					this.intersections[ controller.uuid ].object.dispatchEvent( {
 						type: 'over',
 						controller: controller
 					} );
+					controller.userData.laser.scale.y = intersects[0].distance;
+
 				}
+
+			} else {
+
+				if ( this.intersections[ controller.uuid ] ) {
+					this.intersections[ controller.uuid ].object.dispatchEvent( {
+						type: 'out',
+						controller: controller
+					} );
+					controller.userData.laser.scale.y = Interaction.Laser.scale.y;
+				}
+
+				this.intersections[ controller.uuid ] = null;
+
 			}
 
 		}
@@ -349,26 +368,39 @@ Interaction.prototype.update = function() {
 
 		var intersects = raycaster.intersectObjects( list );
 
-		if ( this.intersections.mouse ) {
-			this.intersections.mouse.object.dispatchEvent( {
-				type: 'out',
-				controller: mouse
-			} );
-		}
+		if ( !!intersects[ 0 ] ) {
 
-		if ( this.intersections.mouse !== intersects[ 0 ] ) {
-			// intersects[ 0 ] can be a null or undefined value.
-			// ...and that's okay!
-			this.intersections.mouse = intersects[ 0 ];
-			if ( !!intersects[ 0 ] ) {
+			if ( !this.intersections.mouse || this.intersections.mouse.object !== intersects[ 0 ].object ) {
+
+				if ( this.intersections.mouse ) {
+					this.intersections.mouse.object.dispatchEvent( {
+						type: 'out',
+						controller: mouse
+					} );
+				}
+				// intersects[ 0 ] can be a null or undefined value.
+				// ...and that's okay!
+				this.intersections.mouse = intersects[ 0 ];
 				this.intersections.mouse.object.dispatchEvent( {
 					type: 'over',
 					controller: mouse
 				} );
 				renderer.domElement.style.cursor = 'pointer';
-			} else {
-				renderer.domElement.style.cursor = 'default';
+
 			}
+
+		} else {
+
+			if ( this.intersections.mouse ) {
+				this.intersections.mouse.object.dispatchEvent( {
+					type: 'out',
+					controller: mouse
+				} );
+			}
+
+			this.intersections.mouse = null;
+			renderer.domElement.style.cursor = 'default';
+
 		}
 
 	}
