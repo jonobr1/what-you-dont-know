@@ -26,6 +26,10 @@ AudioManager.prototype.bars = 10;
 AudioManager.prototype.isPlaying = false;
 AudioManager.prototype.started = false;
 
+/**
+ * @function Add a series of WebAudio nodes to a linear track for convenient
+ * sequencing.
+ */
 AudioManager.prototype.addTrack = function ( name, clips ) {
 
 	var track = new AudioManager.Track( name, clips );
@@ -43,6 +47,10 @@ AudioManager.prototype.addTrack = function ( name, clips ) {
 
 };
 
+/**
+ * @function Initialize the AudioManager to manage playing multiple audio
+ * tracks as loops.
+ */
 AudioManager.prototype.start = function () {
 
 	var ctx = WebAudio.getContext();
@@ -67,6 +75,38 @@ AudioManager.prototype.start = function () {
 
 };
 
+/**
+ * @function Transition from one section of tracks to another.
+ * @param {Number} [index] - The desired index to set the tracks to. If none is
+ * specified then it increments to the next index.
+ */
+AudioManager.prototype.transition = function ( index ) {
+
+	// Seconds of how long one repitition (rep) is.
+	var duration = this.getDuration();
+	var currentTime = WebAudio.getContext().currentTime;
+	// The starting time of the AudioManager relative to the WebAudio context.
+	var startTime = this.startTime;
+	// Elapsed time in seconds.
+	var elapsed = currentTime - startTime;
+	// How many 10 bar clips have been played in the experience so far.
+	var reps = Math.floor( elapsed / duration );
+	// Time to change to next set of tracks.
+	var to = startTime + duration * ( reps + 1 );
+
+	for ( var i = 0; i < this.tracks.length; i++ ) {
+		var track = this.tracks[ i ];
+		track.transition( to, index );
+	}
+
+	return this;
+
+};
+
+/**
+ * @function halt the AudioManager from running. Cuts the volume, but is still
+ * playing in the background in order to keep the timing of the audio tracks.
+ */
 AudioManager.prototype.stop = function () {
 
 	var ctx = WebAudio.getContext();
@@ -78,11 +118,19 @@ AudioManager.prototype.stop = function () {
 
 };
 
+/**
+ * @function returns the amount of seconds for a single repitition (rep).
+ */
 AudioManager.prototype.getDuration = function () {
 	return 4 * this.bars * ( 60 / this.bpm );
 };
 
+/**
+ * @function logic that needs to be updated every frame ( animation tick ).
+ */
 AudioManager.prototype.update = function () {
+
+	// TODO: Need to calculate how much time until the next rep for visualizng.
 
 	for ( var i = 0; i < this.tracks.length; i++ ) {
 		var track = this.tracks[ i ];
@@ -93,6 +141,9 @@ AudioManager.prototype.update = function () {
 
 };
 
+/**
+ * @class A group of WebAudio nodes to be sequenced together.
+ */
 AudioManager.Track = function ( name, clips ) {
 
 	var ctx = WebAudio.getContext();
@@ -107,6 +158,9 @@ AudioManager.Track = function ( name, clips ) {
 
 }
 
+/**
+ * @function Begin playing a node from the track.
+ */
 AudioManager.Track.prototype.start = function ( startTime ) {
 
 	if ( !this.current ) {
@@ -120,6 +174,9 @@ AudioManager.Track.prototype.start = function ( startTime ) {
 
 };
 
+/**
+ * @function Halt playing the current node of the track.
+ */
 AudioManager.Track.prototype.stop = function ( endTime ) {
 
 	if ( !this.current ) {
@@ -133,6 +190,21 @@ AudioManager.Track.prototype.stop = function ( endTime ) {
 
 };
 
+/**
+ * @function Get a specific index {Number} to the current audio node.
+ */
+AudioManager.Track.prototype.select = function ( i ) {
+
+	this.index = i % this.clips.length;
+	this.current = this.clips[ this.index ];
+
+	return this.current;
+
+};
+
+/**
+ * Get the next incremented index {Number} as the audio node.
+ */
 AudioManager.Track.prototype.next = function () {
 
 	this.current = this.clips[ this.index ];
@@ -142,10 +214,20 @@ AudioManager.Track.prototype.next = function () {
 
 };
 
-AudioManager.Track.prototype.transition = function ( time ) {
+/**
+ * @function Convience function to automatically switch from one audio node
+ * to another on a given track.
+ * @param {Seconds} time - The time in seconds to switch tracks.
+ * @param {Number} index - The index of the new audio node to switch to.
+ */
+AudioManager.Track.prototype.transition = function ( time, index ) {
 
 	this.stop( time );
-	this.next();
+	if ( /number/i.test( typeof index ) ) {
+		this.select( index );
+	} else {
+		this.next();
+	}
 	this.start( time );
 
 	return this;
