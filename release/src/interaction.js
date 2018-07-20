@@ -327,6 +327,9 @@ Interaction.prototype.update = function() {
 
 				if ( !this.intersections[ controller.uuid ] || this.intersections[ controller.uuid ].object !== intersects[ 0 ].object ) {
 
+					// Update the intersection object and trigger `out` and `over`
+					// events if available.
+
 					if ( this.intersections[ controller.uuid ] ) {
 						this.intersections[ controller.uuid ].object.dispatchEvent( {
 							type: 'out',
@@ -342,9 +345,18 @@ Interaction.prototype.update = function() {
 					} );
 					controller.userData.laser.scale.y = intersects[0].distance;
 
+				} else {
+
+					// Update the intersection point position,
+					// even though the object hasn't changed.
+
+					this.intersections[ controller.uuid ] = intersects[ 0 ];
+
 				}
 
 			} else {
+
+				// Remove intersection object
 
 				if ( this.intersections[ controller.uuid ] ) {
 					this.intersections[ controller.uuid ].object.dispatchEvent( {
@@ -372,24 +384,36 @@ Interaction.prototype.update = function() {
 
 			if ( !this.intersections.mouse || this.intersections.mouse.object !== intersects[ 0 ].object ) {
 
+				// Update the intersection object and trigger `out` and `over`
+				// events if available.
+
 				if ( this.intersections.mouse ) {
 					this.intersections.mouse.object.dispatchEvent( {
 						type: 'out',
 						controller: mouse
 					} );
 				}
-				// intersects[ 0 ] can be a null or undefined value.
-				// ...and that's okay!
+
 				this.intersections.mouse = intersects[ 0 ];
 				this.intersections.mouse.object.dispatchEvent( {
 					type: 'over',
 					controller: mouse
 				} );
-				renderer.domElement.style.cursor = 'pointer';
+
+			} else {
+
+				// Update the intersection point position,
+				// even though the object hasn't changed.
+
+				this.intersections.mouse = intersects[ 0 ];
 
 			}
 
+			renderer.domElement.style.cursor = 'pointer';
+
 		} else {
+
+			// Remove intersection object
 
 			if ( this.intersections.mouse ) {
 				this.intersections.mouse.object.dispatchEvent( {

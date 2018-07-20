@@ -109,6 +109,7 @@
 					cursor.visible = true;
 					metronome.plate.getWorldPosition( plane.position );
 					scene.add( plane );
+					interaction.ignore( metronome.plate );
 					interaction.listen( plane );
 				} );
 				interaction.addEventListener( 'primary-up', function () {
@@ -119,6 +120,7 @@
 					}
 					cursor.visible = false;
 					scene.remove( plane );
+					interaction.listen( metronome.plate );
 					interaction.ignore( plane );
 				} );
 
@@ -159,7 +161,7 @@
 						var controller = interaction.controllers[ id ];
 						var intersection = interaction.intersections[ id ];
 
-						if ( intersection ) {
+						if ( intersection && intersection.object.uuid === plane.uuid ) {
 							swing = metronome.swing;
 							cursor.position.copy( intersection.point );
 							var angle = Math.atan2( cursor.position.y, cursor.position.x );
