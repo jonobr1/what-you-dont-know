@@ -14,7 +14,6 @@ function AudioManager ( bpm, bars ) {
 	}
 
 	this.tracks = [];
-	this.clips = [];
 
 	this.destination = ctx.createGain();
 	this.master = ctx.createGain();
@@ -45,7 +44,6 @@ AudioManager.prototype.addTrack = function ( name, clips ) {
 	track.node.connect( this.destination );
 
 	this.tracks.push( track );
-	this.clips.concat( clips );
 
 	return track;
 
