@@ -158,9 +158,9 @@ AudioManager.prototype.update = function () {
 
 		var track = this.tracks[ i ];
 
-		if ( this.playing ) {
+		if ( this.isPlaying ) {
 			// Update the track's fft data for visualizing.
-			track.analyser.getByteTimeDomainData( track.analyser.data );	// 0 - 128
+			track.analyser.getByteFrequencyData( track.analyser.data );	// 0 - 255
 		}
 
 		// Update the track's volume.
