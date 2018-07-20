@@ -1,3 +1,7 @@
+/**
+ * @class Manage multiple audio files in the form of "stem" tracks to be
+ * played on top of each other and in specific sequences.
+ */
 function AudioManager ( bpm, bars ) {
 
 	var ctx = WebAudio.getContext();
@@ -16,15 +20,20 @@ function AudioManager ( bpm, bars ) {
 	this.master = ctx.createGain();
 	this.master.connect( ctx.destination );
 
+	this.remainingTimeOfCurrentRep = this.getDuration();
+
 }
 
 AudioManager.drag = 0.125;
+AudioManager.fftSize = 32;
 
 AudioManager.prototype.startTime = null;
 AudioManager.prototype.bpm = 90;
 AudioManager.prototype.bars = 10;
 AudioManager.prototype.isPlaying = false;
 AudioManager.prototype.started = false;
+AudioManager.prototype.remainingTimeOfCurrentRep = 0;
+AudioManager.prototype.elapsedPercentageOfCurrentRep = 0;
 
 /**
  * @function Add a series of WebAudio nodes to a linear track for convenient
@@ -34,11 +43,6 @@ AudioManager.prototype.addTrack = function ( name, clips ) {
 
 	var track = new AudioManager.Track( name, clips );
 	track.node.connect( this.destination );
-
-	for ( var i = 0; i < clips.length; i++ ) {
-		var clip = clips[ i ];
-		clip.connect( track.node );
-	}
 
 	this.tracks.push( track );
 	this.clips.concat( clips );
@@ -76,11 +80,11 @@ AudioManager.prototype.start = function () {
 };
 
 /**
- * @function Transition from one section of tracks to another.
- * @param {Number} [index] - The desired index to set the tracks to. If none is
- * specified then it increments to the next index.
+ * @function Get the time in seconds of when the next repitition will start.
+ * This is relative to the Audio Context's `currentTime` value a.k.a. the
+ * absolute clock time of the application running.
  */
-AudioManager.prototype.transition = function ( index ) {
+AudioManager.prototype.getTimeToNextRep = function() {
 
 	// Seconds of how long one repitition (rep) is.
 	var duration = this.getDuration();
@@ -92,7 +96,18 @@ AudioManager.prototype.transition = function ( index ) {
 	// How many 10 bar clips have been played in the experience so far.
 	var reps = Math.floor( elapsed / duration );
 	// Time to change to next set of tracks.
-	var to = startTime + duration * ( reps + 1 );
+	return startTime + duration * ( reps + 1 );
+
+};
+
+/**
+ * @function Transition from one section of tracks to another.
+ * @param {Number} [index] - The desired index to set the tracks to. If none is
+ * specified then it increments to the next index.
+ */
+AudioManager.prototype.transition = function ( index ) {
+
+	var to = this.getTimeToNextRep();
 
 	for ( var i = 0; i < this.tracks.length; i++ ) {
 		var track = this.tracks[ i ];
@@ -104,7 +119,7 @@ AudioManager.prototype.transition = function ( index ) {
 };
 
 /**
- * @function halt the AudioManager from running. Cuts the volume, but is still
+ * @function Halt the AudioManager from running. Cuts the volume, but is still
  * playing in the background in order to keep the timing of the audio tracks.
  */
 AudioManager.prototype.stop = function () {
@@ -130,12 +145,28 @@ AudioManager.prototype.getDuration = function () {
  */
 AudioManager.prototype.update = function () {
 
-	// TODO: Need to calculate how much time until the next rep for visualizng.
+	// Update the track's time until next repetition.
+	var ctx = WebAudio.getContext();
+	var currentTime = ctx.currentTime;
+	var startTime = this.startTime;
+	var to = this.getTimeToNextRep();
+
+	this.remainingTimeOfCurrentRep = to - currentTime;
+	this.elapsedPercentageOfCurrentRep = 1 - this.remainingTimeOfCurrentRep / this.getDuration();
 
 	for ( var i = 0; i < this.tracks.length; i++ ) {
+
 		var track = this.tracks[ i ];
+
+		if ( this.playing ) {
+			// Update the track's fft data for visualizing.
+			track.analyser.getByteTimeDomainData( track.analyser.data );	// 0 - 128
+		}
+
+		// Update the track's volume.
 		track.node.gain.value += ( track.volume - track.node.gain.value )
 			* AudioManager.drag;
+
 	}
 	return this;
 
@@ -153,10 +184,20 @@ AudioManager.Track = function ( name, clips ) {
 	this.clips = clips;
 
 	this.node = ctx.createGain();
+	this.analyser = ctx.createAnalyser();
+	this.analyser.fftSize = AudioManager.fftSize;
+	this.analyser.data = new Uint8Array( this.analyser.frequencyBinCount );
+	this.node.connect( this.analyser );
+
 	this.volume = 1;
 	this.next();
 
-}
+	for ( var i = 0; i < clips.length; i++ ) {
+		var clip = clips[ i ];
+		clip.connect( this.node );
+	}
+
+};
 
 /**
  * @function Begin playing a node from the track.
@@ -203,7 +244,7 @@ AudioManager.Track.prototype.select = function ( i ) {
 };
 
 /**
- * Get the next incremented index {Number} as the audio node.
+ * @function Get the next incremented index {Number} as the audio node.
  */
 AudioManager.Track.prototype.next = function () {
 
