@@ -112,12 +112,12 @@ var Editor = function () {
 
 		prevTime = time;
 
-		var renderer = scope.resources.get( 'renderer' );
-		if ( renderer ) {
-			renderer.animate( animate );
-		} else {
+		// var renderer = scope.resources.get( 'renderer' );
+		// if ( renderer ) {
+		// 	renderer.animate( animate );
+		// } else {
 			window.requestAnimationFrame( animate );
-		}
+		// }
 
 	}
 
