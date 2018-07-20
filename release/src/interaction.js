@@ -443,6 +443,7 @@ Interaction.prototype.listen = function ( obj ) {
 
 Interaction.prototype.ignore = function ( obj ) {
 	var list = this.searchables;
+	var renderer = this.renderer;
 	var index = list.indexOf( obj );
 	// Reset cursor style
 	renderer.domElement.style.cursor = 'default';
