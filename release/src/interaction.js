@@ -8,6 +8,8 @@ function Interaction ( renderer, camera ) {
 	this.renderer = renderer;
 	this.camera = camera;
 
+	this.enabled = true;
+
 	this.mouse = new THREE.Vector2().copy( Interaction.Offscreen );
 	this.searchables = [];
 	this.intersections = {};
@@ -15,6 +17,10 @@ function Interaction ( renderer, camera ) {
 	this.raycaster = new THREE.Raycaster();
 
 	this.mousedown = function ( event ) {
+
+		if ( !scope.enabled ) {
+			return;
+		}
 
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse;
@@ -31,11 +37,15 @@ function Interaction ( renderer, camera ) {
 		  controller: mouse
 		} );
 
-		return this;
+		return;
 
 	};
 
 	this.touchstart = function ( event ) {
+
+		if ( !scope.enabled ) {
+			return;
+		}
 
 		var mouse = scope.mouse;
 		var rect = renderer.domElement.getBoundingClientRect();
@@ -73,7 +83,7 @@ function Interaction ( renderer, camera ) {
 			isTouch: true
 		} );
 
-		return this;
+		return;
 
 	};
 
@@ -88,7 +98,7 @@ function Interaction ( renderer, camera ) {
 		mouse.x = 2 * mouse.x - 1;
 		mouse.y = - 2 * mouse.y + 1;
 
-		return this;
+		return;
 
 	};
 
@@ -112,11 +122,15 @@ function Interaction ( renderer, camera ) {
 
 		}
 
-		return this;
+		return;
 
 	};
 
 	this.mouseup = function ( event ) {
+
+		if ( !scope.enabled ) {
+			return;
+		}
 
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse;
@@ -133,11 +147,15 @@ function Interaction ( renderer, camera ) {
 		  controller: mouse
 		} );
 
-		return this;
+		return;
 
 	};
 
 	this.touchend = function ( event ) {
+
+		if ( !scope.enabled ) {
+			return;
+		}
 
 		var mouse = scope.mouse;
 		var item = scope.intersections.mouse;
@@ -175,7 +193,7 @@ function Interaction ( renderer, camera ) {
 
 		mouse.copy( Interaction.Offscreen );
 
-		return this;
+		return;
 
 	};
 
@@ -192,59 +210,91 @@ function Interaction ( renderer, camera ) {
 		controller.userData.laser = laser;
 
 		function primaryPressBegan () {
+
+			if ( !scope.enabled ) {
+				return;
+			}
+
 			var item = scope.intersections[ controller.uuid ];
+
 			if ( item ) {
 				item.object.dispatchEvent( {
 					type: 'primary-down',
 					controller: controller
 			  	} );
 			}
+
 			scope.dispatchEvent( {
 			  type: 'primary-down',
 			  controller: controller
 			} );
+
 		}
 
 		function primaryPressEnded () {
+
+			if ( !scope.enabled ) {
+				return;
+			}
+
 			var item = scope.intersections[ controller.uuid ];
+
 			if ( item ) {
 				item.object.dispatchEvent( {
 					type: 'primary-up',
 					controller: controller
 				} );
 			}
+
 			scope.dispatchEvent( {
 			  type: 'primary-up',
 			  controller: controller
 			} );
+
 		}
 
 		function primaryTouchBegan () {
+
+			if ( !scope.enabled ) {
+				return;
+			}
+
 			var item = scope.intersections[ controller.uuid ];
+
 			if ( item ) {
 				item.object.dispatchEvent( {
 					type: 'primary-touchstart',
 					controller: controller
 			  	} );
 			}
+
 			scope.dispatchEvent( {
 			  type: 'primary-touchstart',
 			  controller: controller
 			} );
+
 		}
 
 		function primaryTouchEnded () {
+
+			if ( !scope.enabled ) {
+				return;
+			}
+
 			var item = scope.intersections[ controller.uuid ];
+
 			if ( item ) {
 				item.object.dispatchEvent( {
 					type: 'primary-touchend',
 					controller: controller
 			  	} );
 			}
+
 			scope.dispatchEvent( {
 			  type: 'primary-touchend',
 			  controller: controller
 			} );
+
 		}
 
 		controller.addEventListener( 'primary press began', primaryPressBegan );
@@ -298,7 +348,7 @@ Interaction.prototype.update = function() {
 	var mouse = this.mouse;
 	var camera = this.camera;
 
-	if ( list.length <= 0 ) {
+	if ( list.length <= 0 || !this.enabled ) {
 		return;
 	}
 
@@ -490,6 +540,26 @@ Interaction.prototype.disconnect = function() {
 	renderer.domElement.removeEventListener( 'touchend', this.touchend, false );
 	renderer.domElement.removeEventListener( 'touchcancel', this.touchend, false );
 
+	return this;
+
+};
+
+Interaction.prototype.reset = function() {
+
+	for ( var cid in this.intersections ) {
+
+		var intersection = this.intersections[ cid ];
+
+		if ( intersection ) {
+			intersection.object.dispatchEvent( {
+				type: 'out',
+				controller: this.controllers[ cid ]
+			} );
+		}
+
+	  this.intersections[ cid ] = null;
+
+	}
 	return this;
 
 };
