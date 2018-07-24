@@ -13,6 +13,7 @@ function AudioManager ( bpm, bars ) {
 		this.bars = bars;
 	}
 
+	this.section = 0;
 	this.tracks = [];
 
 	this.destination = ctx.createGain();
@@ -53,17 +54,17 @@ AudioManager.prototype.addTrack = function ( name, clips ) {
  * @function Initialize the AudioManager to manage playing multiple audio
  * tracks as loops.
  */
-AudioManager.prototype.start = function () {
+AudioManager.prototype.start = function ( time ) {
 
 	var ctx = WebAudio.getContext();
 	this.isPlaying = true;
 
 	if ( !this.started ) {
 
-		this.startTime = ctx.currentTime;
+		this.startTime = ctx.currentTime + ( time || 0 );
 
 		for ( var i = 0; i < this.tracks.length; i++ ) {
-			this.tracks[ i ].start();
+			this.tracks[ i ].start( this.startTime );
 		}
 
 		this.destination.connect( this.master );
@@ -138,6 +139,10 @@ AudioManager.prototype.getDuration = function () {
 	return 4 * this.bars * ( 60 / this.bpm );
 };
 
+AudioManager.prototype.getCurrentSection = function () {
+	return this.section;
+};
+
 /**
  * @function logic that needs to be updated every frame ( animation tick ).
  */
@@ -148,13 +153,19 @@ AudioManager.prototype.update = function () {
 	var currentTime = ctx.currentTime;
 	var startTime = this.startTime;
 	var to = this.getTimeToNextRep();
+	var isAboutToSwitch = this.elapsedPercentageOfCurrentRep > 0.999;
 
 	this.remainingTimeOfCurrentRep = to - currentTime;
-	this.elapsedPercentageOfCurrentRep = 1 - this.remainingTimeOfCurrentRep / this.getDuration();
+	this.elapsedPercentageOfCurrentRep = 1
+		- this.remainingTimeOfCurrentRep / this.getDuration();
 
 	for ( var i = 0; i < this.tracks.length; i++ ) {
 
 		var track = this.tracks[ i ];
+
+		if ( isAboutToSwitch && this.section !== track.index ) {
+			this.section = track.index;
+		}
 
 		if ( this.isPlaying ) {
 			// Update the track's fft data for visualizing.
@@ -188,12 +199,13 @@ AudioManager.Track = function ( name, clips ) {
 	this.node.connect( this.analyser );
 
 	this.volume = 1;
-	this.next();
 
 	for ( var i = 0; i < clips.length; i++ ) {
 		var clip = clips[ i ];
 		clip.connect( this.node );
 	}
+
+	this.current = this.clips[ this.index ];
 
 };
 
@@ -246,8 +258,8 @@ AudioManager.Track.prototype.select = function ( i ) {
  */
 AudioManager.Track.prototype.next = function () {
 
-	this.current = this.clips[ this.index ];
 	this.index = ( this.index + 1 ) % this.clips.length;
+	this.current = this.clips[ this.index ];
 
 	return this.current;
 
