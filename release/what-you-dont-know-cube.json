@@ -455,7 +455,7 @@
 				"\tvar pct = manager.elapsedPercentageOfCurrentRep;",
 				"\tvar offset = 0;",
 				"",
-				"\tportion.value = ( 8 * pct + offset ) % 1;",
+				"\tportion.value = pct;",
 				"",
 				"\t",
 				"\t/*",
