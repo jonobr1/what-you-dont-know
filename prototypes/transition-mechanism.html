@@ -92,15 +92,6 @@
 
             "}",
 
-            "float easedLine( in float x, in float axis, in float linewidth ) {",
-
-              "linewidth *= pow( 1.0 + sin( axis * PI ), 2.0 );",
-              "x = pow( easing( x ), 2.0 );",
-
-              "return line( x, axis, linewidth );",
-
-            "}",
-
             "void main() {",
 
               "vec2 uv = vUv;",
@@ -114,9 +105,11 @@
                 "float pos = 1.0 - pow( 1.0 - pow( portion, 1.0 ), 8.0 * pct );",
 
                 "f += line( pct, uv.x, width );",
-                "f += easedLine( pos, uv.y, width );",
+                "f += line( pos, uv.y, width );",
 
               "}",
+
+              "f += line( 1.0, uv.y, width );",
 
               "gl_FragColor = vec4( color.rgb, f * opacity );",
 
