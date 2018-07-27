@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../release/third-party/three.js"></script>
+      <script src="../release/src/interaction.js"></script>
+      <script>
+
+        var Face = function( width, height ) {
+
+          THREE.Mesh.call( this, Face.Geometry, Face.Material.clone() );
+
+          if ( !width ) {
+            width = 10;
+          }
+
+          if ( !height ) {
+            height = width;
+          }
+
+          this.scale.set( width, height, 1 );
+
+        };
+
+        Face.prototype = Object.create( THREE.Mesh.prototype );
+
+        Face.Geometry = new THREE.PlaneBufferGeometry( 1, 1 );
+        Face.Material = new THREE.ShaderMaterial( {
+
+          transparent: true,
+
+          uniforms: {
+            opacity: { type: 'f', value: 1 },
+            portion: { type: 'f', value: 0 },
+            color: { type: 'c', value: new THREE.Color( 0x333333 ) },
+            linewidth: { type: 'f', value: 0.5 }
+          },
+
+          vertexShader: [
+
+            "varying vec2 vUv;",
+
+            "void main() {",
+
+              "vUv = uv;",
+              "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+            "}"
+
+          ].join( '\n' ),
+
+          fragmentShader: [
+
+            "const float PI = 3.141592653589793;",
+            "const float amount = 20.0;",
+
+            "uniform float opacity;",
+            "uniform float portion;",
+            "uniform vec3 color;",
+            "uniform float linewidth;",
+
+            "varying vec2 vUv;",
+
+            "float easing( in float k ) {",
+              "return 0.5 * ( 1.0 - cos( PI * k ) );",
+            "}",
+
+            "float line( in float x, in float axis, in float linewidth ) {",
+
+              "x *= ( 1.0 - linewidth );",
+              "x += linewidth / 2.0;",
+
+              "float t = 1.0 - distance( x, axis );",
+              "t = step( t, 1.0 - linewidth );",
+              "t = 1.0 - t;",
+
+              "return t;",
+
+            "}",
+
+            "float easedLine( in float x, in float axis, in float linewidth ) {",
+
+              "linewidth *= pow( 1.0 + sin( axis * PI ), 2.0 );",
+              "x = pow( easing( x ), 2.0 );",
+
+              "return line( x, axis, linewidth );",
+
+            "}",
+
+            "void main() {",
+
+              "vec2 uv = vUv;",
+              "float width = linewidth * 0.0025;",
+
+              "float f = 0.0;",
+
+              "for ( float i = 0.0; i < amount; i ++ ) {",
+
+                "float pct = i / ( amount - 1.0 );",
+                "float pos = 1.0 - pow( 1.0 - pow( portion, 1.0 ), 8.0 * pct );",
+
+                "f += line( pct, uv.x, width );",
+                "f += easedLine( pos, uv.y, width );",
+
+              "}",
+
+              "gl_FragColor = vec4( color.rgb, f * opacity );",
+
+            "}"
+
+          ].join( '\n' )
+
+        } );
+
+        var renderer = new THREE.WebGLRenderer();
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera( 75 );
+        var face = new Face();
+
+        setup();
+
+        function setup() {
+
+          face.position.z = - 10;
+          scene.add( face );
+
+          renderer.setClearColor( 0xefefef );
+
+          document.body.appendChild( renderer.domElement );
+          window.addEventListener( 'resize', resize, false );
+          resize();
+          renderer.setAnimationLoop( animate );
+
+        }
+
+        function resize() {
+
+          var width = window.innerWidth;
+          var height = window.innerHeight;
+
+          renderer.setSize( width, height );
+
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+
+        }
+
+        function animate( time ) {
+
+          face.material.uniforms.linewidth.value = ( Math.sin( time / 1000 ) + 1 ) / 2;
+
+          if ( face.material.uniforms.portion.value >= 1 ) {
+            face.material.uniforms.portion.value = 0;
+          } else {
+            face.material.uniforms.portion.value += 0.005;
+          }
+
+          renderer.render( scene, camera );
+
+        }
+
+      </script>
+    </div>
+  </body>
+</html>

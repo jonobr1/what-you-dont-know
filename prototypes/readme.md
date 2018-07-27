@@ -23,6 +23,7 @@
 + [Interaction Transforms](./interaction-transforms.html)
 + [Interaction Dragging](./interaction-dragging.html)
 + [Interaction States](./interaction-states.html)
++ [Transition Mechanism](./transition-mechanism.html)
 
 ## Visuals
 
