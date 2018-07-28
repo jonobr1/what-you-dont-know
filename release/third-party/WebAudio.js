@@ -15,6 +15,7 @@ function WebAudio( context ) {
 
 	var currentTime = 0;
 	var loop = false;
+	var loopStart, loopEnd;
 	var playbackRate = 1;
 
 	var paused = true;
@@ -104,6 +105,8 @@ function WebAudio( context ) {
 		source = context.createBufferSource();
 		source.buffer = buffer;
 		source.loop = loop;
+		source.loopStart = loopStart || 0;
+		source.loopEnd = loopEnd || source.duration;
 		source.playbackRate.value = playbackRate;
 		source.start( startTime || 0, currentTime );
 		source.connect( volume );
@@ -202,6 +205,18 @@ function WebAudio( context ) {
 		},
 		set loop( value ) {
 			loop = value;
+		},
+		get loopStart() {
+			return loopStart;
+		},
+		set loopStart( time ) {
+			loopStart = time;
+		},
+		get loopEnd() {
+			return loopEnd;
+		},
+		set loopEnd( time ) {
+			loopEnd = time;
 		},
 		get paused() {
 			return paused;
