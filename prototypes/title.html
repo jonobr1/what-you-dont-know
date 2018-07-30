@@ -52,7 +52,8 @@
                 "vec3 pos = vec3( position );",
                 "vec4 texel = texture2D( map, vUv );",
 
-                "pos.z += texel.r * 0.1;",
+                // "pos.z += smoothstep( 0.0, 0.25, texel.r ) * 0.2;",
+                "pos.z += pow( texel.r, 0.33 ) * 0.1;",
 
                 "gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );",
 
@@ -62,6 +63,8 @@
 
             fragmentShader: [
 
+              "const float PI = 3.141592653589793;",
+
               "uniform sampler2D map;",
 
               "varying vec2 vUv;",
@@ -70,7 +73,12 @@
 
                 "vec4 texel = texture2D( map, vUv );",
 
-                "gl_FragColor = vec4( vec3( vUv.x, 0.0, vUv.y ) * texel.rgb, 1.0 );",
+                "float t = ( vUv.y ) * 0.7 + 0.1;",
+                "vec3 background = vec3( 1.0, t, t );",
+
+                "background.gb += pow( sin( texel.r * PI ), 2.0 ) / 2.0;",
+
+                "gl_FragColor = vec4( background, 1.0 );",
 
               "}"
 
@@ -110,7 +118,7 @@
 
         function animate( time ) {
 
-          // plane.rotation.y += 0.01;
+          plane.rotation.y = Math.PI * 0.125 * Math.sin( time / 500 );
           renderer.render( scene, camera );
 
         }
