@@ -24,7 +24,7 @@
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera( 75 );
 
-        var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 128, true );
+        var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 3, 256, true );
         geometry.rotateZ( - Math.PI / 2 );
 
         var ring = new THREE.Mesh(
@@ -67,10 +67,11 @@
                 "t = vUv.x;",
                 "theta = atan( position.y, position.z );",
                 "index = mod( t + fulcrum, 1.0 );",
-                "offset = twist * ( abs( cos( index * PI ) ) );",
+                // "offset = twist * ( abs( sin( index * PI ) ) );",
+                "offset = twist * sin( index * PI );",
 
                 "x = radius * cos( theta + offset );",
-                "y = radius * sin( theta + offset );",
+                "y = ( twist * radius * 0.2 + radius ) * sin( theta + offset );",
 
                 "vec3 anchor = vec3( length * ( t - 0.5 ), y, x );",
 
@@ -94,7 +95,7 @@
 
               "void main() {",
 
-                "gl_FragColor = vec4( 0.0, 0.0, vUv.y, 1.0 );",
+                "gl_FragColor = vec4( pow( vUv.x, 2.0 ), 0.0, vUv.y, 1.0 );",
 
               "}"
 
@@ -107,8 +108,8 @@
 
         function setup() {
 
-          ring.rotation.x = - Math.PI / 2;
-          ring.position.z = - 250;
+          // ring.rotation.x = - Math.PI / 2;
+          ring.position.z = - 500;
           scene.add( ring );
 
           renderer.setClearColor( 0xefefef );
@@ -138,7 +139,7 @@
           // ring.rotation.x += 0.1;
           // ring.material.uniforms.amplitude.value = 10 * Math.sin( time / 500 );
           // ring.rotation.y += 0.01;
-          ring.material.uniforms.twist.value = 5 * ( Math.sin( time / 500 ) + 1 ) / 2;
+          ring.material.uniforms.twist.value = 9 * ( Math.sin( time / 500 ) + 1 ) / 2;
           ring.material.uniforms.fulcrum.value += 0.01;
           renderer.render( scene, camera );
 

@@ -25,6 +25,7 @@
 + [Interaction States](./interaction-states.html)
 + [Transition Mechanism](./transition-mechanism.html)
 + [Twisted Cylinder](./twisted-cylinder.html)
++ [Title Card](./title.html)
 
 ## Visuals
 

@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../release/third-party/three.js"></script>
+      <script src="../release/src/interaction.js"></script>
+      <script>
+
+        var renderer = new THREE.WebGLRenderer( { antialias: true } );
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera( 75 );
+
+        var image = document.createElement( 'img' );
+        image.onload = function() {
+          if ( plane ) {
+            plane.material.uniforms.map.value.needsUpdate = true;
+          }
+        };
+        image.src = '../assets/textures/title.jpg'
+
+        var plane = new THREE.Mesh(
+          new THREE.PlaneBufferGeometry( 1, 1, 512, 512 ),
+          new THREE.ShaderMaterial( {
+
+            uniforms: {
+              map: { type: 't', value: new THREE.Texture( image ) }
+            },
+
+            vertexShader: [
+
+              "uniform sampler2D map;",
+              "varying vec2 vUv;",
+
+              "void main() {",
+
+                "vUv = uv;",
+
+                "vec3 pos = vec3( position );",
+                "vec4 texel = texture2D( map, vUv );",
+
+                "pos.z += texel.r * 0.1;",
+
+                "gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );",
+
+              "}"
+
+            ].join( '\n' ),
+
+            fragmentShader: [
+
+              "uniform sampler2D map;",
+
+              "varying vec2 vUv;",
+
+              "void main() {",
+
+                "vec4 texel = texture2D( map, vUv );",
+
+                "gl_FragColor = vec4( vec3( vUv.x, 0.0, vUv.y ) * texel.rgb, 1.0 );",
+
+              "}"
+
+            ].join( '\n' )
+
+          } )
+
+        );
+
+        setup();
+
+        function setup() {
+
+          plane.position.z = - 1;
+          scene.add( plane );
+
+          renderer.setClearColor( 0xefefef );
+
+          document.body.appendChild( renderer.domElement );
+          window.addEventListener( 'resize', resize, false );
+          resize();
+          renderer.setAnimationLoop( animate );
+
+        }
+
+        function resize() {
+
+          var width = window.innerWidth;
+          var height = window.innerHeight;
+
+          renderer.setSize( width, height );
+
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+
+        }
+
+        function animate( time ) {
+
+          // plane.rotation.y += 0.01;
+          renderer.render( scene, camera );
+
+        }
+
+      </script>
+    </div>
+  </body>
+</html>
