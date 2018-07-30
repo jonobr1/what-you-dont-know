@@ -24,8 +24,8 @@
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera( 75 );
 
-        var geometry = new THREE.TorusBufferGeometry( 100, 5, 4, 128 );
-        geometry.rotateX( Math.PI / 2 );
+        var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 128, true );
+        geometry.rotateZ( - Math.PI / 2 );
 
         var ring = new THREE.Mesh(
           geometry,
@@ -35,9 +35,9 @@
 
             uniforms: {
               twist: { type: 'f', value: 0 }, // In radians
-              radius: { type: 'f', value: 100 },
-              phi: { type: 'f', value: 5.0 },
-              amplitude: { type: 'f', value: 10 }
+              length: { type: 'f', value: 1000 },
+              radius: { type: 'f', value: 50 },
+              fulcrum: { type: 'f', value: 0 }
             },
 
             vertexShader: [
@@ -45,44 +45,44 @@
               "const float PI = 3.141592653589793;",
 
               "uniform float twist;",
+              "uniform float length;",
               "uniform float radius;",
-              "uniform float phi;",
-              "uniform float amplitude;",
+              "uniform float fulcrum;",
 
               "varying vec2 vUv;",
 
+              "float t;",
+              "float index;",
+              "float theta;",
+              "float offset;",
+
+              "float x;",
+              "float y;",
+              "float z;",
+
               "void main() {",
 
-                "vUv = uv;",
+                "vUv = vec2( uv.y, ( position.y / 0.2 ) + 0.5 );",
 
-                "float theta = atan( position.z, position.x );",
-                "vec3 spine = radius * vec3( cos( theta ), 0.0, sin( theta ) );",
+                "t = vUv.x;",
+                "theta = atan( position.y, position.z );",
+                "index = mod( t + fulcrum, 1.0 );",
+                "offset = twist * ( abs( cos( index * PI ) ) );",
 
-                "float dp = dot( position, spine );",
-                "float no = length( position ) * length( spine );",
+                "x = radius * cos( theta + offset );",
+                "y = radius * sin( theta + offset );",
 
-                "float angle = acos( dp / no );",
-                "float magnitude = distance( position, spine );",
+                "vec3 anchor = vec3( length * ( t - 0.5 ), y, x );",
 
-                "float sa = sin( twist * PI );",
-                "float ca = cos( twist * PI );",
+                "theta = 2.0 * PI * t;",
 
-                "mat3 rotation = mat3( 1.0 );",
+                "x = length * 0.5 * cos( theta );",
+                "y = radius * 2.0 * ( vUv.y - 0.5 );",
+                "z = length * 0.5 * sin( theta );",
 
-                "rotation[ 0 ][ 0 ] = ca * rotation[ 0 ][ 0 ] + sa * rotation[ 0 ][ 1 ];",
-                "rotation[ 1 ][ 0 ] = ca * rotation[ 1 ][ 0 ] + sa * rotation[ 1 ][ 1 ];",
-                "rotation[ 2 ][ 0 ] = ca * rotation[ 2 ][ 0 ] + sa * rotation[ 2 ][ 1 ];",
+                "vec3 pos = vec3( x, y, z );",
 
-                "rotation[ 0 ][ 1 ] = - sa * rotation[ 0 ][ 0 ] + ca * rotation[ 0 ][ 1 ];",
-                "rotation[ 1 ][ 1 ] = - sa * rotation[ 1 ][ 0 ] + ca * rotation[ 1 ][ 1 ];",
-                "rotation[ 2 ][ 1 ] = - sa * rotation[ 2 ][ 0 ] + ca * rotation[ 2 ][ 1 ];",
-
-                "vec3 up = normalize( position - spine ) * rotation;",
-                "vec3 pos = spine + up * magnitude;",
-
-                // "pos.y += amplitude * sin( theta * phi );",
-
-                "gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );",
+                "gl_Position = projectionMatrix * modelViewMatrix * vec4( anchor, 1.0 );",
 
               "}"
 
@@ -94,7 +94,7 @@
 
               "void main() {",
 
-                "gl_FragColor = vec4( vUv.x, 0.0, vUv.y, 1.0 );",
+                "gl_FragColor = vec4( 0.0, 0.0, vUv.y, 1.0 );",
 
               "}"
 
@@ -135,10 +135,11 @@
         function animate( time ) {
 
 
-          // ring.rotation.x += 0.01;
+          // ring.rotation.x += 0.1;
           // ring.material.uniforms.amplitude.value = 10 * Math.sin( time / 500 );
           // ring.rotation.y += 0.01;
-          ring.material.uniforms.twist.value += 0.01;
+          ring.material.uniforms.twist.value = 5 * ( Math.sin( time / 500 ) + 1 ) / 2;
+          ring.material.uniforms.fulcrum.value += 0.01;
           renderer.render( scene, camera );
 
         }
