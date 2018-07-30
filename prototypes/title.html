@@ -74,7 +74,9 @@
                 "vec4 texel = texture2D( map, vUv );",
 
                 "float t = ( vUv.y ) * 0.7 + 0.1;",
-                "vec3 background = vec3( 1.0, t, t );",
+                "float u = ( vUv.x ) * 2.0 + 1.0;",
+                "float b = clamp( t + ( 1.0 - t ) * u * 0.1, 0.0, 1.0 );",
+                "vec3 background = vec3( 1.0, t, b );",
 
                 "background.gb += pow( sin( texel.r * PI ), 2.0 ) / 2.0;",
 
