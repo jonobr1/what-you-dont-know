@@ -17,14 +17,16 @@
   <body>
     <div class="scripts">
       <script src="../release/third-party/three.js"></script>
+      <script src="../release/third-party/OrbitControls.js"></script>
       <script src="../release/src/interaction.js"></script>
       <script>
 
         var renderer = new THREE.WebGLRenderer( { antialias: true } );
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera( 75 );
+        var controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-        var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 3, 256, true );
+        var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 1024, true );
         geometry.rotateZ( - Math.PI / 2 );
 
         var ring = new THREE.Mesh(
@@ -34,10 +36,10 @@
             // wireframe: true,
 
             uniforms: {
-              twist: { type: 'f', value: 0 }, // In radians
-              length: { type: 'f', value: 1000 },
-              radius: { type: 'f', value: 50 },
-              fulcrum: { type: 'f', value: 0 }
+              twist: { type: 'f', value: 32 }, // In radians
+              size: { type: 'f', value: 500 },
+              thickness: { type: 'f', value: 1.5 },
+              offset: { type: 'f', value: 0 }
             },
 
             vertexShader: [
@@ -45,16 +47,15 @@
               "const float PI = 3.141592653589793;",
 
               "uniform float twist;",
-              "uniform float length;",
-              "uniform float radius;",
-              "uniform float fulcrum;",
+              "uniform float size;",
+              "uniform float thickness;",
+              "uniform float offset;",
 
               "varying vec2 vUv;",
 
               "float t;",
               "float index;",
               "float theta;",
-              "float offset;",
 
               "float x;",
               "float y;",
@@ -66,24 +67,19 @@
 
                 "t = vUv.x;",
                 "theta = atan( position.y, position.z );",
-                "index = mod( t + fulcrum, 1.0 );",
-                // "offset = twist * ( abs( sin( index * PI ) ) );",
-                "offset = twist * sin( index * PI );",
+                "index = mod( t + offset, 1.0 ) - 0.5;",
+                "index = twist * abs( index );",
 
-                "x = radius * cos( theta + offset );",
-                "y = ( twist * radius * 0.2 + radius ) * sin( theta + offset );",
+                "y = thickness * sin( theta + index ) * 0.1;",
+                "z = thickness * cos( theta + index ) * 0.1 + 1.0;",
 
-                "vec3 anchor = vec3( length * ( t - 0.5 ), y, x );",
-
-                "theta = 2.0 * PI * t;",
-
-                "x = length * 0.5 * cos( theta );",
-                "y = radius * 2.0 * ( vUv.y - 0.5 );",
-                "z = length * 0.5 * sin( theta );",
+                "x = sin( t * PI * 2.0 ) * size * z;",
+                "y *= size;",
+                "z = cos( t * PI * 2.0 ) * size * z;",
 
                 "vec3 pos = vec3( x, y, z );",
 
-                "gl_Position = projectionMatrix * modelViewMatrix * vec4( anchor, 1.0 );",
+                "gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );",
 
               "}"
 
@@ -108,9 +104,10 @@
 
         function setup() {
 
-          // ring.rotation.x = - Math.PI / 2;
-          ring.position.z = - 500;
           scene.add( ring );
+          camera.far = 10000;
+          camera.position.y = 500;
+          camera.rotation.x = - Math.PI / 2;
 
           renderer.setClearColor( 0xefefef );
 
@@ -136,11 +133,10 @@
         function animate( time ) {
 
 
-          // ring.rotation.x += 0.1;
-          // ring.material.uniforms.amplitude.value = 10 * Math.sin( time / 500 );
-          // ring.rotation.y += 0.01;
-          ring.material.uniforms.twist.value = 9 * ( Math.sin( time / 500 ) + 1 ) / 2;
-          ring.material.uniforms.fulcrum.value += 0.01;
+          // ring.material.uniforms.twist.value = 50 * ( Math.sin( time / 1000 ) + 1 ) / 2;
+          // ring.material.uniforms.thickness.value = Math.sin( time / 500 ) + 1;
+          ring.material.uniforms.offset.value -= 0.001;
+
           renderer.render( scene, camera );
 
         }
