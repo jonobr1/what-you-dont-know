@@ -18,6 +18,7 @@
     <div class="scripts">
       <script src="../release/third-party/three.js"></script>
       <script src="../release/third-party/OrbitControls.js"></script>
+      <script src="../release/third-party/WebVR.js"></script>
       <script src="../release/src/interaction.js"></script>
       <script>
 
@@ -26,7 +27,7 @@
         var camera = new THREE.PerspectiveCamera( 75 );
         var controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-        var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 1024, true );
+        var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 512 );
         geometry.rotateZ( - Math.PI / 2 );
 
         var ring = new THREE.Mesh(
@@ -36,10 +37,19 @@
             // wireframe: true,
 
             uniforms: {
-              twist: { type: 'f', value: 32 }, // In radians
+
+              twist: { type: 'f', value: 0 }, // Applied to radians
+
               size: { type: 'f', value: 500 },
               thickness: { type: 'f', value: 1.5 },
-              offset: { type: 'f', value: 0 }
+              offset: { type: 'f', value: 0 },
+
+              startAngle: { type: 'f', value: 0 },
+              endAngle: { type: 'f', value: Math.PI * 2 },
+
+              phi: { type: 'f', value: 12 },
+              amplitude: { type: 'f', value: 75 }
+
             },
 
             vertexShader: [
@@ -47,13 +57,21 @@
               "const float PI = 3.141592653589793;",
 
               "uniform float twist;",
+
               "uniform float size;",
               "uniform float thickness;",
               "uniform float offset;",
 
+              "uniform float startAngle;",
+              "uniform float endAngle;",
+
+              "uniform float phi;",
+              "uniform float amplitude;",
+
               "varying vec2 vUv;",
 
               "float t;",
+              "float angle;",
               "float index;",
               "float theta;",
 
@@ -63,19 +81,21 @@
 
               "void main() {",
 
-                "vUv = vec2( uv.y, ( position.y / 0.2 ) + 0.5 );",
+                "vUv = vec2( position.x + 0.5, ( position.y / 0.2 ) + 0.5 );",
 
                 "t = vUv.x;",
-                "theta = atan( position.y, position.z );",
+                "angle = atan( position.y, position.z );",
                 "index = mod( t + offset, 1.0 ) - 0.5;",
                 "index = twist * abs( index );",
 
-                "y = thickness * sin( theta + index ) * 0.1;",
-                "z = thickness * cos( theta + index ) * 0.1 + 1.0;",
+                "y = thickness * sin( angle + index ) * 0.1;",
+                "z = thickness * cos( angle + index ) * 0.1 + 1.0;",
 
-                "x = sin( t * PI * 2.0 ) * size * z;",
-                "y *= size;",
-                "z = cos( t * PI * 2.0 ) * size * z;",
+                "theta = t * ( endAngle - startAngle ) + startAngle;",
+
+                "x = size * sin( theta ) * z;",
+                "y = size * y + amplitude * sin( ( t + offset ) * PI * phi );",
+                "z = size * cos( theta ) * z;",
 
                 "vec3 pos = vec3( x, y, z );",
 
@@ -107,13 +127,17 @@
           scene.add( ring );
           camera.far = 10000;
           camera.position.y = 500;
-          camera.rotation.x = - Math.PI / 2;
 
           renderer.setClearColor( 0xefefef );
 
           document.body.appendChild( renderer.domElement );
+          document.body.appendChild( WEBVR.createButton( renderer ) );
+
           window.addEventListener( 'resize', resize, false );
           resize();
+
+          window.addEventListener( 'vrdisplaypresentchange', presentChange, false );
+
           renderer.setAnimationLoop( animate );
 
         }
@@ -130,12 +154,24 @@
 
         }
 
+        function presentChange ( event ) {
+
+          camera.position.set( 0, 0, 0 );
+          camera.quaternion.set( 0, 0, 0, 0 );
+
+          var isPresenting = event.display.isPresenting;
+          renderer.vr.enabled = isPresenting;
+          controls.enabled = !isPresenting;
+
+        }
+
         function animate( time ) {
 
+          ring.rotation.y += 0.01;
 
-          // ring.material.uniforms.twist.value = 50 * ( Math.sin( time / 1000 ) + 1 ) / 2;
+          ring.material.uniforms.twist.value = 25 * ( Math.sin( time / 1000 ) + 1 ) / 2;
           // ring.material.uniforms.thickness.value = Math.sin( time / 500 ) + 1;
-          ring.material.uniforms.offset.value -= 0.001;
+          // ring.material.uniforms.offset.value -= 0.001;
 
           renderer.render( scene, camera );
 
