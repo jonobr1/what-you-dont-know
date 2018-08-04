@@ -1,7 +1,8 @@
 {
 	"config": {},
 	"libraries": [
-		"../prototypes/js/three.js"
+		"../prototypes/js/three.js",
+		"../prototypes/js/WebVR.js"
 	],
 	"includes": [
 		[
@@ -15,7 +16,9 @@
 				"renderer.shadowMap.enabled = true;",
 				"renderer.gammaInput = true;",
 				"renderer.gammaOutput = true;",
+				"renderer.vr.enabled = true;",
 				"dom.appendChild( renderer.domElement );",
+				"dom.appendChild( WEBVR.createButton( renderer ) );",
 				"",
 				"window.addEventListener( 'resize', function () {",
 				"\t",
@@ -182,9 +185,15 @@
 		[
 			"Orbit Camera",
 			[
+				"var scene = resources.get( 'scene' );",
+				"",
+				"var dolly = new THREE.Camera();",
+				"scene.add( dolly );",
+				"",
 				"var camera = resources.get( 'camera' );",
-				"var target = new THREE.Vector3( 0, 2.0, 0 );",
-				"var distance = 6;",
+				"dolly.add( camera );",
+				"",
+				"var target = new THREE.Vector3( 0, 1, 0 );",
 				"",
 				"function start( progress ){}",
 				"",
@@ -192,10 +201,10 @@
 				"",
 				"function update( progress ){",
 				"\t",
-				"\tcamera.position.y = 2.0;",
-				"\tcamera.position.x = Math.cos( progress * Math.PI * 2.0 ) * distance;",
-				"\tcamera.position.z = Math.sin( progress * Math.PI * 2.0 ) * distance;",
-				"\tcamera.lookAt( target );",
+				"\tdolly.position.x = Math.cos( progress * Math.PI * 2.0 ) * 6;",
+				"\tdolly.position.y = 1.0;",
+				"\tdolly.position.z = Math.sin( progress * Math.PI * 2.0 ) * 6;",
+				"\tdolly.lookAt( target );",
 				"",
 				"}"
 			]
