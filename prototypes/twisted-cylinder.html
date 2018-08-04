@@ -134,14 +134,13 @@
           // camera.rotation.x = - Math.PI / 2;
 
           renderer.setClearColor( 0xefefef );
+          renderer.vr.enabled = true;
 
           document.body.appendChild( renderer.domElement );
           document.body.appendChild( WEBVR.createButton( renderer ) );
 
           window.addEventListener( 'resize', resize, false );
           resize();
-
-          window.addEventListener( 'vrdisplaypresentchange', presentChange, false );
 
           gui = new dat.GUI();
           for ( var name in ring.material.uniforms ) {
@@ -164,17 +163,6 @@
 
           camera.aspect = width / height;
           camera.updateProjectionMatrix();
-
-        }
-
-        function presentChange ( event ) {
-
-          camera.position.set( 0, 0, 0 );
-          camera.quaternion.set( 0, 0, 0, 0 );
-
-          var isPresenting = event.display.isPresenting;
-          renderer.vr.enabled = isPresenting;
-          // controls.enabled = !isPresenting;
 
         }
 
