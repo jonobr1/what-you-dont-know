@@ -34,95 +34,105 @@
         var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 512 );
         geometry.rotateZ( - Math.PI / 2 );
 
-        var ring = new THREE.Mesh(
-          geometry,
-          new THREE.ShaderMaterial( {
+        var material = new THREE.MeshStandardMaterial( {
+          color: 'red'
+        } );
 
-            // wireframe: true,
+        material.onBeforeCompile = function ( shader ) {
 
-            uniforms: {
+          var uniforms = {
 
-              twist: { type: 'f', value: 0 }, // Applied to radians
+            twist: { type: 'f', value: 0 }, // Applied to radians
 
-              size: { type: 'f', value: 500 },
-              thickness: { type: 'f', value: 1.5 },
-              offset: { type: 'f', value: 0 },
+            size: { type: 'f', value: 500 },
+            thickness: { type: 'f', value: 1.5 },
+            offset: { type: 'f', value: 0 },
 
-              startAngle: { type: 'f', value: 0 },
-              endAngle: { type: 'f', value: Math.PI * 2 },
+            startAngle: { type: 'f', value: 0 },
+            endAngle: { type: 'f', value: Math.PI * 2 },
 
-              phi: { type: 'f', value: 8 },
-              amplitude: { type: 'f', value: 0 }
+            phi: { type: 'f', value: 8 },
+            amplitude: { type: 'f', value: 0 }
 
-            },
+          };
 
-            vertexShader: [
+          for ( var name in uniforms ) {
 
-              "const float PI = 3.141592653589793;",
+            shader.uniforms[ name ] = uniforms[ name ];
 
-              "uniform float twist;",
+          }
 
-              "uniform float size;",
-              "uniform float thickness;",
-              "uniform float offset;",
+          var vertexDefines = [
 
-              "uniform float startAngle;",
-              "uniform float endAngle;",
+            "const float PI = 3.141592653589793;",
 
-              "uniform float phi;",
-              "uniform float amplitude;",
+            "uniform float twist;",
 
-              "varying vec2 vUv;",
+            "uniform float size;",
+            "uniform float thickness;",
+            "uniform float offset;",
 
-              "float t;",
-              "float angle;",
-              "float index;",
-              "float theta;",
+            "uniform float startAngle;",
+            "uniform float endAngle;",
 
-              "float x;",
-              "float y;",
-              "float z;",
+            "uniform float phi;",
+            "uniform float amplitude;",
 
-              "void main() {",
+            "vec2 vUv;",
 
-                "vUv = vec2( position.x + 0.5, ( position.y / 0.2 ) + 0.5 );",
+            "float t;",
+            "float angle;",
+            "float index;",
+            "float theta;",
 
-                "t = vUv.x;",
-                "angle = atan( position.y, position.z );",
-                "index = mod( t + offset, 1.0 ) - 0.5;",
-                "index = twist * abs( index );",
+            "float x;",
+            "float y;",
+            "float z;",
+            ""
 
-                "y = thickness * sin( angle + index ) * 0.1;",
-                "z = thickness * cos( angle + index ) * 0.1 + 1.0;",
+          ].join( '\n' );
 
-                "theta = t * ( endAngle - startAngle ) + startAngle;",
+          var vertexMain = [
 
-                "x = size * sin( theta ) * z;",
-                "y = size * y + amplitude * sin( ( t + offset ) * PI * phi );",
-                "z = size * cos( theta ) * z;",
+            "vUv = vec2( position.x + 0.5, ( position.y / 0.2 ) + 0.5 );",
 
-                "vec3 pos = vec3( x, y, z );",
+            "t = vUv.x;",
+            "angle = atan( position.y, position.z );",
+            "index = mod( t + offset, 1.0 ) - 0.5;",
+            "index = twist * abs( index );",
 
-                "gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );",
+            "y = thickness * sin( angle + index ) * 0.1;",
+            "z = thickness * cos( angle + index ) * 0.1 + 1.0;",
 
-              "}"
+            "theta = t * ( endAngle - startAngle ) + startAngle;",
 
-            ].join( '\n' ),
+            "x = size * sin( theta ) * z;",
+            "y = size * y + amplitude * sin( ( t + offset ) * PI * phi );",
+            "z = size * cos( theta ) * z;",
 
-            fragmentShader: [
+            "vec3 transformed = vec3( x, y, z );",
+            "vNormal *= normalize( transformed );",
 
-              "varying vec2 vUv;",
+          ].join( '\n' );
 
-              "void main() {",
+          shader.vertexShader = vertexDefines + shader.vertexShader;
+          shader.vertexShader = shader.vertexShader.replace(
+            '#include <begin_vertex>',
+            vertexMain
+          );
 
-                "gl_FragColor = vec4( pow( vUv.x, 2.0 ), 0.0, vUv.y, 1.0 );",
+          ring.userData.shader = shader;
 
-              "}"
+          for ( var name in uniforms ) {
 
-            ].join( '\n' )
+            var property = shader.uniforms[ name ];
+            gui.add( property, 'value' ).name( name ).step( 0.1 );
 
-          } )
-        );
+          }
+
+        };
+
+        var ring = new THREE.Mesh( geometry, material );
 
         setup();
 
@@ -138,6 +148,15 @@
           // group.position.y = 1000;
           // group.rotation.x = - Math.PI / 2;
 
+          var ambient = new THREE.HemisphereLight( 0xFEFCFF, 0xB0ADAA, 0.9 );
+          scene.add( ambient );
+
+          var light = new THREE.DirectionalLight( 0xFFFFFF, 0.35 );
+          light.position.set( 2.5, 5.0, 2.5 );
+          light.castShadow = true;
+          light.shadow.radius = 10;
+          scene.add( light );
+
           renderer.setClearColor( 0xefefef );
           renderer.vr.enabled = true;
 
@@ -148,12 +167,6 @@
           resize();
 
           gui = new dat.GUI();
-          for ( var name in ring.material.uniforms ) {
-
-            var property = ring.material.uniforms[ name ];
-            gui.add( property, 'value' ).name( name ).step( 0.1 );
-
-          }
 
           renderer.setAnimationLoop( animate );
 
@@ -172,6 +185,10 @@
         }
 
         function animate( time ) {
+
+          if ( ring.userData.shader ) {
+            ring.userData.shader.uniforms.offset.value += 0.001;
+          }
 
           renderer.render( scene, camera );
 
