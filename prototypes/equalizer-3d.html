@@ -96,7 +96,7 @@
 
 			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .01, 100000 );
 			// camera.position.y = 1.6;
-			
+
 			var camGroup = new THREE.Group();
 			// camGroup.position.z = 3;
 			camGroup.position.set( 0, 1.6, 3 );
@@ -301,7 +301,7 @@
 			var avg = document.querySelector('#avg');
 			var beatScale = document.querySelector('#beat-scale');
 
-			renderer.animate( loop );
+			renderer.setAnimationLoop( loop );
 
 			function loop() {
 				// TWEEN.update();

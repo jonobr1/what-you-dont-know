@@ -68,7 +68,7 @@
 
 			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .1, 100000 );
 			// camera.position.y = 1.6;
-			
+
 			var camGroup = new THREE.Group();
 			// camGroup.position.z = 3;
 			camGroup.position.set( 0, 0, 3 );
@@ -169,9 +169,9 @@
 
 				axes.fromArray( controller.getAxes('touchpad').value );
 				axes.y *= -1;
-				
+
 				var angle = axes.angle();
-				
+
 				for ( var i = 0; i < rings.length; i++ ) {
 					var ring = rings[i];
 					var minAngle = i / numSegments * Math.PI * 2;
@@ -256,7 +256,7 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 
-			renderer.animate( loop );
+			renderer.setAnimationLoop( loop );
 
 			function loop() {
 				// TWEEN.update();
