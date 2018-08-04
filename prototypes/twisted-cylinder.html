@@ -20,7 +20,10 @@
       <script src="../release/third-party/OrbitControls.js"></script>
       <script src="../release/third-party/WebVR.js"></script>
       <script src="../release/src/interaction.js"></script>
+      <script src="./js/dat.gui.min.js"></script>
       <script>
+
+        var gui;
 
         var renderer = new THREE.WebGLRenderer( { antialias: true } );
         var scene = new THREE.Scene();
@@ -47,8 +50,8 @@
               startAngle: { type: 'f', value: 0 },
               endAngle: { type: 'f', value: Math.PI * 2 },
 
-              phi: { type: 'f', value: 12 },
-              amplitude: { type: 'f', value: 75 }
+              phi: { type: 'f', value: 8 },
+              amplitude: { type: 'f', value: 0 }
 
             },
 
@@ -126,7 +129,9 @@
 
           scene.add( ring );
           camera.far = 10000;
-          camera.position.y = 500;
+
+          camera.position.y = 1000;
+          camera.rotation.x = - Math.PI / 2;
 
           renderer.setClearColor( 0xefefef );
 
@@ -137,6 +142,14 @@
           resize();
 
           window.addEventListener( 'vrdisplaypresentchange', presentChange, false );
+
+          gui = new dat.GUI();
+          for ( var name in ring.material.uniforms ) {
+
+            var property = ring.material.uniforms[ name ];
+            gui.add( property, 'value' ).name( name ).step( 0.1 );
+
+          }
 
           renderer.setAnimationLoop( animate );
 
@@ -166,12 +179,6 @@
         }
 
         function animate( time ) {
-
-          ring.rotation.y += 0.01;
-
-          ring.material.uniforms.twist.value = 25 * ( Math.sin( time / 1000 ) + 1 ) / 2;
-          // ring.material.uniforms.thickness.value = Math.sin( time / 500 ) + 1;
-          // ring.material.uniforms.offset.value -= 0.001;
 
           renderer.render( scene, camera );
 
