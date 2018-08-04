@@ -191,7 +191,7 @@
 				"var scene = resources.get( 'scene' );",
 				"",
 				"var dolly = new THREE.Camera();",
-				"dolly.position.set( 0, 1, 5 );",
+				"dolly.position.set( 0, 1, 6 );",
 				"scene.add( dolly );",
 				"",
 				"var camera = resources.get( 'camera' );",
