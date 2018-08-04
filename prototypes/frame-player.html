@@ -66,7 +66,9 @@
           document.body.appendChild( button );
 
           timeline.compile( resources, player );
-          animate();
+
+          var renderer = resources.get( 'renderer' );
+          renderer.setAnimationLoop( animate );
 
         } );
 
@@ -75,18 +77,12 @@
       //
 
       var prevTime = 0;
+
       function animate( time ) {
 
         player.tick( time - prevTime );
         timeline.update( player.currentTime );
         prevTime = time;
-
-        var renderer = resources.get( 'renderer' );
-        if ( renderer ) {
-          renderer.animate( animate );
-        } else {
-          window.requestAnimationFrame( animate );
-        }
 
       }
 
