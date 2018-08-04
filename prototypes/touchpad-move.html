@@ -68,7 +68,7 @@
 
 			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .1, 100000 );
 			// camera.position.y = 1.6;
-			
+
 			var camGroup = new THREE.Group();
 			// camGroup.position.z = 3;
 			camGroup.position.set( 0, 0, 3 );
@@ -214,7 +214,7 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 
-			renderer.animate( loop );
+			renderer.setAnimationLoop( loop );
 
 			function loop() {
 				// TWEEN.update();
