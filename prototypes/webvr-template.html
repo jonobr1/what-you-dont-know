@@ -42,6 +42,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.0-0/dat.gui.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/Tween.min.js"></script>
 
+		<script src="../release/src/interaction.js"></script>
+
 		<script>
 
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -99,10 +101,35 @@
 
 			// --------------------------------------------------------------
 
+			var interaction = new Interaction( renderer, camera );
+			interaction.connect();
+
 			var sphereGeo = new THREE.SphereBufferGeometry(0.5, 32, 32);
 			var sphereMat = new THREE.MeshNormalMaterial();
 			var sphere = new THREE.Mesh( sphereGeo, sphereMat );
 			scene.add( sphere );
+
+			interaction.listen( sphere );
+
+			sphere.addEventListener( 'over', function () {
+				sphere.scale.setScalar( 1.1 );
+			});
+
+			sphere.addEventListener( 'out', function () {
+				sphere.scale.setScalar( 1 );
+			});
+
+			sphere.addEventListener( 'primary-down', function () {
+				// console.log('sphere primary down');
+			});
+
+			// interaction.addEventListener( 'primary-down', function () {
+			// 	sphere.scale.setScalar( 1.1 );
+			// });
+
+			// interaction.addEventListener( 'primary-up', function () {
+			// 	sphere.scale.setScalar( 1 );
+			// });
 
 			// --------------------------------------------------------------
 
@@ -156,66 +183,39 @@
 
 				// console.log('controller connected, dof: ' + controller.dof);
 
-				controller.standingMatrix = renderer.vr.getStandingMatrix();
+				// controller.standingMatrix = renderer.vr.getStandingMatrix();
 				// controller.head = camera;
 
-				//
+				switch ( controller.style ) {
 
-				// if ( controller.dof >= 3 ) {
+					case 'daydream':
+						fbxLoader.load( '../assets/models/daydream-controller/daydream.fbx', function ( fbx ) {
+							var daydream = fbx.children[0];
+							controller.add( daydream );
 
-					var laserRadius = 0.001;
-					var laserLength = 1;
-					var laserGeo = new THREE.CylinderBufferGeometry( laserRadius, laserRadius, laserLength, 8, 1, true );
-					// set origin to bottom side for scale.y
-					laserGeo.applyMatrix( new THREE.Matrix4().makeTranslation( 0, laserLength/2, 0 ) );
-					var laserMat = new THREE.MeshBasicMaterial({ color: blue });
+							var pointPose = new THREE.Group();
+							pointPose.position.z = -0.053;
+							daydream.add( pointPose );
+							pointPose.add( controller.userData.laser );
+						});
+						break;
 
-					var laser = new THREE.Mesh( laserGeo, laserMat );
-					laser.rotation.x = - Math.PI / 2;
-					laser.userData.defaultLength = 6;
-					laser.scale.y = laser.userData.defaultLength;
+					case 'oculus-go':
+						fbxLoader.load('../assets/models/oculus-go/pacific_lp.fbx', function( fbx ) {
+							var goController = fbx.children[0];
+							controller.add( goController );
+						});
+						break;
 
-					laser.userData.length = new THREE.Vector3();
+					default:
+						var handGeo = new THREE.BoxBufferGeometry( 0.08, 0.08, 0.08 );
+						var handMat = new THREE.MeshPhongMaterial({ color: blue });
+						var handMesh = new THREE.Mesh( handGeo, handMat );
+						controller.userData.mesh = handMesh;
+						controller.add( handMesh );
+						break;
 
-					controller.add( laser );
-					controller.userData.laser = laser;
-
-					//
-
-					switch ( controller.style ) {
-
-						case 'daydream':
-							fbxLoader.load( '../assets/models/daydream-controller/daydream.fbx', function ( fbx ) {
-								var daydream = fbx.children[0];
-								controller.add( daydream );
-
-								var pointPose = new THREE.Group();
-								pointPose.position.z = -0.053;
-								daydream.add( pointPose );
-								pointPose.add( controller.userData.laser );
-							});
-							break;
-
-						case 'oculus-go':
-							fbxLoader.load('../assets/models/oculus-go/pacific_lp.fbx', function( fbx ) {
-								var goController = fbx.children[0];
-								controller.add( goController );
-							});
-							break;
-
-						default:
-							var handGeo = new THREE.BoxBufferGeometry( 0.08, 0.08, 0.08 );
-							var handMat = new THREE.MeshPhongMaterial({ color: blue });
-							var handMesh = new THREE.Mesh( handGeo, handMat );
-							controller.userData.mesh = handMesh;
-							controller.add( handMesh );
-							break;
-
-					}
-
-				// }
-
-				//
+				}
 
 				controller.addEventListener('primary press began', primaryDown);
 				controller.addEventListener('primary press ended', primaryUp);
@@ -255,6 +255,7 @@
 				}
 				// TWEEN.update();
 				THREE.VRController.update();
+				interaction.update();
 				renderer.render( scene, camera );
 			}
 
