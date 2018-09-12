@@ -136,7 +136,8 @@ AudioManager.prototype.stop = function () {
  * @function returns the amount of seconds for a single repitition (rep).
  */
 AudioManager.prototype.getDuration = function () {
-	return 4 * this.bars * ( 60 / this.bpm );
+	var duration = 4 * this.bars * ( 60 / this.bpm );
+	return Math.floor(duration * 1000) / 1000;
 };
 
 AudioManager.prototype.getCurrentSection = function () {

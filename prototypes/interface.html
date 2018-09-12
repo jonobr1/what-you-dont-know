@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../release/third-party/two.js"></script>
+      <script src="../release/third-party/tween.js"></script>
+      <script src="../release/third-party/WebAudio.js"></script>
+      <script src="../release/src/audio-manager.js"></script>
+      <script>
+
+        var two = new Two({
+          type: Two.Types.canvas,
+          width: 512,
+          height: 512,
+          autostart: true
+        }).appendTo(document.body);
+
+        two.renderer.domElement.style.border = '1px solid #ccc';
+
+        var layer = two.makeGroup();
+        var bpm = 90;
+        var bars = 2;
+        var manager = new AudioManager(bpm, bars);
+        var modes = ['instrumental', 'machine-drum-a', 'melody', 'sub-tone', 'summation'];
+
+        for (var i = 0; i < modes.length; i++) {
+
+          var sound = new WebAudio();
+
+          sound.src = '../assets/v2/verse-1-' + modes[i] + '.mp3';
+          sound.loop = true;
+
+          manager.addTrack('melody', [sound]);
+
+        }
+
+        window.addEventListener('click', function() {
+          manager.start(1);
+        }, false);
+
+        var width = two.width;
+        var height = two.height;
+
+        for (var i = 0; i < manager.tracks.length; i++) {
+
+          var y = height * (i + 0.5) / manager.tracks.length;
+          var track = new Two.Line(0, y, width, y);
+          track.ending = 0;
+
+          layer.add(track);
+
+        }
+
+        two.bind('update', function() {
+
+          if (manager.isPlaying) {
+            manager.update();
+          }
+
+          var pct = manager.elapsedPercentageOfCurrentRep;
+
+          for (var i = 0; i < layer.children.length; i++) {
+            var child = layer.children[i];
+            child.ending = pct;
+          }
+
+        });
+
+      </script>
+    </div>
+  </body>
+</html>
