@@ -1,21 +1,20 @@
-function Interface( section, bars, tracks ) {
+function Interface( bars, maxTracks ) {
 
   var size = Interface.Resolution;
   var styles = Interface.Styles;
+  var divisions = Interface.Divisions;
   var i;
 
   this.two = new Two({
     type: Two.Types.canvas,
     width: size,
     height: size,
-    ratio: 1
+    // ratio: 1
     // smoothing: false
   });
 
   var height = size - styles.leading * 2;
   var width = size;
-
-  // this.texture = new THREE.Texture( this.two.renderer.domElement );
 
   this.bars = this.two.makeGroup();
 
@@ -25,7 +24,7 @@ function Interface( section, bars, tracks ) {
 
       var pct = j / divisions;
       var x = this.two.width * ( i + pct ) / bars;
-      var bar = two.makeLine( 0, 0, 0, height );
+      var bar = this.two.makeLine( 0, 0, 0, height );
 
       if (j <= 0) {
         bar.linewidth = 0.66;
@@ -44,31 +43,30 @@ function Interface( section, bars, tracks ) {
   }
 
   this.tracks = this.two.makeGroup();
+  for ( i = 0; i < maxTracks; i++ ) {
 
-  for ( i = 0; i < tracks; i++ ) {
+    var y = height * ( i + 0.5 ) / maxTracks;
+    var track = new Two.Line( 0, 0, 0, 0 );
 
-    var y = height * ( i + 0.5 ) / tracks;
-    var track = new Two.Line( 0, y, 0, y );
-
-    tracks.add( track );
+    this.tracks.add( track );
 
   }
 
   this.cursor = this.two.makeRectangle(0, height / 2, 0, height);
-  cursor.noFill();
-  cursor.width = 1;
+  this.cursor.noFill();
+  this.cursor.size = this.cursor.width = 2;
 
-  this.frame = two.makeRectangle(width / 2, height / 2, width, height);
+  this.frame = this.two.makeRectangle(width / 2, height / 2, width, height);
   this.frame.linewidth = 0.5;
   this.frame.noFill();
 
-  this.title = two.makeText( 'WHAT YOU DON’T KNOW', 0, 0, styles );
+  this.title = this.two.makeText( 'WHAT YOU DON’T KNOW', 0, 0, styles );
   this.title.translation.x = styles.leading * 0.125;
-  this.title.translation.y = two.height - styles.leading * 0.5;
+  this.title.translation.y = this.two.height - styles.leading * 0.5;
   this.title.baseline = 'bottom';
   this.title.alignment = 'left';
 
-  this.section = this.two.makeText(section, 0, 0, styles );
+  this.section = this.two.makeText( '', 0, 0, styles );
   this.section.translation.x = this.two.width - styles.leading * 0.125;
   this.section.translation.y = this.two.height - styles.leading * 0.5;
   this.section.baseline = 'bottom';
@@ -126,7 +124,7 @@ Interface.prototype.update = function( pct ) {
 
     for ( i = 0; i < this.bars.children.length; i++ ) {
       var bar = this.bars.children[ i ];
-      bar.visible = cursor.translation.x >= bar.translation.x;
+      bar.visible = this.cursor.translation.x >= bar.translation.x;
     }
 
   }
@@ -136,22 +134,27 @@ Interface.prototype.update = function( pct ) {
     for ( i = 0; i < this.tracks.children.length; i++ ) {
 
       var track = this.tracks.children[ i ];
-      track.vertices[ 1 ].x = cursor.translation.x;
 
-      if ( cursor.visible ) {
-        track.vertices[ 1 ].x -= cursor.size / 2;
+      if ( !track.visible ) {
+        continue;
+      }
+
+      track.vertices[ 1 ].x = this.cursor.translation.x;
+
+      if ( this.cursor.visible ) {
+        track.vertices[ 1 ].x -= this.cursor.size / 2;
       }
 
     }
 
   }
 
-  if ( this.message.visible ) {
+  if ( this.message.visible && this.message.value ) {
 
     this.message.scale = 1;  // Reset
 
     var rect = this.message.getBoundingClientRect(true);
-    var scale = Math.min(two.width / rect.width, two.height / rect.height);
+    var scale = Math.min(this.two.width / rect.width, this.two.height / rect.height);
 
     this.message.scale = scale;
     this.message.linewidth = 1 / scale;
@@ -162,13 +165,50 @@ Interface.prototype.update = function( pct ) {
   }
 
   this.two.update();
-  // this.texture.needsUpdate = true;
+
+  return this;
+
+};
+
+Interface.prototype.setTracks = function( tracks ) {
+
+  var size = Interface.Resolution;
+  var styles = Interface.Styles;
+  var height = size - styles.leading * 2;
+  var width = size;
+
+  for ( i = 0; i < this.tracks.children.length; i++ ) {
+
+    var y;
+    var track = this.tracks.children[ i ];
+
+    if ( i < tracks ) {
+      y = height * ( i + 0.5 ) / tracks;
+      track.translation.y = y;
+      track.visible = true;
+    } else {
+      track.visible = false;
+    }
+
+  }
+
+
+  return this;
+
+};
+
+Interface.prototype.setSection = function( value ) {
+
+  this.section.value = value;
+  return this;
 
 };
 
 Interface.prototype.setMessage = function( message ) {
 
   this.message.value = message;
+  this.message.visible = true;
+
   return this;
 
 };
