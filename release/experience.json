@@ -785,7 +785,7 @@
 			]
 		],
 		[
-			"Verse 1: Iâ€™d beat up all my cues for you",
+			"Verse 1: I'd beat up all my cues for you",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -800,7 +800,7 @@
 			]
 		],
 		[
-			"Verse 1: For you Iâ€™d take it off too soon",
+			"Verse 1: For you I'd take it off too soon",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -872,21 +872,7 @@
 			]
 		],
 		[
-			"Effect",
-			[
-				"var parameters = {",
-				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
-				"};",
-				"",
-				"function start( progress ){}",
-				"",
-				"function end( progress ){}",
-				"",
-				"function update( progress ){}"
-			]
-		],
-		[
-			"Verse 2: Iâ€™d beat up all my cues for you",
+			"Verse 2: I'd beat up all my cues for you",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -901,7 +887,7 @@
 			]
 		],
 		[
-			"Verse 2: For you Iâ€™d take it off too soon",
+			"Verse 2: For you I'd take it off too soon",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -946,7 +932,7 @@
 			]
 		],
 		[
-			"Chorus: What You Donâ€™t Know",
+			"Chorus: What You Don't Know",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -1036,7 +1022,7 @@
 			]
 		],
 		[
-			"Verse 3: Iâ€™d beat up all my cues for you",
+			"Verse 3: I'd beat up all my cues for you",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -1051,7 +1037,7 @@
 			]
 		],
 		[
-			"Verse 3: For you Iâ€™d take it off too soon",
+			"Verse 3: For you I'd take it off too soon",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -1096,7 +1082,7 @@
 			]
 		],
 		[
-			"Verse 4: What You Donâ€™t Know / Come at me what you want me to",
+			"Verse 4: What You Don't Know / Come at me what you want me to",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -1181,6 +1167,54 @@
 				"",
 				"function update( progress ){}"
 			]
+		],
+		[
+			"Verse 2: Set Loop",
+			[
+				"function start( progress ) {",
+				"\tplayer.setLoop( [ 48.99699999999999, 75.66199999999999 ] );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Chorus: Set Loop",
+			[
+				"function start( progress ) {",
+				"\tplayer.setLoop( [ 75.66199999999999, 102.32699999999998 ] );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Verse 3: Set Loop",
+			[
+				"function start( progress ) {",
+				"\tplayer.setLoop( [ 102.29574999999998, 128.992 ] );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Verse 4: Set Loop",
+			[
+				"function start( progress ) {",
+				"\tplayer.setLoop( [ 128.992, 155.65699999999998 ] );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
 		]
 	],
 	"animations": [
@@ -1196,7 +1230,7 @@
 			"Update Video",
 			0,
 			166.32299999999998,
-			4,
+			5,
 			1,
 			true
 		],
@@ -1269,15 +1303,23 @@
 			48.99699999999999,
 			54.32999999999999,
 			2,
-			11,
+			10,
 			true
+		],
+		[
+			"Cycle 2",
+			51,
+			57,
+			3,
+			30,
+			false
 		],
 		[
 			"2.02",
 			54.32999999999999,
 			59.66299999999999,
 			1,
-			12,
+			11,
 			true
 		],
 		[
@@ -1285,7 +1327,7 @@
 			59.66299999999999,
 			64.996,
 			2,
-			13,
+			12,
 			true
 		],
 		[
@@ -1293,7 +1335,7 @@
 			64.996,
 			75.66199999999999,
 			1,
-			14,
+			13,
 			true
 		],
 		[
@@ -1301,15 +1343,23 @@
 			75.66199999999999,
 			80.99499999999999,
 			2,
-			15,
+			14,
 			true
+		],
+		[
+			"Cycle 3",
+			78,
+			84,
+			3,
+			31,
+			false
 		],
 		[
 			"3.02",
 			80.99499999999999,
 			86.32799999999999,
 			1,
-			16,
+			15,
 			true
 		],
 		[
@@ -1317,7 +1367,7 @@
 			86.32799999999999,
 			91.66099999999999,
 			2,
-			17,
+			16,
 			true
 		],
 		[
@@ -1325,7 +1375,7 @@
 			91.66099999999999,
 			96.99399999999999,
 			1,
-			18,
+			17,
 			true
 		],
 		[
@@ -1333,23 +1383,31 @@
 			96.99399999999999,
 			102.32699999999998,
 			2,
-			19,
+			18,
 			true
 		],
 		[
 			"4.01",
-			102.32699999999998,
-			107.65999999999998,
+			102.29574999999998,
+			107.62874999999998,
 			1,
-			20,
+			19,
 			true
+		],
+		[
+			"Cycle 4",
+			104,
+			110,
+			3,
+			32,
+			false
 		],
 		[
 			"4.02",
 			107.65999999999998,
 			112.99299999999998,
 			2,
-			21,
+			20,
 			true
 		],
 		[
@@ -1357,7 +1415,7 @@
 			112.99299999999998,
 			118.32599999999998,
 			1,
-			22,
+			21,
 			true
 		],
 		[
@@ -1365,7 +1423,7 @@
 			118.32599999999998,
 			123.65899999999998,
 			2,
-			23,
+			22,
 			true
 		],
 		[
@@ -1373,7 +1431,7 @@
 			123.65899999999998,
 			128.992,
 			1,
-			24,
+			23,
 			true
 		],
 		[
@@ -1381,7 +1439,7 @@
 			128.992,
 			134.325,
 			2,
-			25,
+			24,
 			true
 		],
 		[
@@ -1389,15 +1447,23 @@
 			134.325,
 			139.658,
 			1,
-			26,
+			25,
 			true
+		],
+		[
+			"Cycle 5",
+			136,
+			142,
+			3,
+			33,
+			false
 		],
 		[
 			"5.03",
 			139.658,
 			144.99099999999999,
 			2,
-			27,
+			26,
 			true
 		],
 		[
@@ -1405,7 +1471,7 @@
 			144.99099999999999,
 			155.65699999999998,
 			1,
-			28,
+			27,
 			true
 		],
 		[
@@ -1413,7 +1479,7 @@
 			155.65699999999998,
 			166.32299999999998,
 			2,
-			29,
+			28,
 			true
 		],
 		[
@@ -1421,7 +1487,7 @@
 			157,
 			163,
 			3,
-			30,
+			29,
 			true
 		]
 	]

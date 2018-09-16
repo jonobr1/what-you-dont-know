@@ -15,7 +15,7 @@ function Interface( section, bars, tracks ) {
   var height = size - styles.leading * 2;
   var width = size;
 
-  this.texture = new THREE.Texture( this.two.renderer.domElement );
+  // this.texture = new THREE.Texture( this.two.renderer.domElement );
 
   this.bars = this.two.makeGroup();
 
@@ -162,7 +162,7 @@ Interface.prototype.update = function( pct ) {
   }
 
   this.two.update();
-  this.texture.needsUpdate = true;
+  // this.texture.needsUpdate = true;
 
 };
 
