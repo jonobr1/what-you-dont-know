@@ -106,7 +106,9 @@ function WebAudio( context ) {
 		source.buffer = buffer;
 		source.loop = loop;
 		source.loopStart = loopStart || 0;
-		source.loopEnd = loopEnd || source.duration;
+		if (loopEnd || source.duration) {
+			source.loopEnd = loopEnd || source.duration;
+		}
 		source.playbackRate.value = playbackRate;
 		source.start( startTime || 0, currentTime );
 		source.connect( volume );

@@ -8,16 +8,24 @@
       <script src="../release/third-party/tween.js"></script>
       <script src="../release/third-party/WebAudio.js"></script>
       <script src="../release/src/audio-manager.js"></script>
+      <link rel="stylesheet" href="https://use.typekit.net/cjj0tob.css">
       <script>
+
+        var lyrics = ['I’LL', 'GIVE', 'UP', 'ALL', 'MY', 'CUES', 'FOR', 'YOU'];
+
+        var styles = {
+          family: 'alternate-gothic-no-3-d',
+          weight: 400,
+          size: 13,
+          leading: 15
+        };
 
         var two = new Two({
           type: Two.Types.canvas,
-          width: 512,
-          height: 512,
-          autostart: true
+          width: 256,
+          height: 256,
+          smoothing: false
         }).appendTo(document.body);
-
-        two.renderer.domElement.style.border = '1px solid #ccc';
 
         var layer = two.makeGroup();
         var bpm = 90;
@@ -37,23 +45,48 @@
         }
 
         window.addEventListener('click', function() {
+
           manager.start(1);
+
+          setTimeout(function() {
+            two.play();
+          }, 1000);
+
         }, false);
 
         var width = two.width;
-        var height = two.height;
+        var height = two.height - styles.leading * 2;
 
         for (var i = 0; i < manager.tracks.length; i++) {
 
           var y = height * (i + 0.5) / manager.tracks.length;
-          var track = new Two.Line(0, y, width, y);
-          track.ending = 0;
+          var track = new Two.Line(0, y, 0, y);
 
           layer.add(track);
 
         }
 
-        two.bind('update', function() {
+        var cursor = two.makeRectangle(0, height / 2, 5, height);
+        cursor.width = 5;
+
+        var frame = two.makeRectangle(two.width / 2, height / 2, two.width, height);
+        frame.noFill();
+
+        var verse = two.makeText('1.01', 0, 0, styles);
+        verse.translation.x = two.width;
+        verse.translation.y = two.height - styles.leading * 0.33;
+        verse.baseline = 'bottom';
+        verse.alignment = 'right';
+
+        var title = two.makeText('WHAT YOU DON’T KNOW', 0, 0, styles);
+        title.translation.y = two.height - styles.leading * 0.33;
+        title.baseline = 'bottom';
+        title.alignment = 'left';
+
+        var vocals = two.makeText(lyrics[0], two.width / 2, two.height / 2, styles);
+        vocals.fill = 'red';
+
+        two.bind('update', function(frameCount) {
 
           if (manager.isPlaying) {
             manager.update();
@@ -61,10 +94,24 @@
 
           var pct = manager.elapsedPercentageOfCurrentRep;
 
+          cursor.translation.x = pct * two.width;
+
           for (var i = 0; i < layer.children.length; i++) {
             var child = layer.children[i];
-            child.ending = pct;
+            child.vertices[1].x = cursor.translation.x;
           }
+
+          cursor.translation.x -= pct * cursor.width / 2;
+
+          var id = Math.floor(frameCount / 10);
+
+          vocals.value = lyrics[id % lyrics.length];
+          vocals.scale = 1;
+
+          var rect = vocals.getBoundingClientRect(true);
+          var scale = Math.min(two.width / rect.width, two.height / rect.height);
+
+          vocals.scale = scale;
 
         });
 
