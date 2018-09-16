@@ -32,8 +32,9 @@
 
         var layer = two.makeGroup();
         var bpm = 90;
-        var bars = 2;
-        var manager = new AudioManager(bpm, bars);
+        var bars = [];
+        var divisions = 32;
+        var manager = new AudioManager(bpm, 2);
         var modes = ['instrumental', 'machine-drum-a', 'melody', 'sub-tone', 'summation'];
 
         for (var i = 0; i < modes.length; i++) {
@@ -60,6 +61,30 @@
         var width = two.width;
         var height = two.height - styles.leading * 2;
 
+        for (var i = 0; i < manager.bars; i++) {
+
+          for (var j = 0; j < divisions; j++) {
+
+            var pct = j / divisions;
+            var x = two.width * (i + pct) / manager.bars;
+            var bar = two.makeLine(0, 0, 0, height);
+
+            if (j <= 0) {
+              bar.linewidth = 0.66;
+            } else if ((j % (divisions / 2))) {
+              bar.linewidth = 0.2;
+            } else {
+              bar.linewidth = 0.5;
+            }
+
+            bar.translation.x = x;
+            bar.visible = false;
+            bars.push(bar);
+
+          }
+
+        }
+
         for (var i = 0; i < manager.tracks.length; i++) {
 
           var y = height * (i + 0.5) / manager.tracks.length;
@@ -69,11 +94,13 @@
 
         }
 
-        var cursor = two.makeRectangle(0, height / 2, 5, height);
+        var cursor = two.makeRectangle(0, height / 2, 0, height);
         cursor.noFill();
-        cursor.size = 5;
+        cursor.size = 1;
+        cursor.width = cursor.size;
 
         var frame = two.makeRectangle(two.width / 2, height / 2, two.width, height);
+        frame.linewidth = 0.5;
         frame.noFill();
 
         var verse = two.makeText('1.01', 0, 0, styles);
@@ -89,7 +116,11 @@
         title.alignment = 'left';
 
         var vocals = two.makeText(lyrics[0], two.width / 2, two.height / 2, styles);
-        vocals.fill = 'red';
+        vocals.fill = '#fff';
+        vocals.stroke = new Two.LinearGradient(0, 0, 0, 0, [
+          new Two.Stop(0, '#fff'),
+          new Two.Stop(1, '#000')
+        ]);
 
         two.bind('update', function(frameCount) {
 
@@ -102,12 +133,20 @@
           cursor.translation.x = pct * two.width;
           cursor.translation.x -= pct * cursor.size / 2;
 
+          for (var i = 0; i < bars.length; i++) {
+            var bar = bars[i];
+            bar.visible = cursor.translation.x >= bar.translation.x;
+          }
+
           for (var i = 0; i < layer.children.length; i++) {
+
             var child = layer.children[i];
             child.vertices[1].x = cursor.translation.x;
+
             if (cursor.visible) {
               child.vertices[1].x -= cursor.size / 2;
             }
+
           }
 
           var id = Math.floor(frameCount / 10);
@@ -119,6 +158,9 @@
           var scale = Math.min(two.width / rect.width, two.height / rect.height);
 
           vocals.scale = scale;
+          vocals.linewidth = 1 / scale;
+          vocals.stroke.left.x = pct * rect.width - rect.width / 2 - 0.001;
+          vocals.stroke.right.x = pct * rect.width - rect.width / 2 + 0.001;
 
         });
 
