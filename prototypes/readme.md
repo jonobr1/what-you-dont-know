@@ -30,6 +30,7 @@
 + [Transition Mechanism](./transition-mechanism.html)
 + [Twisted Cylinder](./twisted-cylinder.html)
 + [Title Card](./title.html)
++ [Interface 2D](./interface.html)
 
 ## Visuals
 
