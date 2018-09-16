@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../release/third-party/two.js"></script>
+      <script src="../release/third-party/tween.js"></script>
+      <script src="../release/third-party/WebAudio.js"></script>
+      <script src="../release/src/audio-manager.js"></script>
+      <link rel="stylesheet" href="https://use.typekit.net/cjj0tob.css">
+      <script>
+
+        var sound = new WebAudio();
+        sound.onLoad = function() {
+          document.body.style.background = 'green';
+          window.addEventListener('click', function() {
+            sound.play();
+          }, false);
+        };
+        sound.src = '../assets/v2/verse-1-vocals-a.ogg';
+
+      </script>
+    </div>
+  </body>
+</html>

@@ -117,6 +117,17 @@ AudioManager.prototype.transition = function ( index ) {
 
 };
 
+AudioManager.prototype.set = function ( index ) {
+
+	for ( var i = 0; i < this.tracks.length; i++ ) {
+		var track = this.tracks[ i ];
+		track.transition( 0, index );
+	}
+
+	return this;
+
+};
+
 /**
  * @function Halt the AudioManager from running. Cuts the volume, but is still
  * playing in the background in order to keep the timing of the audio tracks.
@@ -203,7 +214,10 @@ AudioManager.Track = function ( name, clips ) {
 
 	for ( var i = 0; i < clips.length; i++ ) {
 		var clip = clips[ i ];
-		clip.connect( this.node );
+		if ( clip && !clip.connected ) {
+			clip.connect( this.node );
+			clip.connected = true;
+		}
 	}
 
 	this.current = this.clips[ this.index ];
@@ -220,6 +234,11 @@ AudioManager.Track.prototype.start = function ( startTime ) {
 	}
 
 	var ctx = WebAudio.getContext();
+
+	if ( !this.current.loop ) {
+		// TODO: Hack for the vocals...
+		this.current.currentTime = 0;
+	}
 	this.current.cue( startTime || 0, 'play' );
 
 	return this;
@@ -274,13 +293,28 @@ AudioManager.Track.prototype.next = function () {
  */
 AudioManager.Track.prototype.transition = function ( time, index ) {
 
-	this.stop( time );
+	var a = this.clips[ index ];
+	var b = this.current;
+
+	var isSameClip = a === b;
+	var singlePass = ( a && !a.loop ) || ( b && !b.loop );
+	var needsUpdate = !isSameClip;
+
+	if ( needsUpdate ) {
+		if ( !singlePass ) {
+			this.stop( time );
+		}
+	}
+
 	if ( /number/i.test( typeof index ) ) {
 		this.select( index );
 	} else {
 		this.next();
 	}
-	this.start( time );
+
+	if ( needsUpdate ) {
+		this.start( time );
+	}
 
 	return this;
 

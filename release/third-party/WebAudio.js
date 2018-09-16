@@ -25,7 +25,7 @@ function WebAudio( context ) {
 
 	if ( context ) {
 
-		createVolume();
+		// createVolume();
 
 	}
 
@@ -106,7 +106,7 @@ function WebAudio( context ) {
 		source.buffer = buffer;
 		source.loop = loop;
 		source.loopStart = loopStart || 0;
-		if (loopEnd || source.duration) {
+		if ( loopEnd || source.duration ) {
 			source.loopEnd = loopEnd || source.duration;
 		}
 		source.playbackRate.value = playbackRate;
@@ -233,7 +233,7 @@ function WebAudio( context ) {
 			if ( !buffer ) {
 				if ( !context ) {
 					context = WebAudio.getContext();
-					createVolume();
+					// createVolume();
 				}
 				decode( callback );
 			} else if ( callback ) {
