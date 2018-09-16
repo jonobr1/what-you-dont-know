@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="https://use.typekit.net/cjj0tob.css">
       <script>
 
-        var lyrics = ['I’LL', 'GIVE', 'UP', 'ALL', 'MY', 'CUES', 'FOR', 'YOU'];
+        var lyrics = ['I’D', 'GIVE', 'UP', 'ALL', 'MY', 'CUES', 'FOR', 'YOU'];
 
         var styles = {
           family: 'alternate-gothic-no-3-d',
@@ -67,19 +67,21 @@
         }
 
         var cursor = two.makeRectangle(0, height / 2, 5, height);
-        cursor.width = 5;
+        cursor.noFill();
+        cursor.size = 5;
 
         var frame = two.makeRectangle(two.width / 2, height / 2, two.width, height);
         frame.noFill();
 
         var verse = two.makeText('1.01', 0, 0, styles);
-        verse.translation.x = two.width;
-        verse.translation.y = two.height - styles.leading * 0.33;
+        verse.translation.x = two.width - styles.leading * 0.125;
+        verse.translation.y = two.height - styles.leading * 0.5;
         verse.baseline = 'bottom';
         verse.alignment = 'right';
 
         var title = two.makeText('WHAT YOU DON’T KNOW', 0, 0, styles);
-        title.translation.y = two.height - styles.leading * 0.33;
+        title.translation.x = styles.leading * 0.125;
+        title.translation.y = two.height - styles.leading * 0.5;
         title.baseline = 'bottom';
         title.alignment = 'left';
 
@@ -95,13 +97,15 @@
           var pct = manager.elapsedPercentageOfCurrentRep;
 
           cursor.translation.x = pct * two.width;
+          cursor.translation.x -= pct * cursor.size / 2;
 
           for (var i = 0; i < layer.children.length; i++) {
             var child = layer.children[i];
             child.vertices[1].x = cursor.translation.x;
+            if (cursor.visible) {
+              child.vertices[1].x -= cursor.size / 2;
+            }
           }
-
-          cursor.translation.x -= pct * cursor.width / 2;
 
           var id = Math.floor(frameCount / 10);
 
