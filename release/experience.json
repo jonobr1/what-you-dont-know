@@ -785,8 +785,10 @@
 				"var interface = resources.get( 'interface' );",
 				"",
 				"function start( progress ) {",
+				"\tmanager.set( 0 );",
 				"\tinterface.setSection( '1.01' );",
 				"\tinterface.setTracks( 1 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -805,6 +807,7 @@
 				"\tmanager.set( 1 );",
 				"\tinterface.setSection( '1.02' );",
 				"\tinterface.setTracks( 3 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -823,6 +826,7 @@
 				"\tmanager.set( 2 );",
 				"\tinterface.setSection( '1.03' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -841,6 +845,7 @@
 				"\tmanager.set( 3 );",
 				"\tinterface.setSection( '1.04' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -859,6 +864,7 @@
 				"\tmanager.set( 4 );",
 				"\tinterface.setSection( '1.05' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -877,6 +883,7 @@
 				"\tmanager.set( 5 );",
 				"\tinterface.setSection( '1.06' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -895,6 +902,7 @@
 				"\tmanager.set( 6 );",
 				"\tinterface.setSection( '1.07' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1316,6 +1324,370 @@
 				"",
 				"function update( progress ){}"
 			]
+		],
+		[
+			"Lyrics: I'd",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'I\\'D' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Beat",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'BEAT' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: All",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'ALL' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Cues",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'CUES' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: You",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'YOU' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Up",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'UP' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: My",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'MY' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: For",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'FOR' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Take",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'TAKE' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: It",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'IT' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Off",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'OFF' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Too",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'TOO' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Soon",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'SOON' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Some",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'SOME' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Way",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'WAY' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Other",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'OTHER' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: To",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'TO' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Get",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'GET' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Now",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'NOW' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Give",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'GIVE' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Effect",
+			[
+				"var parameters = {",
+				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"};",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Effect",
+			[
+				"var parameters = {",
+				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"};",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Effect",
+			[
+				"var parameters = {",
+				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"};",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Lyrics: Fears",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'FEARS' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Effect",
+			[
+				"var parameters = {",
+				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"};",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Effect",
+			[
+				"var parameters = {",
+				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"};",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
 		]
 	],
 	"animations": [
@@ -1331,7 +1703,7 @@
 			"Update Video",
 			0,
 			166.32299999999998,
-			5,
+			8,
 			1,
 			true
 		],
@@ -1365,7 +1737,71 @@
 			29,
 			3,
 			9,
-			false
+			true
+		],
+		[
+			"1Ai",
+			24.5,
+			25,
+			4,
+			34,
+			true
+		],
+		[
+			"1Aii",
+			25,
+			25.5,
+			5,
+			35,
+			true
+		],
+		[
+			"1Aiii",
+			25.25,
+			25.75,
+			6,
+			39,
+			true
+		],
+		[
+			"1Aiv",
+			25.5,
+			26,
+			4,
+			36,
+			true
+		],
+		[
+			"1Av",
+			25.75,
+			26.25,
+			7,
+			40,
+			true
+		],
+		[
+			"1Avi",
+			26,
+			26.5,
+			5,
+			37,
+			true
+		],
+		[
+			"1Avii",
+			26.25,
+			26.75,
+			6,
+			41,
+			true
+		],
+		[
+			"1Aviii",
+			26.5,
+			27,
+			4,
+			38,
+			true
 		],
 		[
 			"1.04",
@@ -1373,6 +1809,70 @@
 			32.998,
 			2,
 			5,
+			true
+		],
+		[
+			"1Bi",
+			29.75,
+			30.5,
+			4,
+			41,
+			true
+		],
+		[
+			"1Bii",
+			30.25,
+			30.75,
+			5,
+			38,
+			true
+		],
+		[
+			"1Biii",
+			30.5,
+			31,
+			6,
+			34,
+			true
+		],
+		[
+			"1Biv",
+			30.75,
+			31.25,
+			4,
+			42,
+			true
+		],
+		[
+			"1Bv",
+			31,
+			31.5,
+			7,
+			43,
+			true
+		],
+		[
+			"1Bvi",
+			31.25,
+			31.75,
+			5,
+			44,
+			true
+		],
+		[
+			"1Bvii",
+			31.66,
+			32.16,
+			6,
+			45,
+			true
+		],
+		[
+			"1Bviii",
+			32,
+			32.5,
+			4,
+			46,
 			true
 		],
 		[
@@ -1384,11 +1884,131 @@
 			true
 		],
 		[
+			"1Ci",
+			35,
+			35.5,
+			4,
+			47,
+			true
+		],
+		[
+			"1Cii",
+			35.5,
+			36,
+			5,
+			49,
+			true
+		],
+		[
+			"1Ciii",
+			36,
+			36.5,
+			4,
+			48,
+			true
+		],
+		[
+			"1Civ",
+			36.5,
+			37,
+			5,
+			50,
+			true
+		],
+		[
+			"1Cv",
+			36.75,
+			37.25,
+			4,
+			51,
+			true
+		],
+		[
+			"1Cvi",
+			37,
+			37.5,
+			6,
+			50,
+			true
+		],
+		[
+			"1Cvii",
+			37.25,
+			37.75,
+			5,
+			38,
+			true
+		],
+		[
 			"1.06",
 			38.330999999999996,
 			43.663999999999994,
 			2,
 			7,
+			true
+		],
+		[
+			"1Di",
+			40.5,
+			41,
+			4,
+			52,
+			true
+		],
+		[
+			"1Dii",
+			40.75,
+			41.25,
+			5,
+			53,
+			true
+		],
+		[
+			"1Diii",
+			41,
+			41.5,
+			4,
+			39,
+			true
+		],
+		[
+			"1Div",
+			41.25,
+			41.75,
+			5,
+			36,
+			true
+		],
+		[
+			"1Dv",
+			41.5,
+			42,
+			6,
+			40,
+			true
+		],
+		[
+			"1Dvi",
+			41.748192258613365,
+			42.25,
+			4,
+			57,
+			true
+		],
+		[
+			"1Dvii",
+			42.25,
+			42.75,
+			5,
+			41,
+			true
+		],
+		[
+			"1Dviii",
+			42.5,
+			43,
+			4,
+			38,
 			true
 		],
 		[
