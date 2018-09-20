@@ -1023,6 +1023,7 @@
 				"\tmanager.set( 11 );",
 				"\tinterface.setSection( '3.02' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1059,6 +1060,7 @@
 				"\tmanager.set( 14 );",
 				"\tinterface.setSection( '3.04' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1968,6 +1970,34 @@
 				"",
 				"function update( progress ) {}"
 			]
+		],
+		[
+			"Lyrics: Don't",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'DON\\'T' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
+		],
+		[
+			"Lyrics: Know",
+			[
+				"var interface = resources.get( 'interface' );",
+				"",
+				"function start( progress ) {",
+				"\tinterface.setMessage( 'KNOW' );",
+				"}",
+				"",
+				"function end( progress ) {}",
+				"",
+				"function update( progress ) {}"
+			]
 		]
 	],
 	"animations": [
@@ -2313,7 +2343,7 @@
 			57,
 			3,
 			30,
-			true
+			false
 		],
 		[
 			"2Ai",
@@ -2628,12 +2658,76 @@
 			true
 		],
 		[
+			"3Ai",
+			76,
+			76.5,
+			4,
+			58,
+			true
+		],
+		[
+			"3Aii",
+			76.25,
+			76.75,
+			5,
+			38,
+			true
+		],
+		[
+			"3Aiii",
+			76.5,
+			77,
+			4,
+			80,
+			true
+		],
+		[
+			"3Aiv",
+			76.75,
+			77.25,
+			5,
+			81,
+			true
+		],
+		[
+			"3Av",
+			77.25,
+			77.75,
+			4,
+			58,
+			true
+		],
+		[
+			"3Avi",
+			77.5,
+			78,
+			5,
+			38,
+			true
+		],
+		[
+			"3Avii",
+			77.75,
+			78.25,
+			4,
+			80,
+			true
+		],
+		[
 			"Cycle 3",
 			78,
 			84,
 			3,
 			31,
 			false
+		],
+		[
+			"3Aviii",
+			78,
+			78.5,
+			5,
+			81,
+			true
 		],
 		[
 			"3.02",
@@ -2649,6 +2743,70 @@
 			91.66099999999999,
 			2,
 			16,
+			true
+		],
+		[
+			"3Bi",
+			86.5,
+			87,
+			4,
+			58,
+			true
+		],
+		[
+			"3Bii",
+			86.75,
+			87.25,
+			5,
+			38,
+			true
+		],
+		[
+			"3Biii",
+			87,
+			87.5,
+			4,
+			80,
+			true
+		],
+		[
+			"3Biv",
+			87.25,
+			87.75,
+			5,
+			81,
+			true
+		],
+		[
+			"3Bv",
+			87.75,
+			88.25,
+			4,
+			58,
+			true
+		],
+		[
+			"3Bvi",
+			88,
+			88.5,
+			5,
+			38,
+			true
+		],
+		[
+			"3Bvii",
+			88.25,
+			88.75,
+			4,
+			81,
+			true
+		],
+		[
+			"3Bviii",
+			88.5,
+			89,
+			5,
+			81,
 			true
 		],
 		[
@@ -2668,9 +2826,73 @@
 			true
 		],
 		[
+			"3Ci",
+			97.25,
+			97.75,
+			4,
+			58,
+			true
+		],
+		[
+			"3Cii",
+			97.5,
+			98,
+			5,
+			38,
+			true
+		],
+		[
+			"3Ciii",
+			97.75,
+			98.25,
+			4,
+			80,
+			true
+		],
+		[
+			"3Civ",
+			98,
+			98.5,
+			5,
+			81,
+			true
+		],
+		[
+			"3Cv",
+			98.5,
+			99,
+			4,
+			58,
+			true
+		],
+		[
+			"3Cvi",
+			98.75,
+			99.25,
+			5,
+			38,
+			true
+		],
+		[
+			"3Cvii",
+			99,
+			99.5,
+			4,
+			80,
+			true
+		],
+		[
+			"3Cviii",
+			99.25,
+			99.75,
+			5,
+			81,
+			true
+		],
+		[
 			"4.01",
-			102.29574999999998,
-			107.62874999999998,
+			102.32699999999998,
+			107.65999999999998,
 			1,
 			19,
 			true
