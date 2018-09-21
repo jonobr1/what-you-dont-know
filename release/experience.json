@@ -933,6 +933,7 @@
 				"\tmanager.set( 7 );",
 				"\tinterface.setSection( '2.01' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -951,6 +952,7 @@
 				"\tmanager.set( 8 );",
 				"\tinterface.setSection( '2.02' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -969,6 +971,7 @@
 				"\tmanager.set( 9 );",
 				"\tinterface.setSection( '2.03' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -987,6 +990,7 @@
 				"\tmanager.set( 10 );",
 				"\tinterface.setSection( '2.04' );",
 				"\tinterface.setTracks( 6 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1005,6 +1009,7 @@
 				"\tmanager.set( 11 );",
 				"\tinterface.setSection( '3.01' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1024,6 +1029,7 @@
 				"\tinterface.setSection( '3.02' );",
 				"\tinterface.setTracks( 9 );",
 				"\tinterface.hideMessage();",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1042,6 +1048,7 @@
 				"\tmanager.set( 13 );",
 				"\tinterface.setSection( '3.03' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1079,6 +1086,7 @@
 				"\tmanager.set( 15 );",
 				"\tinterface.setSection( '3.05' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1097,6 +1105,7 @@
 				"\tmanager.set( 16 );",
 				"\tinterface.setSection( '4.01' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1115,6 +1124,7 @@
 				"\tmanager.set( 17 );",
 				"\tinterface.setSection( '4.02' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1133,6 +1143,7 @@
 				"\tmanager.set( 18 );",
 				"\tinterface.setSection( '4.03' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1151,6 +1162,7 @@
 				"\tmanager.set( 19 );",
 				"\tinterface.setSection( '4.04' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1169,6 +1181,7 @@
 				"\tmanager.set( 20 );",
 				"\tinterface.setSection( '4.05' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1187,6 +1200,7 @@
 				"\tmanager.set( 21 );",
 				"\tinterface.setSection( '5.01' );",
 				"\tinterface.setTracks( 8 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1205,6 +1219,7 @@
 				"\tmanager.set( 22 );",
 				"\tinterface.setSection( '5.02' );",
 				"\tinterface.setTracks( 8 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1223,6 +1238,7 @@
 				"\tmanager.set( 23 );",
 				"\tinterface.setSection( '5.03' );",
 				"\tinterface.setTracks( 8 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1241,6 +1257,7 @@
 				"\tmanager.set( 24 );",
 				"\tinterface.setSection( '5.04' );",
 				"\tinterface.setTracks( 8 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1259,6 +1276,7 @@
 				"\tmanager.set( 25 );",
 				"\tinterface.setSection( '6.01' );",
 				"\tinterface.setTracks( 9 );",
+				"\tinterface.hideMessage();",
 				"}",
 				"",
 				"function end( progress ) {",
@@ -1307,7 +1325,7 @@
 			"Verse 3: Set Loop",
 			[
 				"function start( progress ) {",
-				"\tplayer.setLoop( [ 102.29574999999998, 128.992 ] );",
+				"\tplayer.setLoop( [ 102.32699999999998, 128.992 ] );",
 				"}",
 				"",
 				"function end( progress ){}",
@@ -2914,11 +2932,163 @@
 			true
 		],
 		[
+			"4Bi",
+			107.75,
+			108.25,
+			4,
+			58,
+			true
+		],
+		[
+			"4Bii",
+			107.99688230709276,
+			108.5,
+			5,
+			38,
+			true
+		],
+		[
+			"4Biii",
+			108.25,
+			108.75,
+			4,
+			80,
+			true
+		],
+		[
+			"4Biv",
+			108.5,
+			109,
+			5,
+			81,
+			true
+		],
+		[
+			"4Bv",
+			110.25,
+			110.75,
+			4,
+			35,
+			true
+		],
+		[
+			"4Bvi",
+			110.5,
+			111,
+			5,
+			39,
+			true
+		],
+		[
+			"4Bvii",
+			110.75299085151306,
+			111.25,
+			6,
+			36,
+			true
+		],
+		[
+			"4Bviii",
+			110.99577762139342,
+			111.5,
+			4,
+			40,
+			true
+		],
+		[
+			"4Bix",
+			111.2491203377903,
+			111.75,
+			5,
+			37,
+			true
+		],
+		[
+			"4Bx",
+			111.5,
+			112,
+			6,
+			41,
+			true
+		],
+		[
+			"4Bxi",
+			111.74876847290645,
+			112.25,
+			4,
+			38,
+			true
+		],
+		[
 			"4.03",
 			112.99299999999998,
 			118.32599999999998,
 			1,
 			21,
+			true
+		],
+		[
+			"4Ci",
+			115.25,
+			115.75,
+			4,
+			41,
+			true
+		],
+		[
+			"4Cii",
+			115.5,
+			116,
+			5,
+			38,
+			true
+		],
+		[
+			"4Ciii",
+			115.75299085151308,
+			116.254,
+			6,
+			34,
+			true
+		],
+		[
+			"4Civ",
+			115.99929627023228,
+			116.5,
+			4,
+			42,
+			true
+		],
+		[
+			"4Cv",
+			116.25263898662918,
+			116.75,
+			5,
+			43,
+			true
+		],
+		[
+			"4Cvi",
+			116.5,
+			117,
+			6,
+			44,
+			true
+		],
+		[
+			"4Cvii",
+			116.74876847290645,
+			117.25,
+			4,
+			45,
+			true
+		],
+		[
+			"4Cviii",
+			116.99859254046451,
+			117.5,
+			5,
+			46,
 			true
 		],
 		[
@@ -2930,11 +3100,131 @@
 			true
 		],
 		[
+			"4Di",
+			120.75,
+			121.25,
+			4,
+			47,
+			true
+		],
+		[
+			"4Dii",
+			121.25,
+			121.75,
+			5,
+			49,
+			true
+		],
+		[
+			"4Diii",
+			121.75,
+			122.25,
+			4,
+			48,
+			true
+		],
+		[
+			"4Div",
+			122.00404644616441,
+			122.50404644616441,
+			5,
+			50,
+			true
+		],
+		[
+			"4Dv",
+			122.25,
+			122.75,
+			6,
+			51,
+			true
+		],
+		[
+			"4Dvi",
+			122.50175932441944,
+			123,
+			4,
+			50,
+			true
+		],
+		[
+			"4Dvii",
+			122.75,
+			123.25,
+			5,
+			38,
+			true
+		],
+		[
 			"4.05",
 			123.65899999999998,
 			128.992,
 			1,
 			23,
+			true
+		],
+		[
+			"4Ei",
+			125.75,
+			126.25,
+			4,
+			52,
+			true
+		],
+		[
+			"4Eii",
+			126,
+			126.5,
+			5,
+			53,
+			true
+		],
+		[
+			"4Eiii",
+			126.25,
+			126.75,
+			6,
+			39,
+			true
+		],
+		[
+			"4Eiv",
+			126.49542575650956,
+			127,
+			4,
+			36,
+			true
+		],
+		[
+			"4Ev",
+			126.75,
+			127.25,
+			5,
+			40,
+			true
+		],
+		[
+			"4Evi",
+			127,
+			127.5,
+			6,
+			54,
+			true
+		],
+		[
+			"4Evii",
+			127.25,
+			127.75,
+			4,
+			41,
+			true
+		],
+		[
+			"4Eviii",
+			127.5,
+			128,
+			5,
+			38,
 			true
 		],
 		[
