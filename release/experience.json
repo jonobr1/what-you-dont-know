@@ -735,12 +735,13 @@
 				"var scene = resources.get( 'scene' );",
 				"",
 				"var carousel = new THREE.Group();",
+				"carousel.position.y = 1.6;",
 				"",
 				"var drag = 0.125;",
-				"var size = 4;",
+				"var size = 8;",
 				"",
-				"carousel.userData.amount = 10;",
-				"carousel.userData.distance = 10;",
+				"carousel.userData.amount = 7;",
+				"carousel.userData.distance = 20;",
 				"carousel.userData.index = 0;",
 				"carousel.userData.geometry = new THREE.PlaneBufferGeometry( size, size, 1, 1 );",
 				"",
@@ -788,15 +789,21 @@
 				"};",
 				"",
 				"carousel.userData.select = function( index ) {",
-				"\tvar child = carousel.children[ carousel.userData.index ];",
+				"",
+				"\tvar length = carousel.children.length;",
+				"",
+				"\tvar child = carousel.children[ carousel.userData.index % length ];",
 				"\tif ( child ) {",
 				"\t\tchild.material.opacity = 0.5;",
 				"\t}",
+				"",
 				"\tcarousel.userData.index = index;",
-				"\tchild = carousel.children[ carousel.userData.index ];",
+				"",
+				"\tchild = carousel.children[ carousel.userData.index % length ];",
 				"\tif ( child ) {",
 				"\t\tchild.material.opacity = 1;",
 				"\t}",
+				"",
 				"\treturn carousel;",
 				"};",
 				"",
@@ -804,10 +811,11 @@
 				"",
 				"\tvar index = carousel.userData.index;",
 				"\tvar amount = carousel.userData.amount;",
+				"\tvar length = carousel.children.length;",
 				"",
 				"\t// Update the texture",
-				"\tif ( index in carousel.children ) {",
-				"\t\tcarousel.children[ index ].material.map.needsUpdate = true;",
+				"\tif ( carousel.children.length > 0 ) {",
+				"\t\tcarousel.children[ index % length ].material.map.needsUpdate = true;",
 				"\t}",
 				"",
 				"\t// Animate to the selected element",
@@ -2122,10 +2130,18 @@
 				"",
 				"function start( progress ) {",
 				"",
-				"\tvar card = carousel.userData.createCard();",
-				"\tcard.userData.setCanvas( interface.two.renderer.domElement );",
+				"\tvar card;",
+				"\tvar index;",
+				"\tvar length = carousel.children.length;",
+				"\t",
+				"\tif ( length < carousel.userData.amount ) {",
+				"\t\tcard = carousel.userData.createCard();",
+				"\t\tcard.userData.setCanvas( interface.two.renderer.domElement );",
+				"\t\tindex = carousel.userData.add( card );",
+				"\t} else {",
+				"\t\tindex = carousel.userData.index + 1;",
+				"\t}",
 				"",
-				"\tvar index = carousel.userData.add( card );",
 				"\tcarousel.userData.select( index );",
 				"",
 				"}",
@@ -2174,7 +2190,7 @@
 			true
 		],
 		[
-			"1.01 UI",
+			"Intro UI",
 			1,
 			5,
 			3,
@@ -2190,14 +2206,6 @@
 			true
 		],
 		[
-			"1.02 UI",
-			11.666,
-			16.666,
-			3,
-			81,
-			true
-		],
-		[
 			"1.03",
 			22.332,
 			27.665,
@@ -2206,7 +2214,7 @@
 			true
 		],
 		[
-			"1.03 UI",
+			"Verse 1 UI",
 			22.332,
 			26.33,
 			3,
@@ -2294,14 +2302,6 @@
 			true
 		],
 		[
-			"1.04 UI",
-			27.665,
-			31.665,
-			3,
-			81,
-			true
-		],
-		[
 			"1Bi",
 			29.75,
 			30.5,
@@ -2374,14 +2374,6 @@
 			true
 		],
 		[
-			"1.05 UI",
-			32.998,
-			36.998,
-			3,
-			81,
-			true
-		],
-		[
 			"1Ci",
 			35,
 			35.5,
@@ -2443,14 +2435,6 @@
 			43.663999999999994,
 			2,
 			7,
-			true
-		],
-		[
-			"1.06 UI",
-			38.330999999999996,
-			42.330999999999996,
-			3,
-			81,
 			true
 		],
 		[
@@ -2526,14 +2510,6 @@
 			true
 		],
 		[
-			"1.07 UI",
-			43.663999999999994,
-			47.663999999999994,
-			3,
-			81,
-			true
-		],
-		[
 			"2.01",
 			48.99699999999999,
 			54.32999999999999,
@@ -2542,7 +2518,7 @@
 			true
 		],
 		[
-			"2.01 UI",
+			"Verse 2 UI",
 			48.99699999999999,
 			52.99699999999999,
 			3,
@@ -2870,6 +2846,14 @@
 			true
 		],
 		[
+			"Verse 3 UI",
+			75.66199999999999,
+			79.66199999999999,
+			3,
+			81,
+			true
+		],
+		[
 			"3Ai",
 			76,
 			76.5,
@@ -3110,6 +3094,14 @@
 			true
 		],
 		[
+			"Verse 4 UI",
+			102.32699999999998,
+			106.32699999999998,
+			3,
+			81,
+			true
+		],
+		[
 			"Cycle 4",
 			104,
 			110,
@@ -3159,6 +3151,38 @@
 		],
 		[
 			"4Bv",
+			109,
+			109.5,
+			4,
+			57,
+			true
+		],
+		[
+			"4Bvi",
+			109.25,
+			109.75,
+			5,
+			37,
+			true
+		],
+		[
+			"4Bvii",
+			109.50307377049182,
+			110,
+			4,
+			79,
+			true
+		],
+		[
+			"4Bviii",
+			109.75,
+			110.25,
+			5,
+			80,
+			true
+		],
+		[
+			"4Bix",
 			110.25,
 			110.75,
 			4,
@@ -3166,7 +3190,7 @@
 			true
 		],
 		[
-			"4Bvi",
+			"4Bx",
 			110.5,
 			111,
 			5,
@@ -3174,7 +3198,7 @@
 			true
 		],
 		[
-			"4Bvii",
+			"4Bxi",
 			110.75299085151306,
 			111.25,
 			6,
@@ -3182,7 +3206,7 @@
 			true
 		],
 		[
-			"4Bviii",
+			"4Bxii",
 			110.99577762139342,
 			111.5,
 			4,
@@ -3190,7 +3214,7 @@
 			true
 		],
 		[
-			"4Bix",
+			"4Bxiii",
 			111.2491203377903,
 			111.75,
 			5,
@@ -3198,7 +3222,7 @@
 			true
 		],
 		[
-			"4Bx",
+			"4Bxiv",
 			111.5,
 			112,
 			6,
@@ -3206,7 +3230,7 @@
 			true
 		],
 		[
-			"4Bxi",
+			"4Bxv",
 			111.74876847290645,
 			112.25,
 			4,
@@ -3427,6 +3451,14 @@
 			134.325,
 			2,
 			23,
+			true
+		],
+		[
+			"Verse 5 UI",
+			128.992,
+			132.992,
+			3,
+			81,
 			true
 		],
 		[
@@ -4003,6 +4035,14 @@
 			166.32299999999998,
 			2,
 			27,
+			true
+		],
+		[
+			"Verse 6 UI",
+			155.65699999999998,
+			159.65699999999998,
+			3,
+			81,
 			true
 		],
 		[
