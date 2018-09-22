@@ -74,7 +74,7 @@ function Interface( bars, maxTracks ) {
 
   this.message = this.two.makeText( '', size / 2, size / 2, styles );
   this.message.fill = '#fff';
-  this.message.baseline = 'middle';
+  // this.message.baseline = 'middle';
   this.message.stroke = new Two.LinearGradient(0, 0, 0, 0, [
     new Two.Stop(0, '#fff'),
     new Two.Stop(1, '#000')

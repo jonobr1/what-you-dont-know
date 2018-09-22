@@ -143,6 +143,17 @@ AudioManager.prototype.stop = function () {
 
 };
 
+AudioManager.prototype.forceStop = function ( time ) {
+
+	for ( var i = 0; i < this.tracks.length; i++ ) {
+		var track = this.tracks[ i ];
+		track.stop( time );
+	}
+
+	return this;
+
+};
+
 /**
  * @function returns the amount of seconds for a single repitition (rep).
  */
@@ -312,7 +323,7 @@ AudioManager.Track.prototype.transition = function ( time, index ) {
 		this.next();
 	}
 
-	if ( needsUpdate ) {
+	if ( ( this.current && this.current.paused ) || needsUpdate ) {
 		this.start( time );
 	}
 
