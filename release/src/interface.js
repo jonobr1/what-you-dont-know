@@ -74,11 +74,12 @@ function Interface( bars, maxTracks ) {
 
   this.message = this.two.makeText( '', size / 2, size / 2, styles );
   this.message.fill = '#fff';
+  this.message.stroke = '#000';
   // this.message.baseline = 'middle';
-  this.message.stroke = new Two.LinearGradient(0, 0, 0, 0, [
-    new Two.Stop(0, '#fff'),
-    new Two.Stop(1, '#000')
-  ]);
+  // this.message.stroke = new Two.LinearGradient(0, 0, 0, 0, [
+  //   new Two.Stop(0, '#fff'),
+  //   new Two.Stop(1, '#000')
+  // ]);
 
 }
 
@@ -160,8 +161,8 @@ Interface.prototype.update = function( pct ) {
     this.message.scale = scale;
     this.message.linewidth = 1 / scale;
 
-    this.message.stroke.left.x = pct * rect.width - rect.width / 2 - 0.001;
-    this.message.stroke.right.x = pct * rect.width - rect.width / 2 + 0.001;
+    // this.message.stroke.left.x = pct * rect.width - rect.width / 2 - 0.001;
+    // this.message.stroke.right.x = pct * rect.width - rect.width / 2 + 0.001;
 
   }
 
