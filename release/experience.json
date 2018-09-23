@@ -880,7 +880,7 @@
 			[
 				"var scene = resources.get( 'scene' );",
 				"",
-				"var drag = 0.125;",
+				"var drag = 0.00625;",
 				"",
 				"var backdrop = new THREE.Mesh(",
 				"\tnew THREE.SphereBufferGeometry( 100, 100, 16, 16 ),",
@@ -4212,7 +4212,7 @@
 				"var backdrop = resources.get( 'backdrop' );",
 				"",
 				"function start( progress ) {",
-				"\tbackdrop.userData.setSourceColor( 0xaa64a0 );",
+				"\tbackdrop.userData.setSourceColor( 0x824b7d );",
 				"\tbackdrop.userData.setTargetColor( 0xff96e6 );",
 				"}",
 				"",
