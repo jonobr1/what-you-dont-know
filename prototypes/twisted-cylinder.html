@@ -31,16 +31,17 @@
         var camera = new THREE.PerspectiveCamera( 75 );
         var group = new THREE.Group();
         var light;
-        // var controls = new THREE.OrbitControls( camera, renderer.domElement );
+        var controls = new THREE.OrbitControls( camera, renderer.domElement );
 
         var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 512 );
         geometry.rotateZ( - Math.PI / 2 );
 
         var material = new THREE.MeshStandardMaterial( {
-          color: 'white',
-          map: loader.load( '../assets/textures/matcap.jpg' ),
+          color: 0xff3333,
+          map: loader.load( '../assets/textures/gradient-bw.jpg' ),
           roughness: 0.5,
-          metalness: 0.25
+          metalness: 0.75,
+          // blending: THREE.MultiplyBlending
         } );
 
         // var material = new THREE.MeshNormalMaterial();
@@ -159,8 +160,8 @@
 
           ring.frustumCulled = false;
 
-          // group.position.y = 1000;
-          // group.rotation.x = - Math.PI / 2;
+          group.position.y = 1000;
+          group.rotation.x = - Math.PI / 2;
 
           var ambient = new THREE.HemisphereLight( 0xFEFCFF, 0xB0ADAA, 0.9 );
           scene.add( ambient );
@@ -171,8 +172,9 @@
           light.shadow.radius = 10;
           scene.add( light );
 
-          renderer.setClearColor( 0xefefef );
-          renderer.vr.enabled = true;
+          // renderer.setClearColor( 0xf0c8c8 );
+          renderer.setClearColor( 0xff3333 );
+          // renderer.vr.enabled = true;
 
           document.body.appendChild( renderer.domElement );
           document.body.appendChild( WEBVR.createButton( renderer ) );
