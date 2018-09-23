@@ -25,24 +25,31 @@
 
         var gui;
 
+        var loader = new THREE.TextureLoader();
         var renderer = new THREE.WebGLRenderer( { antialias: true } );
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera( 75 );
         var group = new THREE.Group();
+        var light;
         // var controls = new THREE.OrbitControls( camera, renderer.domElement );
 
         var geometry = new THREE.CylinderBufferGeometry( 0.1, 0.1, 1, 4, 512 );
         geometry.rotateZ( - Math.PI / 2 );
 
         var material = new THREE.MeshStandardMaterial( {
-          color: 'red'
+          color: 'white',
+          map: loader.load( '../assets/textures/matcap.jpg' ),
+          roughness: 0.5,
+          metalness: 0.25
         } );
+
+        // var material = new THREE.MeshNormalMaterial();
 
         material.onBeforeCompile = function ( shader ) {
 
           var uniforms = {
 
-            twist: { type: 'f', value: 0 }, // Applied to radians
+            twist: { type: 'f', value: 0 }, // Needs to be in radians
 
             size: { type: 'f', value: 500 },
             thickness: { type: 'f', value: 1.5 },
@@ -78,7 +85,9 @@
             "uniform float phi;",
             "uniform float amplitude;",
 
+            "#if !defined( USE_MAP ) && !defined( USE_BUMPMAP ) && !defined( USE_NORMALMAP ) && !defined( USE_SPECULARMAP ) && !defined( USE_ALPHAMAP ) && !defined( USE_EMISSIVEMAP ) && !defined( USE_ROUGHNESSMAP ) && !defined( USE_METALNESSMAP )",
             "vec2 vUv;",
+            "#endif",
 
             "float t;",
             "float angle;",
@@ -106,12 +115,17 @@
 
             "theta = t * ( endAngle - startAngle ) + startAngle;",
 
-            "x = size * sin( theta ) * z;",
-            "y = size * y + amplitude * sin( ( t + offset ) * PI * phi );",
-            "z = size * cos( theta ) * z;",
+            "vec3 origin = vec3( 0.0 );",
+            "origin.x = size * sin( theta );",
+            "origin.y = amplitude * sin( ( t + offset ) * PI * phi );",
+            "origin.z = size * cos( theta );",
+
+            "x = origin.x * z;",
+            "y = origin.y + size * y;",
+            "z = origin.z * z;",
 
             "vec3 transformed = vec3( x, y, z );",
-            "vNormal *= normalize( transformed );",
+            "vNormal = normalize( transformed - origin );",
 
           ].join( '\n' );
 
@@ -151,7 +165,7 @@
           var ambient = new THREE.HemisphereLight( 0xFEFCFF, 0xB0ADAA, 0.9 );
           scene.add( ambient );
 
-          var light = new THREE.DirectionalLight( 0xFFFFFF, 0.35 );
+          light = new THREE.DirectionalLight( 0xFFFFFF, 0.35 );
           light.position.set( 2.5, 5.0, 2.5 );
           light.castShadow = true;
           light.shadow.radius = 10;
@@ -186,9 +200,13 @@
 
         function animate( time ) {
 
+          // ring.rotation.x += 0.01;
+
           if ( ring.userData.shader ) {
             ring.userData.shader.uniforms.offset.value += 0.001;
           }
+
+          light.position.z = Math.sin( time / 1000 ) * 20;
 
           renderer.render( scene, camera );
 
