@@ -13,7 +13,7 @@ These folders all require you run a local server on your computer. A good cross-
 
 Below are more details for each of the pages and how to use them.
 
-### /release (Not Available at the moment)
+### /release
 [http://localhost:8080/release/](http://localhost:8080/release/) is the most current place to see our current build of the project.
 
 ### /editor

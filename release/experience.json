@@ -880,13 +880,15 @@
 			[
 				"var scene = resources.get( 'scene' );",
 				"",
+				"var drag = 0.125;",
+				"",
 				"var backdrop = new THREE.Mesh(",
 				"\tnew THREE.SphereBufferGeometry( 100, 100, 16, 16 ),",
 				"\tnew THREE.ShaderMaterial( {",
 				"",
 				"\t\tuniforms: {",
-				"\t\t\tcSource: { type: 'c', value: new THREE.Color( 0xff3333 ) },",
-				"\t\t\tcTarget: { type: 'c', value: new THREE.Color( 0xf0c8c8 ) }",
+				"\t\t\tcSource: { type: 'c', value: new THREE.Color( 0x000000 ) },",
+				"\t\t\tcTarget: { type: 'c', value: new THREE.Color( 0x000000 ) }",
 				"\t\t},",
 				"",
 				"\t\tvertexShader: [",
@@ -919,16 +921,38 @@
 				"\t\t].join( '\\n' ),",
 				"\t\t",
 				"\t\tside: THREE.BackSide,",
-				"\t\t",
 				"",
 				"\t} )",
-				"\t/*",
-				"\tnew THREE.MeshBasicMaterial( {",
-				"\t\tcolor: 0xefefef,",
-				"\t\tside: THREE.BackSide",
-				"\t} )",
-				"\t*/",
 				");",
+				"",
+				"backdrop.userData.cSource = new THREE.Color( 0x000000 );",
+				"backdrop.userData.cTarget = new THREE.Color( 0x000000 );",
+				"",
+				"backdrop.userData.setSourceColor = function ( color ) {",
+				"\tbackdrop.userData.cSource.set( color );",
+				"\treturn backdrop;",
+				"};",
+				"",
+				"backdrop.userData.setTargetColor = function ( color ) {",
+				"\tbackdrop.userData.cTarget.set( color );",
+				"\treturn backdrop;",
+				"};",
+				"",
+				"backdrop.userData.update = function () {",
+				"",
+				"\tvar source = backdrop.userData.cSource;",
+				"\tvar target = backdrop.userData.cTarget;",
+				"",
+				"\tif ( !backdrop.material.uniforms.cSource.value.equals( source ) ) {",
+				"\t\tbackdrop.material.uniforms.cSource.value.lerp( source, drag );",
+				"\t}",
+				"\tif ( !backdrop.material.uniforms.cTarget.value.equals( target ) ) {",
+				"\t\tbackdrop.material.uniforms.cTarget.value.lerp( target, drag );",
+				"\t}",
+				"",
+				"\treturn backdrop;",
+				"",
+				"};",
 				"",
 				"scene.add( backdrop );",
 				"",
@@ -968,6 +992,7 @@
 				"var renderer = resources.get( 'renderer' );",
 				"var interaction = resources.get( 'interaction' );",
 				"var carousel = resources.get( 'carousel' );",
+				"var backdrop = resources.get( 'backdrop' );",
 				"var camera = resources.get( 'camera' );",
 				"var scene = resources.get( 'scene' );",
 				"",
@@ -985,6 +1010,7 @@
 				"\tinteraction.update();",
 				"",
 				"\tcarousel.userData.update( isPresenting );",
+				"\tbackdrop.userData.update();",
 				"",
 				"\trenderer.render( scene, camera );",
 				"",
@@ -4126,6 +4152,153 @@
 				"\t\t.start();",
 				"}"
 			]
+		],
+		[
+			"Set Background Pink",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"",
+				"function start( progress ) {",
+				"\tbackdrop.userData.setSourceColor( 0xff3333 );",
+				"\tbackdrop.userData.setTargetColor( 0xf0c8c8 );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Rotate Background Z",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"var startAngle = 0;",
+				"var endAngle = Math.PI / 2;",
+				"",
+				"function start( progress ) {",
+				"\tstartAngle = backdrop.rotation.z;",
+				"\tendAngle *= Math.random() > 0.5 ? 1 : - 1;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"\tbackdrop.rotation.z = progress * endAngle + startAngle;",
+				"}"
+			]
+		],
+		[
+			"Rotate Background Y",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"var startAngle = 0;",
+				"var endAngle = Math.PI;",
+				"",
+				"function start( progress ) {",
+				"\tstartAngle = backdrop.rotation.y;",
+				"\tendAngle *= Math.random() > 0.5 ? 1 : - 1;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"\tbackdrop.rotation.y = progress * endAngle + startAngle;",
+				"}"
+			]
+		],
+		[
+			"Set Background Purple",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"",
+				"function start( progress ) {",
+				"\tbackdrop.userData.setSourceColor( 0xaa64a0 );",
+				"\tbackdrop.userData.setTargetColor( 0xff96e6 );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Set Background Blue",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"",
+				"function start( progress ) {",
+				"\tbackdrop.userData.setSourceColor( 0x6473aa );",
+				"\tbackdrop.userData.setTargetColor( 0x8ba4ff );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Set Background Red",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"",
+				"function start( progress ) {",
+				"\tbackdrop.userData.setSourceColor( 0xff3333 );",
+				"\tbackdrop.userData.setTargetColor( 0x993333 );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Set Background Green",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"",
+				"function start( progress ) {",
+				"\tbackdrop.userData.setSourceColor( 0x63a987 );",
+				"\tbackdrop.userData.setTargetColor( 0xc7ff96 );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Set Background Orange",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"",
+				"function start( progress ) {",
+				"\tbackdrop.userData.setSourceColor( 0xff9d00 );",
+				"\tbackdrop.userData.setTargetColor( 0xffd896 );",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Rapid Rotation Y",
+			[
+				"var backdrop = resources.get( 'backdrop' );",
+				"var startAngle = 0;",
+				"var endAngle = Math.PI * 2;",
+				"",
+				"function start( progress ) {",
+				"\tstartAngle = backdrop.rotation.y;",
+				"\tendAngle *= Math.random() > 0.5 ? 1 : - 1;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"\tbackdrop.rotation.y = progress * endAngle + startAngle;",
+				"}"
+			]
 		]
 	],
 	"animations": [
@@ -4141,7 +4314,7 @@
 			"Update Video",
 			0,
 			166.32299999999998,
-			9,
+			12,
 			1,
 			true
 		],
@@ -4162,6 +4335,22 @@
 			true
 		],
 		[
+			"Intro Background Rotation",
+			1,
+			22.332,
+			9,
+			109,
+			true
+		],
+		[
+			"Intro Background",
+			1,
+			11.666,
+			10,
+			108,
+			true
+		],
+		[
 			"1.02",
 			11.666,
 			22.332,
@@ -4175,6 +4364,14 @@
 			22.332,
 			3,
 			89,
+			true
+		],
+		[
+			"Body Background A",
+			11.666,
+			48.99699999999999,
+			10,
+			113,
 			true
 		],
 		[
@@ -4194,10 +4391,18 @@
 			true
 		],
 		[
+			"Verse 1 Background Rotation",
+			22.332,
+			48.99699999999999,
+			8,
+			110,
+			true
+		],
+		[
 			"Cycle 1",
 			23,
 			29,
-			8,
+			11,
 			82,
 			false
 		],
@@ -4530,10 +4735,26 @@
 			true
 		],
 		[
+			"Verse 2 Background A",
+			48.99699999999999,
+			59.66299999999999,
+			8,
+			109,
+			true
+		],
+		[
+			"Body Background B",
+			48.99699999999999,
+			75.66199999999999,
+			10,
+			111,
+			true
+		],
+		[
 			"Cycle 2",
 			51,
 			57,
-			8,
+			11,
 			29,
 			false
 		],
@@ -4618,6 +4839,14 @@
 			true
 		],
 		[
+			"Verse 2 Background B",
+			54.32999999999999,
+			64.996,
+			9,
+			110,
+			true
+		],
+		[
 			"2Bi",
 			56.5,
 			57,
@@ -4671,6 +4900,14 @@
 			64.996,
 			3,
 			95,
+			true
+		],
+		[
+			"Verse 2 Background C",
+			59.66299999999999,
+			75.66199999999999,
+			8,
+			109,
 			true
 		],
 		[
@@ -4882,6 +5119,22 @@
 			true
 		],
 		[
+			"Chorus Background A",
+			75.66199999999999,
+			80.99499999999999,
+			9,
+			109,
+			true
+		],
+		[
+			"Chorus Background A",
+			75.66199999999999,
+			107.65999999999998,
+			10,
+			114,
+			true
+		],
+		[
 			"3Ai",
 			76,
 			76.5,
@@ -4949,7 +5202,7 @@
 			"Cycle 3",
 			78,
 			84,
-			8,
+			11,
 			30,
 			false
 		],
@@ -4970,6 +5223,14 @@
 			true
 		],
 		[
+			"Chorus Background B",
+			80.99499999999999,
+			86.32799999999999,
+			9,
+			109,
+			true
+		],
+		[
 			"3.03",
 			86.32799999999999,
 			91.66099999999999,
@@ -4983,6 +5244,14 @@
 			91.66099999999999,
 			3,
 			98,
+			true
+		],
+		[
+			"Chorus Background C",
+			86.32799999999999,
+			91.66099999999999,
+			9,
+			109,
 			true
 		],
 		[
@@ -5066,6 +5335,14 @@
 			true
 		],
 		[
+			"Chorus Background D",
+			91.66099999999999,
+			96.99399999999999,
+			9,
+			109,
+			true
+		],
+		[
 			"3.05",
 			96.99399999999999,
 			102.32699999999998,
@@ -5079,6 +5356,14 @@
 			102.32699999999998,
 			3,
 			100,
+			true
+		],
+		[
+			"Chorus Background E",
+			96.99399999999999,
+			102.32699999999998,
+			9,
+			109,
 			true
 		],
 		[
@@ -5162,10 +5447,18 @@
 			true
 		],
 		[
+			"Chorus Background F",
+			102.32699999999998,
+			107.65999999999998,
+			9,
+			109,
+			true
+		],
+		[
 			"Cycle 4",
 			104,
 			110,
-			8,
+			11,
 			31,
 			false
 		],
@@ -5183,6 +5476,22 @@
 			112.99299999999998,
 			3,
 			101,
+			true
+		],
+		[
+			"Verse 3 Background Rotation",
+			107.65999999999998,
+			128.992,
+			8,
+			110,
+			true
+		],
+		[
+			"Body Background C",
+			107.65999999999998,
+			128.992,
+			10,
+			115,
 			true
 		],
 		[
@@ -5554,6 +5863,22 @@
 			true
 		],
 		[
+			"Verse 4 Background A",
+			128.992,
+			139.658,
+			9,
+			109,
+			true
+		],
+		[
+			"Body Background D",
+			128.992,
+			155.65699999999998,
+			10,
+			112,
+			true
+		],
+		[
 			"5Ai",
 			129.25,
 			129.75,
@@ -5698,6 +6023,14 @@
 			true
 		],
 		[
+			"Verse 4 Background B",
+			134.325,
+			144.99099999999999,
+			8,
+			110,
+			true
+		],
+		[
 			"5Bi",
 			134.5,
 			135,
@@ -5749,7 +6082,7 @@
 			"Cycle 5",
 			136,
 			142,
-			8,
+			11,
 			32,
 			false
 		],
@@ -5823,6 +6156,14 @@
 			144.99099999999999,
 			3,
 			106,
+			true
+		],
+		[
+			"Verse 4 Background C",
+			139.658,
+			155.65699999999998,
+			9,
+			109,
 			true
 		],
 		[
@@ -6162,10 +6503,26 @@
 			true
 		],
 		[
+			"Breakdown Background A",
+			155.65699999999998,
+			166.32299999999998,
+			8,
+			116,
+			true
+		],
+		[
+			"Outro Background",
+			155.65699999999998,
+			166.32299999999998,
+			10,
+			108,
+			true
+		],
+		[
 			"Cycle 6",
 			157,
 			163,
-			8,
+			11,
 			28,
 			true
 		]
