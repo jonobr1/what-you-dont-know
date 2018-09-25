@@ -15,6 +15,8 @@ function AudioManager ( bpm, bars ) {
 
 	this.section = 0;
 	this.tracks = [];
+	this.analysers = {}; // Should be less than `tracks.length`
+	this.analysers.list = [];
 
 	this.destination = ctx.createGain();
 	this.master = ctx.createGain();
@@ -41,9 +43,19 @@ AudioManager.prototype.elapsedPercentageOfCurrentRep = 0;
  */
 AudioManager.prototype.addTrack = function ( name, clips ) {
 
+	var ctx = WebAudio.getContext();
+
 	var track = new AudioManager.Track( name, clips );
 	track.node.connect( this.destination );
 
+	var key = name.replace( /\-[a-zA-Z]$/i, '' );
+	if ( !( key in this.analysers ) ) {
+		var analyser = AudioManager.Track.createAnalyser( ctx );
+		this.analysers[ key ] = analyser;
+		this.analysers.list.push( analyser );
+	}
+
+	track.node.connect( this.analysers[ key ] );
 	this.tracks.push( track );
 
 	return track;
@@ -185,14 +197,15 @@ AudioManager.prototype.update = function () {
 	for ( var i = 0; i < this.tracks.length; i++ ) {
 
 		var track = this.tracks[ i ];
+		var analyser = this.analysers.list[ i ];
 
 		if ( isAboutToSwitch && this.section !== track.index ) {
 			this.section = track.index;
 		}
 
-		if ( this.isPlaying ) {
+		if ( analyser && this.isPlaying ) {
 			// Update the track's fft data for visualizing.
-			track.analyser.getByteFrequencyData( track.analyser.data );	// 0 - 255
+			analyser.getByteFrequencyData( analyser.data );	// 0 - 255
 		}
 
 		// Update the track's volume.
@@ -216,10 +229,6 @@ AudioManager.Track = function ( name, clips ) {
 	this.clips = clips;
 
 	this.node = ctx.createGain();
-	this.analyser = ctx.createAnalyser();
-	this.analyser.fftSize = AudioManager.fftSize;
-	this.analyser.data = new Uint8Array( this.analyser.frequencyBinCount );
-	this.node.connect( this.analyser );
 
 	this.volume = 1;
 
@@ -232,6 +241,16 @@ AudioManager.Track = function ( name, clips ) {
 	}
 
 	this.current = this.clips[ this.index ];
+
+};
+
+AudioManager.Track.createAnalyser = function( ctx ) {
+
+	var analyser = ctx.createAnalyser();
+	analyser.fftSize = AudioManager.fftSize;
+	analyser.data = new Uint8Array( analyser.frequencyBinCount );
+
+	return analyser;
 
 };
 
