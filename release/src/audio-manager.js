@@ -75,9 +75,9 @@ AudioManager.prototype.start = function ( time ) {
 
 		this.startTime = ctx.currentTime + ( time || 0 );
 
-		// for ( var i = 0; i < this.tracks.length; i++ ) {
-		// 	this.tracks[ i ].start( this.startTime );
-		// }
+		for ( var i = 0; i < this.tracks.length; i++ ) {
+			this.tracks[ i ].start( this.startTime );
+		}
 
 		this.destination.connect( this.master );
 
