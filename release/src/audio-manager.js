@@ -75,9 +75,9 @@ AudioManager.prototype.start = function ( time ) {
 
 		this.startTime = ctx.currentTime + ( time || 0 );
 
-		for ( var i = 0; i < this.tracks.length; i++ ) {
-			this.tracks[ i ].start( this.startTime );
-		}
+		// for ( var i = 0; i < this.tracks.length; i++ ) {
+		// 	this.tracks[ i ].start( this.startTime );
+		// }
 
 		this.destination.connect( this.master );
 
@@ -129,11 +129,25 @@ AudioManager.prototype.transition = function ( index ) {
 
 };
 
-AudioManager.prototype.set = function ( index ) {
+AudioManager.prototype.set = function ( index, startPct ) {
 
 	for ( var i = 0; i < this.tracks.length; i++ ) {
+
 		var track = this.tracks[ i ];
-		track.transition( 0, index );
+
+		if ( track.current ) {
+			track.current.pause();
+		}
+
+		track.select( index );
+
+		if ( track.current ) {
+			track.current.currentTime = startPct * track.current.duration;
+			if ( track.current.paused ) {
+				track.current.play();
+			}
+		}
+
 	}
 
 	return this;
@@ -149,7 +163,13 @@ AudioManager.prototype.stop = function () {
 	var ctx = WebAudio.getContext();
 	this.isPlaying = false;
 
-	this.destination.gain.value = 0;
+	// this.destination.gain.value = 0;
+	for ( var i = 0; i < this.tracks.length; i++ ) {
+		var track = this.tracks[ i ];
+		if ( track.current && !track.current.paused ) {
+			track.current.pause();
+		}
+	}
 
 	return this;
 
