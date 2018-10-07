@@ -144,7 +144,6 @@ AudioManager.prototype.set = function ( index, startPct ) {
 		var d = b || track.current !== track.clips[ index ]
 
 		if ( a && c && d ) {
-			console.log( 'pause', track.name, track.current.paused );
 			track.current.pause();
 		}
 
