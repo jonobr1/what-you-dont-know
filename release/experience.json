@@ -4624,6 +4624,190 @@
 				"",
 				"}"
 			]
+		],
+		[
+			"Ring Phi: 6",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 6;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: 8",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 8;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: 2",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 2;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: 10",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 10;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: 4",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 4;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: 12",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 12;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: 14",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 14;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: 16",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var phi = 16;",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = phi;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Ring Phi: Random",
+			[
+				"var ring = resources.get( 'ring' );",
+				"",
+				"function start( progress ) {",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tuniforms.phi.value = Math.floor( Math.random() * 8 ) * 2 + 2;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
+		],
+		[
+			"Effect",
+			[
+				"var parameters = {",
+				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"};",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
 		]
 	],
 	"animations": [
@@ -5076,6 +5260,14 @@
 			true
 		],
 		[
+			"2.01 Ring Phi",
+			48.99699999999999,
+			51,
+			7,
+			125,
+			true
+		],
+		[
 			"Verse 2 Background A",
 			48.99699999999999,
 			59.66299999999999,
@@ -5188,6 +5380,14 @@
 			true
 		],
 		[
+			"2.02 Ring Phi",
+			54.32999999999999,
+			56.32999999999999,
+			7,
+			127,
+			true
+		],
+		[
 			"Verse 2 Background B",
 			54.32999999999999,
 			64.996,
@@ -5252,6 +5452,14 @@
 			true
 		],
 		[
+			"2.03 Ring Phi",
+			59.66299999999999,
+			61.66299999999999,
+			7,
+			123,
+			true
+		],
+		[
 			"Verse 2 Background C",
 			59.66299999999999,
 			75.66199999999999,
@@ -5313,6 +5521,14 @@
 			64.28610108303255,
 			5,
 			37,
+			true
+		],
+		[
+			"2.04 Ring Phi",
+			64.96475,
+			66.96475,
+			7,
+			124,
 			true
 		],
 		[
@@ -5468,6 +5684,14 @@
 			true
 		],
 		[
+			"3.01 Ring Phi",
+			75.66199999999999,
+			77.66199999999999,
+			7,
+			126,
+			true
+		],
+		[
 			"Chorus Background A",
 			75.66199999999999,
 			80.99499999999999,
@@ -5564,6 +5788,14 @@
 			false
 		],
 		[
+			"3.02 Ring Phi",
+			80.96875,
+			82.96875,
+			7,
+			128,
+			true
+		],
+		[
 			"3.02",
 			80.99499999999999,
 			86.32799999999999,
@@ -5601,6 +5833,14 @@
 			91.66099999999999,
 			3,
 			98,
+			true
+		],
+		[
+			"3.03 Ring Phi",
+			86.32799999999999,
+			88.32799999999999,
+			7,
+			129,
 			true
 		],
 		[
@@ -5692,6 +5932,14 @@
 			true
 		],
 		[
+			"3.04 Ring Phi",
+			91.66099999999999,
+			93.66099999999999,
+			7,
+			130,
+			true
+		],
+		[
 			"Chorus Background D",
 			91.66099999999999,
 			96.99399999999999,
@@ -5713,6 +5961,14 @@
 			102.32699999999998,
 			3,
 			100,
+			true
+		],
+		[
+			"3.05 Ring Phi",
+			96.99399999999999,
+			98.99399999999999,
+			7,
+			131,
 			true
 		],
 		[
@@ -5804,6 +6060,14 @@
 			true
 		],
 		[
+			"4.01 Ring Phi",
+			102.32699999999998,
+			104.32699999999998,
+			7,
+			131,
+			true
+		],
+		[
 			"Chorus Background F",
 			102.32699999999998,
 			107.65999999999998,
@@ -5833,6 +6097,14 @@
 			112.99299999999998,
 			3,
 			101,
+			true
+		],
+		[
+			"4.02 Ring Phi",
+			107.65999999999998,
+			109.65999999999998,
+			7,
+			131,
 			true
 		],
 		[
@@ -5996,6 +6268,14 @@
 			true
 		],
 		[
+			"4.03 Ring Phi",
+			112.99299999999998,
+			114.99299999999998,
+			7,
+			131,
+			true
+		],
+		[
 			"4Ci",
 			115.25,
 			115.75,
@@ -6076,6 +6356,14 @@
 			true
 		],
 		[
+			"4.04 Ring Phi",
+			118.32599999999998,
+			120.32599999999998,
+			7,
+			131,
+			true
+		],
+		[
 			"4Di",
 			120.75,
 			121.25,
@@ -6145,6 +6433,14 @@
 			128.992,
 			3,
 			104,
+			true
+		],
+		[
+			"4.05 Ring Phi",
+			123.65899999999998,
+			125.65899999999998,
+			7,
+			131,
 			true
 		],
 		[
@@ -6225,6 +6521,14 @@
 			134.325,
 			3,
 			87,
+			true
+		],
+		[
+			"5.01 Ring Phi",
+			128.992,
+			130.992,
+			7,
+			131,
 			true
 		],
 		[
@@ -6396,6 +6700,14 @@
 			true
 		],
 		[
+			"5.02 Ring Phi",
+			134.325,
+			136.325,
+			7,
+			131,
+			true
+		],
+		[
 			"Verse 4 Background B",
 			134.325,
 			144.99099999999999,
@@ -6529,6 +6841,14 @@
 			144.99099999999999,
 			3,
 			106,
+			true
+		],
+		[
+			"5.03 Ring Phi",
+			139.658,
+			141.658,
+			7,
+			131,
 			true
 		],
 		[
@@ -6673,6 +6993,14 @@
 			155.65699999999998,
 			3,
 			107,
+			true
+		],
+		[
+			"5.04 Ring Phi",
+			144.99099999999999,
+			146.99099999999999,
+			7,
+			131,
 			true
 		],
 		[
@@ -6873,6 +7201,14 @@
 			166.32299999999998,
 			3,
 			88,
+			true
+		],
+		[
+			"6.01 Ring Phi",
+			155.65699999999998,
+			157.65699999999998,
+			7,
+			131,
 			true
 		],
 		[
