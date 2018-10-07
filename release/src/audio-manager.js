@@ -46,6 +46,7 @@ AudioManager.prototype.addTrack = function ( name, clips ) {
 	var ctx = WebAudio.getContext();
 
 	var track = new AudioManager.Track( name, clips );
+	track.isVocal = /vocal/i.test( name );
 	track.node.connect( this.destination );
 
 	var key = name.replace( /\-[a-zA-Z]$/i, '' );
@@ -131,11 +132,19 @@ AudioManager.prototype.transition = function ( index ) {
 
 AudioManager.prototype.set = function ( index, startPct ) {
 
+	var limit = 0.01;
+	startPct = Math.floor( startPct * 1000 ) / 1000;
+
 	for ( var i = 0; i < this.tracks.length; i++ ) {
 
 		var track = this.tracks[ i ];
+		var a = track.current && !track.current.paused;
+		var b = startPct > limit;
+		var c = b || ( startPct < limit && !track.isVocal );
+		var d = b || track.current !== track.clips[ index ]
 
-		if ( track.current ) {
+		if ( a && c && d ) {
+			console.log( 'pause', track.name, track.current.paused );
 			track.current.pause();
 		}
 

@@ -384,7 +384,7 @@
 				"\t\tid: '6.01',",
 				"\t\tname: 'breakdown',",
 				"\t\ttracks: {",
-				"\t\t\t'vocals': true,",
+				"\t\t\t'vocals': { loop: false },",
 				"\t\t\t'machine-drum-a': true,",
 				"\t\t\t'machine-drum-b': 'verse-1',",
 				"\t\t\t'instrumental': true,",
