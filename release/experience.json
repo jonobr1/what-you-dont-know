@@ -4416,7 +4416,7 @@
 			]
 		],
 		[
-			"Effect",
+			"Tie Thickness to Progress",
 			[
 				"var ring = resources.get( 'ring' );",
 				"var size = 1;",
@@ -4510,7 +4510,7 @@
 			]
 		],
 		[
-			"Effect",
+			"Tie Amplitude to Vocals",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"var ring = resources.get( 'ring' );",
@@ -4528,15 +4528,66 @@
 				"\t}",
 				"",
 				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tvar id = 5;",
 				"",
-				"\tvar melody = manager.analysers.vocals;",
+				"\tvar melody = manager.analysers.melody;",
 				"\tvar data = melody.data;",
-				"\tvar fft = data[ 5 ];",
+				"\tvar fft = data[ id ];",
+				"",
+				"\tvar vocals = manager.analysers.vocals;",
+				"\tdata = vocals.data;",
+				"\tfft = data[ id ];",
 				"\tfft = 75 * fft / 255;",
 				"\tuniforms.amplitude.value += ( fft - uniforms.amplitude.value ) * 0.125;",
 				"",
+				"}"
+			]
+		],
+		[
+			"Amplitude to Vocals and Twist to Drum Machine",
+			[
+				"var manager = resources.get( 'audio-manager' );",
+				"var ring = resources.get( 'ring' );",
 				"",
-				"\tuniforms.thickness.value += ( 1 - uniforms.thickness.value ) * 0.125;",
+				"var offsetVelocity = 0;",
+				"",
+				"function start( progress ) {}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update ( progress ) {",
+				"",
+				"\tif ( !ring.userData.shader ) {",
+				"\t\treturn;",
+				"\t}",
+				"",
+				"\tvar uniforms = ring.userData.shader.uniforms;",
+				"\tvar id = 5;",
+				"",
+				"\tvar melody = manager.analysers.melody;",
+				"\tvar data = melody.data;",
+				"\tvar fft = data[ id ];",
+				"",
+				"\tif ( fft > offsetVelocity ) {",
+				"\t\toffsetVelocity = fft / 1000;",
+				"\t} else {",
+				"\t\toffsetVelocity -= offsetVelocity * 0.125;",
+				"\t}",
+				"\tuniforms.offset.value -= Math.pow( offsetVelocity, 0.25 ) / 100;",
+				"",
+				"\tvar vocals = manager.analysers.vocals;",
+				"\tdata = vocals.data;",
+				"\tfft = data[ id ];",
+				"\tfft = 75 * fft / 255;",
+				"\tuniforms.amplitude.value += ( fft - uniforms.amplitude.value ) * 0.125;",
+				"",
+				"\tvar machineDrum = manager.analysers[ 'machine-drum' ];",
+				"\tdata = machineDrum.data;",
+				"\tid = Math.floor( data.length / 2 );",
+				"\tfft = data[ id ];",
+				"\tfft = 60 * ( fft / 255 );",
+				"",
+				"\tuniforms.twist.value += ( fft - uniforms.twist.value ) * 0.0625;",
 				"",
 				"}"
 			]
@@ -4628,7 +4679,7 @@
 			17.499000000000002,
 			48.99699999999999,
 			12,
-			119,
+			117,
 			true
 		],
 		[
@@ -5402,9 +5453,9 @@
 		[
 			"Audio Reactive Ring 3",
 			75.66199999999999,
-			166.32299999999998,
+			107.65999999999998,
 			12,
-			118,
+			121,
 			true
 		],
 		[
@@ -5765,6 +5816,14 @@
 			128.992,
 			10,
 			115,
+			true
+		],
+		[
+			"Audio Reactive Ring 4",
+			107.65999999999998,
+			166.32299999999998,
+			12,
+			118,
 			true
 		],
 		[
