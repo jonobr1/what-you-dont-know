@@ -402,7 +402,7 @@
 				"",
 				"var i, name, sound, url, property;",
 				"var ua = navigator.userAgent;",
-				"var isMP3 = !!ua.match( /Safari/ig ) || !!ua.match( /Edge/ig );",
+				"var isMP3 = ( !!ua.match( /Safari/ig ) && !ua.match( /Chrome/ig ) ) || !!ua.match( /Edge/ig );",
 				"var ctx = WebAudio.getContext();",
 				"var extension = isMP3 ? 'mp3' : 'ogg';",
 				"",
