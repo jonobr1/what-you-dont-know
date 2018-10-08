@@ -133,7 +133,6 @@ AudioManager.prototype.transition = function ( index ) {
 AudioManager.prototype.set = function ( index, startPct ) {
 
 	var limit = 0.01;
-	startPct = Math.floor( startPct * 1000 ) / 1000;
 
 	for ( var i = 0; i < this.tracks.length; i++ ) {
 
