@@ -26,7 +26,7 @@ function AudioManager ( bpm, bars ) {
 
 }
 
-AudioManager.drag = 0.125;
+AudioManager.drag = 0.33;
 AudioManager.fftSize = 32;
 
 AudioManager.prototype.startTime = null;
@@ -236,8 +236,12 @@ AudioManager.prototype.update = function () {
 		}
 
 		// Update the track's volume.
-		track.node.gain.value += ( track.volume - track.node.gain.value )
-			* AudioManager.drag;
+		var dt = track.volume - track.node.gain.value;
+		if ( dt < - 0.01 && dt > 0.01 ) {
+			track.node.gain.value += dt * AudioManager.drag;
+		} else {
+			track.node.gain.value = track.volume;
+		}
 
 	}
 	return this;

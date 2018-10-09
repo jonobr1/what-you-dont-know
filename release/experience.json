@@ -4623,7 +4623,7 @@
 				"",
 				"\tuniforms.amplitude.value -= uniforms.amplitude.value * 0.0625;",
 				"\t",
-				"\tvar machineDrum = manager.analysers[ 'machine-drum' ];",
+				"\tvar machineDrum = manager.analysers[ 'summation' ];",
 				"\tdata = machineDrum.data;",
 				"\tid = Math.floor( data.length / 2 );",
 				"\tfft = data[ id ];",
@@ -4883,6 +4883,31 @@
 				"\tvar uniforms = ring.userData.shader.uniforms;",
 				"\tuniforms.thickness.value -= uniforms.thickness.value * 0.125;",
 				"}"
+			]
+		],
+		[
+			"Silence Machine Drum, Instrument, Melody, Subtone",
+			[
+				"// Silence Machine Drum, Instrument, Melody, Subtone",
+				"var manager = resources.get( 'audio-manager' );",
+				"var ids = [ 6, 7, 8, 9, 11 ];",
+				"",
+				"function start( progress ) {",
+				"\tfor ( var i = 0; i < ids.length; i++ ) {",
+				"\t\tvar id = ids[ i ];",
+				"\t\tmanager.tracks[ id ].volume = 0;",
+				"\t}",
+				"}",
+				"",
+				"function end( progress ) {",
+				"\tfor ( var i = 0; i < ids.length; i++ ) {",
+				"\t\tvar id = ids[ i ];",
+				"\t\tmanager.tracks[ id ].volume = 1;",
+				"\t\tmanager.tracks[ id ].node.gain.value = 1;",
+				"\t}",
+				"}",
+				"",
+				"function update( progress ){}"
 			]
 		]
 	],
@@ -6317,6 +6342,14 @@
 			110.75,
 			4,
 			34,
+			true
+		],
+		[
+			"4.X - 5.X Suspense",
+			110.25,
+			131.45,
+			11,
+			135,
 			true
 		],
 		[
