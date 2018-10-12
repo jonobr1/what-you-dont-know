@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../release/third-party/three.js"></script>
+      <script src="../release/third-party/OrbitControls.js"></script>
+      <script src="../release/src/interaction.js"></script>
+      <script>
+
+        var renderer = new THREE.WebGLRenderer( { antialias: true } );
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera( 75 );
+
+        var aspect = 0.16 / 1;
+
+        var geometry = new THREE.CylinderBufferGeometry( 0.16, 0.16, 1, 16, 16 );
+        var positions = geometry.attributes.position;
+
+        for ( var i = 0; i < positions.count; i++ ) {
+
+          var id = i * 3;
+
+          var x = positions.array[ id + 0 ];
+          var y = positions.array[ id + 1 ];
+          var z = positions.array[ id + 2 ];
+
+          var ypct = ( y + 0.5 ); // [ 0 - 1 ] value
+          var t = Math.sin( ( ypct * 0.8 + 0.1 ) * Math.PI );
+          t = Math.pow( t, 0.125 );
+          t *= Math.pow( ( ypct * 0.7 + 0.15 ), 0.33 );
+
+          if ( ( 5 * ypct ) % 1 < 0.1 ) {
+            t *= 0.8;
+          }
+
+          x *= t;
+          z *= t;
+
+          positions.array[ id + 0 ] = x;
+          positions.array[ id + 2 ] = z;
+
+        }
+
+        var controller = new THREE.Mesh(
+          geometry,
+          new THREE.MeshStandardMaterial( {
+            color: 0x000000,
+            roughness: 0.2,
+            metalness: 0.0,
+            emissive: 0xff3333,
+            emissiveIntensity: 0.5
+          } )
+        );
+
+        var scale = 0.2;
+
+        geometry = geometry.clone();
+        geometry.scale( 1 + scale, 1 + scale * aspect, 1 + scale );
+
+        var outline = new THREE.Mesh(
+          geometry,
+          new THREE.MeshBasicMaterial( {
+            color: 0xefefef,
+            side: THREE.BackSide,
+          } )
+        );
+
+        controller.add( outline );
+
+        var laser = new THREE.Mesh(
+          new THREE.ConeBufferGeometry( 0.01, 1, 8, 1, true ),
+          new THREE.MeshBasicMaterial( {
+            transparent: true,
+            // blending: THREE.AdditiveBlending,
+            color: 0x64ffc8,
+            side: THREE.DoubleSide
+          } )
+        );
+        laser.geometry.translate( 0, 0.5, 0 );
+        laser.position.y += 0.5;
+        laser.scale.y = 10;
+        controller.add( laser );
+
+        setup();
+
+        function setup() {
+
+          controller.position.z = - 2;
+
+          scene.add( camera );
+          scene.add( controller );
+
+          var ambient = new THREE.HemisphereLight( 0xFEFCFF, 0xB0ADAA, 0.9 );
+          scene.add( ambient );
+
+          light = new THREE.DirectionalLight( 0xFFFFFF, 0.35 );
+          light.position.set( 2.5, 5.0, 2.5 );
+          light.castShadow = true;
+          light.shadow.radius = 10;
+          scene.add( light );
+
+          renderer.setClearColor( 0xff3333 );
+
+          document.body.appendChild( renderer.domElement );
+
+          window.addEventListener( 'resize', resize, false );
+          resize();
+
+          renderer.setAnimationLoop( animate );
+
+        }
+
+        function resize() {
+
+          var width = window.innerWidth;
+          var height = window.innerHeight;
+
+          renderer.setSize( width, height );
+
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+
+        }
+
+        function animate( time ) {
+
+          controller.rotation.x += 0.01;
+          renderer.render( scene, camera );
+
+        }
+
+      </script>
+    </div>
+  </body>
+</html>
