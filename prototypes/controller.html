@@ -39,9 +39,8 @@
           var z = positions.array[ id + 2 ];
 
           var ypct = ( y + 0.5 ); // [ 0 - 1 ] value
-          var t = Math.sin( ( ypct * 0.8 + 0.1 ) * Math.PI );
-          t = Math.pow( t, 0.125 );
-          t *= Math.pow( ( ypct * 0.7 + 0.15 ), 0.33 );
+          var t = 1;
+          t = Math.pow( ( ypct * 0.7 + 0.15 ), 0.33 );
 
           if ( ( 5 * ypct ) % 1 < 0.1 ) {
             t *= 0.8;
@@ -66,7 +65,9 @@
           } )
         );
 
-        var scale = 0.2;
+        // Interaction.LaserPointer.rotation.x = - Math.PI / 2;
+
+        var scale = 0.15;
 
         geometry = geometry.clone();
         geometry.scale( 1 + scale, 1 + scale * aspect, 1 + scale );

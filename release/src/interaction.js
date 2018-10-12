@@ -328,13 +328,88 @@ function Interaction ( renderer, camera ) {
 Interaction.prototype = Object.create( THREE.Group.prototype );
 Interaction.prototype.constructor = Interaction;
 
-Interaction.Laser = new THREE.Mesh(
-	new THREE.CylinderBufferGeometry( 0.001, 0.001, 1, 8, 1, true ),
-	new THREE.MeshBasicMaterial({ color: 0x0c89c4 })
-);
-Interaction.Laser.geometry.translate( 0, 0.5, 0 );
-Interaction.Laser.rotation.x = - Math.PI / 2;
-Interaction.Laser.scale.y = 6;
+Interaction.getDefaultController = function() {
+
+	var aspect = 0.16 / 1;
+
+	var geometry = new THREE.CylinderBufferGeometry( 0.16, 0.16, 1, 16, 16 );
+	var positions = geometry.attributes.position;
+
+	for ( var i = 0; i < positions.count; i++ ) {
+
+		var id = i * 3;
+
+		var x = positions.array[ id + 0 ];
+		var y = positions.array[ id + 1 ];
+		var z = positions.array[ id + 2 ];
+
+		var ypct = ( y + 0.5 ); // [ 0 - 1 ] value
+		var t = 1;
+		t = Math.pow( ( ypct * 0.7 + 0.15 ), 0.33 );
+
+		if ( ( 5 * ypct ) % 1 < 0.1 ) {
+			t *= 0.8;
+		}
+
+		x *= t;
+		z *= t;
+
+		positions.array[ id + 0 ] = x;
+		positions.array[ id + 2 ] = z;
+
+	}
+
+	var controller = new THREE.Mesh(
+		geometry,
+		new THREE.MeshStandardMaterial( {
+			color: 0x000000,
+			roughness: 0.2,
+			metalness: 0.0,
+			emissive: 0xff3333,
+			emissiveIntensity: 0.5
+		} )
+	);
+
+	// If need to change the position of the controller
+	// do it here instead of trying to do it in the
+	// geometry because the controller is ultimately added
+	// to a group that is transformed.
+	controller.rotation.x = - Math.PI / 2;
+
+	var scale = 0.15;
+
+	geometry = geometry.clone();
+	geometry.scale( 1 + scale, 1 + scale * aspect, 1 + scale );
+
+	var outline = new THREE.Mesh(
+		geometry,
+		new THREE.MeshBasicMaterial( {
+			color: 0xefefef,
+			side: THREE.BackSide,
+		} )
+	);
+
+	controller.add( outline );
+
+	var laser = new THREE.Mesh(
+		new THREE.ConeBufferGeometry( 0.01, 1, 8, 1, true ),
+		new THREE.MeshBasicMaterial( {
+			transparent: true,
+			// blending: THREE.AdditiveBlending,
+			color: 0x64ffc8,
+			side: THREE.DoubleSide
+		} )
+	);
+	laser.geometry.translate( 0, 0.5, 0 );
+	laser.position.y += 0.5;
+	laser.scale.y = 10;
+	controller.add( laser );
+
+	return controller;
+
+};
+
+Interaction.Laser = Interaction.getDefaultController();
 
 Interaction.Offscreen = new THREE.Vector2( - 10, - 10 );
 
