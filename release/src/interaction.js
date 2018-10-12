@@ -405,6 +405,8 @@ Interaction.getDefaultController = function() {
 	laser.scale.y = 10;
 	controller.add( laser );
 
+	controller.userData.scale = laser.scale;
+
 	return controller;
 
 };
@@ -460,7 +462,7 @@ Interaction.prototype.update = function() {
 							type: 'out',
 							controller: controller
 						} );
-						controller.userData.laser.scale.y = Interaction.Laser.scale.y;
+						controller.userData.laser.userData.scale.y = Interaction.Laser.userData.scale.y;
 					}
 
 					this.intersections[ controller.uuid ] = intersects[ 0 ];
@@ -468,7 +470,7 @@ Interaction.prototype.update = function() {
 						type: 'over',
 						controller: controller
 					} );
-					controller.userData.laser.scale.y = intersects[0].distance;
+					controller.userData.laser.userData.scale.y = intersects[0].distance;
 
 				} else {
 
@@ -488,7 +490,7 @@ Interaction.prototype.update = function() {
 						type: 'out',
 						controller: controller
 					} );
-					controller.userData.laser.scale.y = Interaction.Laser.scale.y;
+					controller.userData.laser.userData.scale.y = Interaction.Laser.userData.scale.y;
 				}
 
 				this.intersections[ controller.uuid ] = null;
