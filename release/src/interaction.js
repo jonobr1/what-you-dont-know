@@ -209,6 +209,9 @@ function Interaction ( renderer, camera ) {
 		controller.add( laser );
 		controller.userData.laser = laser;
 
+		laser.userData.pointer = laser.children[ 1 ];
+		laser.userData.scale = laser.userData.pointer.scale;
+
 		function primaryPressBegan () {
 
 			if ( !scope.enabled ) {
@@ -221,7 +224,7 @@ function Interaction ( renderer, camera ) {
 				item.object.dispatchEvent( {
 					type: 'primary-down',
 					controller: controller
-			  	} );
+		  	} );
 			}
 
 			scope.dispatchEvent( {
@@ -265,7 +268,7 @@ function Interaction ( renderer, camera ) {
 				item.object.dispatchEvent( {
 					type: 'primary-touchstart',
 					controller: controller
-			  	} );
+		  	} );
 			}
 
 			scope.dispatchEvent( {
@@ -287,7 +290,7 @@ function Interaction ( renderer, camera ) {
 				item.object.dispatchEvent( {
 					type: 'primary-touchend',
 					controller: controller
-			  	} );
+		  	} );
 			}
 
 			scope.dispatchEvent( {
@@ -321,7 +324,12 @@ function Interaction ( renderer, camera ) {
 
 		} );
 
-	}
+		scope.dispatchEvent( {
+			type: 'connected',
+			controller: controller
+		} );
+
+	};
 
 }
 
@@ -391,7 +399,7 @@ Interaction.getDefaultController = function() {
 
 	controller.add( outline );
 
-	var laser = new THREE.Mesh(
+	var pointer = new THREE.Mesh(
 		new THREE.ConeBufferGeometry( 0.01, 1, 8, 1, true ),
 		new THREE.MeshBasicMaterial( {
 			transparent: true,
@@ -400,12 +408,13 @@ Interaction.getDefaultController = function() {
 			side: THREE.DoubleSide
 		} )
 	);
-	laser.geometry.translate( 0, 0.5, 0 );
-	laser.position.y += 0.5;
-	laser.scale.y = 10;
-	controller.add( laser );
+	pointer.geometry.translate( 0, 0.5, 0 );
+	pointer.position.y += 0.5;
+	pointer.scale.y = 10;
+	controller.add( pointer );
 
-	controller.userData.scale = laser.scale;
+	controller.userData.scale = pointer.scale;
+	controller.userData.pointer = pointer;
 
 	return controller;
 
