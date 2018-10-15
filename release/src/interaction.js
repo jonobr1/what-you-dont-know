@@ -413,7 +413,7 @@ Interaction.getDefaultController = function() {
 	pointer.geometry.translate( 0, 0.5, 0 );
 	pointer.position.y += 0.5;
 	pointer.scale.x = 1  / scaleFactor;
-	pointer.scale.y = 20 / scaleFactor;
+	pointer.scale.y = 50 / scaleFactor;
 	pointer.scale.z = 1  / scaleFactor;
 	controller.add( pointer );
 
