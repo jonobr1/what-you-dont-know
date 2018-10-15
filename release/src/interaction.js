@@ -339,6 +339,7 @@ Interaction.prototype.constructor = Interaction;
 Interaction.getDefaultController = function() {
 
 	var aspect = 0.16 / 1;
+	var scaleFactor = 0.2;
 
 	var geometry = new THREE.CylinderBufferGeometry( 0.16, 0.16, 1, 16, 16 );
 	var positions = geometry.attributes.position;
@@ -366,6 +367,8 @@ Interaction.getDefaultController = function() {
 		positions.array[ id + 2 ] = z;
 
 	}
+
+	geometry.scale( scaleFactor, scaleFactor, scaleFactor );
 
 	var controller = new THREE.Mesh(
 		geometry,
@@ -410,7 +413,7 @@ Interaction.getDefaultController = function() {
 	);
 	pointer.geometry.translate( 0, 0.5, 0 );
 	pointer.position.y += 0.5;
-	pointer.scale.y = 10;
+	pointer.scale.y = 100;
 	controller.add( pointer );
 
 	controller.userData.scale = pointer.scale;
