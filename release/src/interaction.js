@@ -209,8 +209,17 @@ function Interaction ( renderer, camera ) {
 		controller.add( laser );
 		controller.userData.laser = laser;
 
+		// TODO: Move to the controller's prototype and override `clone` method.
 		laser.userData.pointer = laser.children[ 1 ];
-		laser.userData.scale = laser.userData.pointer.scale;
+		Object.defineProperty( laser.userData, 'scale', {
+			enumerable: true,
+			get: function() {
+				return laser.userData.pointer.scale.y * Interaction.ScaleFactor;
+			},
+			set: function(v) {
+				laser.userData.pointer.scale.y = v / Interaction.ScaleFactor;
+			}
+		} );
 
 		function primaryPressBegan () {
 
@@ -335,11 +344,11 @@ function Interaction ( renderer, camera ) {
 
 Interaction.prototype = Object.create( THREE.Group.prototype );
 Interaction.prototype.constructor = Interaction;
+Interaction.ScaleFactor = 0.2;
 
 Interaction.getDefaultController = function() {
 
 	var aspect = 0.16 / 1;
-	var scaleFactor = 0.2;
 
 	var geometry = new THREE.CylinderBufferGeometry( 0.16, 0.16, 1, 16, 16 );
 	var positions = geometry.attributes.position;
@@ -412,23 +421,23 @@ Interaction.getDefaultController = function() {
 	);
 	pointer.geometry.translate( 0, 0.5, 0 );
 	pointer.position.y += 0.5;
-	pointer.scale.x = 1  / scaleFactor;
-	pointer.scale.y = 50 / scaleFactor;
-	pointer.scale.z = 1  / scaleFactor;
+	pointer.scale.x = 1  / Interaction.ScaleFactor;
+	pointer.scale.y = 50 / Interaction.ScaleFactor;
+	pointer.scale.z = 1  / Interaction.ScaleFactor;
 	controller.add( pointer );
 
 	Object.defineProperty( controller.userData, 'scale', {
 		enumerable: true,
 		get: function() {
-			return pointer.scale.y * scaleFactor;
+			return pointer.scale.y * Interaction.ScaleFactor;
 		},
 		set: function(v) {
-			pointer.scale.y = v / scaleFactor;
+			pointer.scale.y = v / Interaction.ScaleFactor;
 		}
 	} );
 	controller.userData.pointer = pointer;
 
-	controller.scale.set( scaleFactor, scaleFactor, scaleFactor );
+	controller.scale.set( Interaction.ScaleFactor, Interaction.ScaleFactor, Interaction.ScaleFactor );
 
 	return controller;
 
