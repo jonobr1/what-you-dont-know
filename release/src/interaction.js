@@ -411,21 +411,25 @@ Interaction.getDefaultController = function() {
 	);
 	pointer.geometry.translate( 0, 0.5, 0 );
 	pointer.position.y += 0.5;
+	pointer.scale.x = 1 / scaleFactor;
 	pointer.scale.y = 100;
+	pointer.scale.z = 1 / scaleFactor;
 	controller.add( pointer );
 
-	var group = new THREE.Group();
-
-	group.userData.scale = pointer.scale;
-	group.userData.pointer = pointer;
-	group.userData.model = controller;
-
-	group.add( controller );
-	group.add( pointer );
+	Object.defineProperty( controller.userData, 'scale', {
+		enumerable: true,
+		get: function() {
+			return pointer.scale.y * scaleFactor;
+		},
+		set: function(v) {
+			pointer.scale.y = v / scaleFactor;
+		}
+	} );
+	controller.userData.pointer = pointer;
 
 	controller.scale.set( scaleFactor, scaleFactor, scaleFactor );
 
-	return group;
+	return controller;
 
 };
 
@@ -480,7 +484,7 @@ Interaction.prototype.update = function() {
 							type: 'out',
 							controller: controller
 						} );
-						controller.userData.laser.userData.scale.y = Interaction.Laser.userData.scale.y;
+						controller.userData.laser.userData.scale = Interaction.Laser.userData.scale;
 					}
 
 					this.intersections[ controller.uuid ] = intersects[ 0 ];
@@ -488,7 +492,7 @@ Interaction.prototype.update = function() {
 						type: 'over',
 						controller: controller
 					} );
-					controller.userData.laser.userData.scale.y = intersects[0].distance;
+					controller.userData.laser.userData.scale = intersects[0].distance;
 
 				} else {
 
@@ -508,7 +512,7 @@ Interaction.prototype.update = function() {
 						type: 'out',
 						controller: controller
 					} );
-					controller.userData.laser.userData.scale.y = Interaction.Laser.userData.scale.y;
+					controller.userData.laser.userData.scale = Interaction.Laser.userData.scale;
 				}
 
 				this.intersections[ controller.uuid ] = null;
