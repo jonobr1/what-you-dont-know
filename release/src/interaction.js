@@ -368,8 +368,6 @@ Interaction.getDefaultController = function() {
 
 	}
 
-	geometry.scale( scaleFactor, scaleFactor, scaleFactor );
-
 	var controller = new THREE.Mesh(
 		geometry,
 		new THREE.MeshStandardMaterial( {
@@ -403,7 +401,7 @@ Interaction.getDefaultController = function() {
 	controller.add( outline );
 
 	var pointer = new THREE.Mesh(
-		new THREE.ConeBufferGeometry( 0.01, 1, 8, 1, true ),
+		new THREE.CylinderBufferGeometry( 0.01, 0.01, 1, 8, 1 ),
 		new THREE.MeshBasicMaterial( {
 			transparent: true,
 			// blending: THREE.AdditiveBlending,
@@ -418,6 +416,8 @@ Interaction.getDefaultController = function() {
 
 	controller.userData.scale = pointer.scale;
 	controller.userData.pointer = pointer;
+
+	controller.scale.set( scaleFactor, scaleFactor, scaleFactor );
 
 	return controller;
 
