@@ -402,6 +402,7 @@ Interaction.getDefaultController = function() {
 
 	var pointer = new THREE.Mesh(
 		new THREE.CylinderBufferGeometry( 0.01, 0.01, 1, 8, 1 ),
+		// TODO: Face teal out over distance.
 		new THREE.MeshBasicMaterial( {
 			transparent: true,
 			// blending: THREE.AdditiveBlending,
@@ -411,9 +412,9 @@ Interaction.getDefaultController = function() {
 	);
 	pointer.geometry.translate( 0, 0.5, 0 );
 	pointer.position.y += 0.5;
-	pointer.scale.x = 1 / scaleFactor;
-	pointer.scale.y = 100;
-	pointer.scale.z = 1 / scaleFactor;
+	pointer.scale.x = 1  / scaleFactor;
+	pointer.scale.y = 20 / scaleFactor;
+	pointer.scale.z = 1  / scaleFactor;
 	controller.add( pointer );
 
 	Object.defineProperty( controller.userData, 'scale', {

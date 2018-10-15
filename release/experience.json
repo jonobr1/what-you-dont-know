@@ -972,9 +972,9 @@
 				"var backdrop = resources.get( 'backdrop' );",
 				"",
 				"var interaction = new Interaction( renderer, camera );",
-				"interaction.connect();",
 				"",
 				"interaction.addEventListener( 'connected', connected );",
+				"interaction.connect();",
 				"",
 				"resources.set( 'interaction', interaction );",
 				"",
@@ -983,7 +983,7 @@
 				"\t\treturn;",
 				"\t}",
 				"\tvar laser = event.controller.userData.laser;",
-				"\tvar material = laser.userData.model.material;",
+				"\tvar material = laser.material;",
 				"\tmaterial.emissive = backdrop.material.uniforms.cSource.value;",
 				"}"
 			]
