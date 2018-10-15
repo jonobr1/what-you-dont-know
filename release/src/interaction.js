@@ -414,12 +414,18 @@ Interaction.getDefaultController = function() {
 	pointer.scale.y = 100;
 	controller.add( pointer );
 
-	controller.userData.scale = pointer.scale;
-	controller.userData.pointer = pointer;
+	var group = new THREE.Group();
+
+	group.userData.scale = pointer.scale;
+	group.userData.pointer = pointer;
+	group.userData.model = controller;
+
+	group.add( controller );
+	group.add( pointer );
 
 	controller.scale.set( scaleFactor, scaleFactor, scaleFactor );
 
-	return controller;
+	return group;
 
 };
 

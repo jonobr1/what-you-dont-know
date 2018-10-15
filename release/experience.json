@@ -558,30 +558,6 @@
 			]
 		],
 		[
-			"Interaction",
-			[
-				"var camera = resources.get( 'camera' );",
-				"var renderer = resources.get( 'renderer' );",
-				"var backdrop = resources.get( 'backdrop' );",
-				"",
-				"var interaction = new Interaction( renderer, camera );",
-				"interaction.connect();",
-				"",
-				"interaction.addEventListener( 'connected', connected );",
-				"",
-				"resources.set( 'interaction', interaction );",
-				"",
-				"function connected( event ) {",
-				"\tif ( !event.controller ) {",
-				"\t\treturn;",
-				"\t}",
-				"\tvar laser = event.controller.userData.laser;",
-				"\tvar material = laser.material;",
-				"\tmaterial.emissive = backdrop.material.uniforms.cSource.value;",
-				"}"
-			]
-		],
-		[
 			"Assets",
 			[
 				"function load ( url ) {",
@@ -986,6 +962,30 @@
 				"scene.add( backdrop );",
 				"",
 				"resources.set( 'backdrop', backdrop );"
+			]
+		],
+		[
+			"Interaction",
+			[
+				"var camera = resources.get( 'camera' );",
+				"var renderer = resources.get( 'renderer' );",
+				"var backdrop = resources.get( 'backdrop' );",
+				"",
+				"var interaction = new Interaction( renderer, camera );",
+				"interaction.connect();",
+				"",
+				"interaction.addEventListener( 'connected', connected );",
+				"",
+				"resources.set( 'interaction', interaction );",
+				"",
+				"function connected( event ) {",
+				"\tif ( !event.controller ) {",
+				"\t\treturn;",
+				"\t}",
+				"\tvar laser = event.controller.userData.laser;",
+				"\tvar material = laser.userData.model.material;",
+				"\tmaterial.emissive = backdrop.material.uniforms.cSource.value;",
+				"}"
 			]
 		],
 		[
