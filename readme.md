@@ -18,3 +18,17 @@ Below are more details for each of the pages and how to use them.
 
 ### /editor
 [http://localhost:8080/editor/](http://localhost:8080/editor/) gives you an empty viewport to see and manipulate how we're choreographing What You Don't Know. Once this is open in your web browser go to `File > New` to make a blank project. Then drag `/release/what-you-dont-know.json` over the window to load timeline data to the project. Similar to video editing software you can hit the spacebar to play and pause the video with some additional controls to see how animations are laid out.
+
+### Roadmap
+
+- [ ] Apple / Safari First Verse MP3s mal-encoded
+- [ ] Controller Pressing Animation
+- [ ] Camera Reset when leaving VR
+- [ ] Title Page
+- [ ] Speed Adjustment on Twisted Cylinder
+- [ ] Quantize Verse Changes
+- [ ] Add Verse Between 1.07 and 2.01
+- [ ] Shortcut to Skip "End"
+- [ ] Arm Orientation Model Drift when Turning
+- [ ] Incorporate Solo'ing
+- [ ] Add More Animations
