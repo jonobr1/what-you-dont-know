@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      div.script {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+
+      <script id="vertex-shader" type="x-shader/x-vertex">
+
+        uniform float time;
+        uniform vec3 wind;
+        uniform float turbulence;
+
+        attribute float size;
+        attribute float life;
+
+        varying float lived;
+
+        float noise( float p ) {
+          return sin( p );
+        }
+
+        void main() {
+
+          float variation = pow( size, 0.33 );
+          float lifetime = life * 1000.0;
+          lived = mod( time, lifetime ) / lifetime;
+
+          vec3 destination = position + variation * wind * lived;
+          vec3 field = vec3(
+            ( wind.y + wind.z ) * noise( destination.y + destination.z ),
+            ( wind.x + wind.z ) * noise( destination.x + destination.z ),
+            ( wind.x + wind.y ) * noise( destination.x + destination.y )
+          );
+          field *= turbulence;
+
+          vec3 pos = mix( destination, destination + field, lived );
+
+          vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
+
+          gl_PointSize = size * ( 100.0 / - mvPosition.z );
+          gl_Position = projectionMatrix * mvPosition;
+
+        }
+
+      </script>
+      <script id="fragment-shader" type="x-shader/x-fragment">
+
+        const float PI = 3.141592653589793;
+
+        uniform vec3 color;
+        varying float lived;
+
+        void main() {
+          gl_FragColor = vec4( color.rgb, sin( lived * PI ) );
+        }
+
+      </script>
+
+      <script src="../release/third-party/three.js"></script>
+      <script src="../release/third-party/TrackballControls.js"></script>
+      <script src="../release/src/interaction.js"></script>
+      <script>
+
+        var renderer = new THREE.WebGLRenderer( { antialias: true } );
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera( 75 );
+        var controls;
+
+        var cube = new THREE.Mesh(
+          new THREE.BoxBufferGeometry( 25, 25, 25 ),
+          new THREE.MeshNormalMaterial()
+        );
+
+        var amount = 10000;
+        var radius = 50;
+
+        var geometry = new THREE.BufferGeometry();
+        geometry.userData.positions = [];
+        geometry.userData.sizes = [];
+        geometry.userData.lifeTimes = [];
+
+        for ( var i = 0; i < amount; i++ ) {
+
+          geometry.userData.positions.push( ( 2 * Math.random() - 1 ) * radius );
+          geometry.userData.positions.push( ( 2 * Math.random() - 1 ) * radius );
+          geometry.userData.positions.push( ( 2 * Math.random() - 1 ) * radius );
+
+          geometry.userData.sizes.push( Math.random() );
+          geometry.userData.lifeTimes.push( Math.pow( Math.random(), 3 ) * 4 + 1 );
+
+        }
+
+        geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( geometry.userData.positions, 3 ) );
+        geometry.addAttribute( 'size', new THREE.Float32BufferAttribute( geometry.userData.sizes, 1 ) );
+        geometry.addAttribute( 'life', new THREE.Float32BufferAttribute( geometry.userData.lifeTimes, 1 ) );
+
+        var material = new THREE.ShaderMaterial({
+          uniforms: {
+            color: { type: 'c', value: new THREE.Color( 'white' ) },
+            wind: { type: 'v3', value: new THREE.Vector3() },
+            time: { type: 'f', value: 0 },
+            turbulence: { type: 'f', value: 1 }
+          },
+          vertexShader: document.body.querySelector( '#vertex-shader' ).textContent,
+          fragmentShader: document.body.querySelector( '#fragment-shader' ).textContent,
+          transparent: true
+        });
+
+        var debris = new THREE.Points( geometry, material );
+
+        scene.add( debris );
+        // scene.add( cube );
+
+        setup();
+
+        function setup() {
+
+          scene.add( camera );
+          camera.position.z = 1;
+
+          renderer.setClearColor( 0x333333 );
+
+          document.body.appendChild( renderer.domElement );
+
+          window.addEventListener( 'resize', resize, false );
+          resize();
+
+          controls = new THREE.TrackballControls( camera, renderer.domElement );
+          controls.rotateSpeed = 5.0;
+          controls.zoomSpeed = 2.2;
+          controls.panSpeed = 1;
+          controls.dynamicDampingFactor = 0.3;
+
+          debris.material.uniforms.wind.value.y = 2;
+
+          renderer.setAnimationLoop( animate );
+
+        }
+
+        function resize() {
+
+          var width = window.innerWidth;
+          var height = window.innerHeight;
+
+          renderer.setSize( width, height );
+
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+
+        }
+
+        function animate( time ) {
+
+          controls.update();
+          debris.material.uniforms.time.value = time;
+          // debris.material.uniforms.turbulence.value = 10 * Math.sin( time / 1000 );
+          renderer.render( scene, camera );
+
+        }
+
+      </script>
+    </div>
+  </body>
+</html>
