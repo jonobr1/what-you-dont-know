@@ -28,14 +28,18 @@
 
         attribute float size;
         attribute float life;
+        attribute float spriteIndex;
 
         varying float lived;
+        varying float spriteId;
 
         float noise( float p ) {
           return sin( p );
         }
 
         void main() {
+
+          spriteId = spriteIndex;
 
           float variation = pow( size, 0.33 );
           float lifetime = life * 1000.0;
@@ -53,7 +57,7 @@
 
           vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
 
-          gl_PointSize = size * ( 100.0 / - mvPosition.z );
+          gl_PointSize = size * ( 200.0 / - mvPosition.z );
           gl_Position = projectionMatrix * mvPosition;
 
         }
@@ -64,10 +68,28 @@
         const float PI = 3.141592653589793;
 
         uniform vec3 color;
+        uniform sampler2D spritesheet;
+        uniform float spriteCount;
+
         varying float lived;
+        varying float spriteId;
 
         void main() {
-          gl_FragColor = vec4( color.rgb, sin( lived * PI ) );
+
+          float rows = floor( sqrt( spriteCount ) );
+          float cols = floor( sqrt( spriteCount ) );
+          float id = floor( spriteCount * spriteId );
+
+          float col = mod( id, cols );
+          float row = floor( id / col );
+
+          vec2 vUv = vec2( gl_PointCoord );
+          vUv.x = ( vUv.x + col ) / cols;
+          vUv.y = ( vUv.y + row ) / rows;
+
+          vec4 texel = texture2D( spritesheet, vUv );
+          gl_FragColor = vec4( color.rgb, texel.a * sin( lived * PI ) );
+
         }
 
       </script>
@@ -81,6 +103,7 @@
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera( 75 );
         var controls;
+        var loader = new THREE.TextureLoader();
 
         var cube = new THREE.Mesh(
           new THREE.BoxBufferGeometry( 25, 25, 25 ),
@@ -94,6 +117,7 @@
         geometry.userData.positions = [];
         geometry.userData.sizes = [];
         geometry.userData.lifeTimes = [];
+        geometry.userData.spriteIndices = [];
 
         for ( var i = 0; i < amount; i++ ) {
 
@@ -103,19 +127,23 @@
 
           geometry.userData.sizes.push( Math.random() );
           geometry.userData.lifeTimes.push( Math.pow( Math.random(), 3 ) * 4 + 1 );
+          geometry.userData.spriteIndices.push( Math.random() );
 
         }
 
         geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( geometry.userData.positions, 3 ) );
         geometry.addAttribute( 'size', new THREE.Float32BufferAttribute( geometry.userData.sizes, 1 ) );
         geometry.addAttribute( 'life', new THREE.Float32BufferAttribute( geometry.userData.lifeTimes, 1 ) );
+        geometry.addAttribute( 'spriteIndex', new THREE.Float32BufferAttribute( geometry.userData.spriteIndices, 1 ) );
 
         var material = new THREE.ShaderMaterial({
           uniforms: {
             color: { type: 'c', value: new THREE.Color( 'white' ) },
             wind: { type: 'v3', value: new THREE.Vector3() },
             time: { type: 'f', value: 0 },
-            turbulence: { type: 'f', value: 1 }
+            turbulence: { type: 'f', value: 1 },
+            spriteCount: { type: 'f', value: 16 },
+            spritesheet: { type: 't', value: loader.load( '../assets/textures/circles.gif' ) }
           },
           vertexShader: document.body.querySelector( '#vertex-shader' ).textContent,
           fragmentShader: document.body.querySelector( '#fragment-shader' ).textContent,
@@ -147,7 +175,7 @@
           controls.panSpeed = 1;
           controls.dynamicDampingFactor = 0.3;
 
-          debris.material.uniforms.wind.value.y = 2;
+          debris.material.uniforms.wind.value.y = 1;
 
           renderer.setAnimationLoop( animate );
 
