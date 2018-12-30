@@ -32,6 +32,7 @@
 
         varying float lived;
         varying float spriteId;
+        varying float duration;
 
         float noise( float p ) {
           return sin( p );
@@ -43,7 +44,9 @@
 
           float variation = pow( size, 0.33 );
           float lifetime = life * 1000.0;
+
           lived = mod( time, lifetime ) / lifetime;
+          duration = spriteIndex * 4000.0 + 1000.0;
 
           vec3 destination = position + variation * wind * lived;
           vec3 field = vec3(
@@ -57,7 +60,7 @@
 
           vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
 
-          gl_PointSize = size * ( 200.0 / - mvPosition.z );
+          gl_PointSize = size * ( 100.0 / - mvPosition.z );
           gl_Position = projectionMatrix * mvPosition;
 
         }
@@ -67,11 +70,13 @@
 
         const float PI = 3.141592653589793;
 
+        uniform float time;
         uniform vec3 color;
         uniform sampler2D spritesheet;
         uniform float spriteCount;
 
         varying float lived;
+        varying float duration;
         varying float spriteId;
 
         void main() {
@@ -79,9 +84,13 @@
           float rows = floor( sqrt( spriteCount ) );
           float cols = floor( sqrt( spriteCount ) );
           float id = floor( spriteCount * spriteId );
+          float elapsed = mod( time, duration ) / duration;
+          float frame = floor( elapsed * spriteCount );
+
+          id = mod( id + frame, spriteCount );
 
           float col = mod( id, cols );
-          float row = floor( id / col );
+          float row = floor( id / cols );
 
           vec2 vUv = vec2( gl_PointCoord );
           vUv.x = ( vUv.x + col ) / cols;
@@ -142,12 +151,13 @@
             wind: { type: 'v3', value: new THREE.Vector3() },
             time: { type: 'f', value: 0 },
             turbulence: { type: 'f', value: 1 },
-            spriteCount: { type: 'f', value: 16 },
+            spriteCount: { type: 'f', value: 324 },
             spritesheet: { type: 't', value: loader.load( '../assets/textures/circles.gif' ) }
           },
           vertexShader: document.body.querySelector( '#vertex-shader' ).textContent,
           fragmentShader: document.body.querySelector( '#fragment-shader' ).textContent,
-          transparent: true
+          transparent: true,
+          depthTest: false
         });
 
         var debris = new THREE.Points( geometry, material );
@@ -175,7 +185,7 @@
           controls.panSpeed = 1;
           controls.dynamicDampingFactor = 0.3;
 
-          debris.material.uniforms.wind.value.y = 1;
+          debris.material.uniforms.wind.value.y = 2;
 
           renderer.setAnimationLoop( animate );
 
