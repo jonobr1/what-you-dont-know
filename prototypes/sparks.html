@@ -211,7 +211,8 @@
 
       <script src="../release/third-party/three.js"></script>
       <script src="../release/third-party/TrackballControls.js"></script>
-      <script src="../release/src/interaction.js"></script>
+      <!-- <script src="../release/src/interaction.js"></script> -->
+      <script src="../release/third-party/WebVR.js"></script>
       <script>
 
         var renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -283,6 +284,9 @@
           camera.position.z = 1;
 
           renderer.setClearColor( 0xcccccc );
+          renderer.vr.enabled = true;
+
+          document.body.appendChild( WEBVR.createButton( renderer ) );
 
           document.body.appendChild( renderer.domElement );
 
