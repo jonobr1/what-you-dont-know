@@ -33,6 +33,7 @@
 + [Interface 2D](./interface.html)
 + [Controller](./controller.html)
 + [Particle System](./sparks.html)
++ [Bone Based Ring](./ring.html)
 
 ## Visuals
 
