@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      div.script {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../release/third-party/three.js"></script>
+      <script src="../release/third-party/TrackballControls.js"></script>
+      <!-- <script src="../release/src/interaction.js"></script> -->
+      <script src="../release/third-party/WebVR.js"></script>
+      <script>
+
+        var renderer = new THREE.WebGLRenderer( { antialias: true } );
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera( 75 );
+        var controls;
+        var loader = new THREE.TextureLoader();
+        var up = new THREE.Vector3( 0, 0, 1 );
+        var down = new THREE.Vector3( 0, 0, - 1 );
+        var zero = new THREE.Vector3();
+
+        var radius = 200;
+        var thickness = 25;
+        var radialSegments = 3;
+        var tubularSegments = 1024;
+
+        var geometry = new THREE.TorusBufferGeometry( radius, thickness, radialSegments, tubularSegments );
+        var material = new THREE.MeshPhysicalMaterial( {
+          // color: 'white',
+          // emissive: 'blue',
+          skinning: true,
+          // metalness: 0,
+          // reflectivity: 0,
+          // roughness: 0.1
+        } );
+
+        geometry.rotateX( Math.PI / 2 );
+
+        var bones = [];
+        var root = new THREE.Bone();
+        bones.push( root );
+
+        for ( var i = 0; i < tubularSegments; i++ ) {
+
+          var pct = i / tubularSegments;
+          var theta = pct * Math.PI * 2;
+          var bone = new THREE.Bone();
+
+          bone.position.x = radius * Math.cos( theta );
+          bone.position.z = radius * Math.sin( theta );
+          bone.rotation.order = 'YXZ';
+          bone.rotation.y = Math.atan2( - bone.position.x, - bone.position.z );
+
+          bone.userData.theta = theta;
+          bone.userData.euler = new THREE.Euler().copy( bone.rotation );
+
+          root.add( bone );
+          bones.push( bone );
+
+        }
+
+        var positions = geometry.attributes.position;
+
+        var weightResolution = 4;
+        var indices = [];
+        var weights = [];
+
+        var v1 = new THREE.Vector3();
+        var v2 = new THREE.Vector3();
+
+        var sortedBones = [];
+
+        for ( var i = 0; i < bones.length; i ++ ) {
+
+          var bone = bones[ i ];
+          sortedBones.push( { id: i, bone: bone, distance: 0 } );
+
+        }
+
+        function getNearestBones( vertex ) {
+
+          for ( var i = 0; i < sortedBones.length; i ++ ) {
+
+            var boneData = sortedBones[ i ];
+            boneData.bone.getWorldPosition( v2 );
+            boneData.distance = vertex.distanceTo( v2 );
+
+          }
+
+          sortedBones.sort( function ( a, b ) { return a.distance - b.distance } );
+
+          return sortedBones;
+
+        }
+
+        for ( var i = 0, j = 0; i < positions.count * weightResolution; i += weightResolution, j += 3 ) {
+
+          v1.fromArray( positions.array, j );
+
+          var data = getNearestBones( v1 );
+
+          for ( var k = 0; k < weightResolution; k++ ) {
+
+            indices[ i + k ] = data[ k ].id;
+            weights[ i + k ] = 1 - ( k / weightResolution );
+            weights[ i + k ] = Math.floor( Math.pow( weights[ i + k ], 25 ) * 100 ) / 100;
+
+          }
+
+        }
+
+        geometry.addAttribute( 'skinIndex', new THREE.Float32BufferAttribute( indices, weightResolution ) );
+        geometry.addAttribute( 'skinWeight', new THREE.Float32BufferAttribute( weights, weightResolution ) );
+
+        var torus = new THREE.SkinnedMesh( geometry, material );
+        torus.add( root );
+        torus.bind( new THREE.Skeleton( bones ) );
+
+        scene.add( torus );
+
+        var helper = new THREE.SkeletonHelper( torus );
+        helper.visible = false;
+        scene.add( helper );
+
+        setup();
+
+        function setup() {
+
+          scene.add( camera );
+          camera.position.y = 0;
+          camera.position.z = 1;
+
+          renderer.setClearColor( 0xcccccc );
+          renderer.vr.enabled = false;
+
+          document.body.appendChild( renderer.domElement );
+          // document.body.appendChild( WEBVR.createButton( renderer ) );
+
+          window.addEventListener( 'resize', resize, false );
+          resize();
+
+          controls = new THREE.TrackballControls( camera, renderer.domElement );
+          controls.rotateSpeed = 5.0;
+          controls.zoomSpeed = 2.2;
+          controls.panSpeed = 1;
+          controls.dynamicDampingFactor = 0.3;
+
+          for ( var i = 0; i < 10; i++ ) {
+
+            var pct = i / ( 10 - 1 );
+            var light = new THREE.DirectionalLight( '#fff', 0.25 );
+
+            light.position.y = 50;
+            light.position.x = 500 * pct - 250;
+            light.lookAt( torus.position );
+
+            scene.add( light );
+            scene.add( new THREE.DirectionalLightHelper( light ) );
+
+          }
+
+          renderer.setAnimationLoop( animate );
+
+        }
+
+        function resize() {
+
+          var width = window.innerWidth;
+          var height = window.innerHeight;
+
+          renderer.setSize( width, height );
+
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+
+        }
+
+        function animate( time ) {
+
+          controls.update();
+
+          var time = Date.now() / 500;
+
+          for ( var i = 0; i < root.children.length; i++ ) {
+
+            var u = ( i / tubularSegments );
+
+            var phase = Math.sin( 4 * Math.PI * u + 2 * time );
+
+            var bone = root.children[ i ];
+            var theta = bone.userData.theta;
+
+            // Oscillation Position
+            // bone.position.y = phase * 50;
+            // Twist
+            bone.rotation.x = Math.PI * Math.sin( Math.PI * 2 * u + time );
+            // Bulge
+            bone.scale.setLength( Math.sin( 12 * Math.PI * u + time / 2 ) + 2 );
+
+          }
+
+          renderer.render( scene, camera );
+
+        }
+
+      </script>
+    </div>
+  </body>
+</html>
