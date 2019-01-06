@@ -147,10 +147,10 @@
           camera.position.z = 1;
 
           renderer.setClearColor( 0xcccccc );
-          renderer.vr.enabled = false;
+          renderer.vr.enabled = true;
 
           document.body.appendChild( renderer.domElement );
-          // document.body.appendChild( WEBVR.createButton( renderer ) );
+          document.body.appendChild( WEBVR.createButton( renderer ) );
 
           window.addEventListener( 'resize', resize, false );
           resize();
