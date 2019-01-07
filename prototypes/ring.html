@@ -24,6 +24,7 @@
       <script src="../release/third-party/TrackballControls.js"></script>
       <!-- <script src="../release/src/interaction.js"></script> -->
       <script src="../release/third-party/WebVR.js"></script>
+      <script src="../release/third-party/tween.js"></script>
       <script>
 
         var renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -37,28 +38,53 @@
 
         var radius = 200;
         var thickness = 25;
-        var radialSegments = 3;
-        var tubularSegments = 1024;
+        var radialSegments = 4;
+        var tubularSegments = 1000;
 
         var geometry = new THREE.TorusBufferGeometry( radius, thickness, radialSegments, tubularSegments );
         var material = new THREE.MeshPhysicalMaterial( {
           // color: 'white',
           // emissive: 'blue',
           skinning: true,
-          // metalness: 0,
-          // reflectivity: 0,
-          // roughness: 0.1
+          // flatShading: true,
+          metalness: 0.0,
+          reflectivity: 0.1,
+          roughness: 0.25
         } );
+        // var material = new THREE.ShaderMaterial( {
+        //   skinning: true,
+        //   vertexShader: [
+        //
+        //     'varying vec4 weight;',
+        //
+        //     'void main() {',
+        //       'weight = skinWeight;',
+        //       'vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );',
+        //       'gl_Position = projectionMatrix * mvPosition;',
+        //     '}'
+        //
+        //   ].join( '\n' ),
+        //   fragmentShader: [
+        //
+        //     'varying vec4 weight;',
+        //
+        //     'void main() {',
+        //       'gl_FragColor = vec4( weight.x, weight.y, weight.z, 1.0 );',
+        //     '}'
+        //
+        //   ].join( '\n' )
+        // } );
 
         geometry.rotateX( Math.PI / 2 );
 
         var bones = [];
+        var amount = 33;
         var root = new THREE.Bone();
         bones.push( root );
 
-        for ( var i = 0; i < tubularSegments; i++ ) {
+        for ( var i = 0; i < amount; i++ ) {
 
-          var pct = i / tubularSegments;
+          var pct = i / amount;
           var theta = pct * Math.PI * 2;
           var bone = new THREE.Bone();
 
@@ -70,11 +96,14 @@
           bone.userData.theta = theta;
           bone.userData.euler = new THREE.Euler().copy( bone.rotation );
 
+          bone.add( new THREE.ArrowHelper( up, zero, 50 ) );
+
           root.add( bone );
           bones.push( bone );
 
         }
 
+        var distanceBetweenBones = bones[ 5 ].position.distanceTo( bones[ 6 ].position );
         var positions = geometry.attributes.position;
 
         var weightResolution = 4;
@@ -114,12 +143,19 @@
           v1.fromArray( positions.array, j );
 
           var data = getNearestBones( v1 );
+          var shortestDistance = data[ 0 ].distance;
 
           for ( var k = 0; k < weightResolution; k++ ) {
 
-            indices[ i + k ] = data[ k ].id;
-            weights[ i + k ] = 1 - ( k / weightResolution );
-            weights[ i + k ] = Math.floor( Math.pow( weights[ i + k ], 25 ) * 100 ) / 100;
+            var id = data[ k ].id;
+            var weight = ( data[ k ].distance - shortestDistance ) / distanceBetweenBones;
+            weight = Math.min( weight, 1 );                               // Clamp to 0 - 1
+            weight = TWEEN.Easing.Sinusoidal.Out( weight );               // Bend curve
+            weight = Math.floor( weight * 100 ) / 100;                    // 3 Decimal point precision
+            weight = 1 - weight;                                          // Invert spectrum
+
+            indices[ i + k ] = id;
+            weights[ i + k ] = weight;
 
           }
 
@@ -147,7 +183,7 @@
           camera.position.z = 1;
 
           renderer.setClearColor( 0xcccccc );
-          renderer.vr.enabled = true;
+          renderer.vr.enabled = false;
 
           document.body.appendChild( renderer.domElement );
           document.body.appendChild( WEBVR.createButton( renderer ) );
@@ -164,10 +200,10 @@
           for ( var i = 0; i < 10; i++ ) {
 
             var pct = i / ( 10 - 1 );
-            var light = new THREE.DirectionalLight( '#fff', 0.25 );
+            var light = new THREE.DirectionalLight( '#fff', 0.1 );
 
-            light.position.y = 50;
-            light.position.x = 500 * pct - 250;
+            // light.position.y = 50;
+            light.position.y = 500 * pct - 250;
             light.lookAt( torus.position );
 
             scene.add( light );
@@ -196,22 +232,26 @@
           controls.update();
 
           var time = Date.now() / 500;
+          var length = root.children.length;
 
-          for ( var i = 0; i < root.children.length; i++ ) {
+          for ( var i = 0; i < length; i++ ) {
 
-            var u = ( i / tubularSegments );
+            var pct = ( i / length );
 
-            var phase = Math.sin( 4 * Math.PI * u + 2 * time );
+            // When converting to radians the theta needs to be
+            // offset in multiples of "2" in order to get a clean
+            // seam from end-to-end of the torus.
+            var phase = Math.sin( 4 * Math.PI * pct + 2 * time );
 
             var bone = root.children[ i ];
             var theta = bone.userData.theta;
 
             // Oscillation Position
-            // bone.position.y = phase * 50;
+            bone.position.y = phase * 50;
             // Twist
-            bone.rotation.x = Math.PI * Math.sin( Math.PI * 2 * u + time );
+            bone.rotation.x = Math.PI * Math.sin( Math.PI * 2 * pct + time );
             // Bulge
-            bone.scale.setLength( Math.sin( 12 * Math.PI * u + time / 2 ) + 2 );
+            bone.scale.setLength( Math.sin( 12 * Math.PI * pct + time * 4 ) + 2 );
 
           }
 
