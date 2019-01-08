@@ -36,15 +36,15 @@
         var down = new THREE.Vector3( 0, 0, - 1 );
         var zero = new THREE.Vector3();
 
-        var radius = 200;
+        var radius = 250;
         var thickness = 25;
         var radialSegments = 4;
-        var tubularSegments = 500;
+        var tubularSegments = 250;
 
         var geometry = new THREE.TorusBufferGeometry( radius, thickness, radialSegments, tubularSegments );
         var material = new THREE.MeshPhysicalMaterial( {
-          // color: 'white',
-          // emissive: 'blue',
+          color: 'rgb(255, 255, 255)',
+          emissive: 'red',
           skinning: true,
           // flatShading: true,
           metalness: 0.0,
@@ -78,7 +78,7 @@
         geometry.rotateX( Math.PI / 2 );
 
         var bones = [];
-        var amount = 33;
+        var amount = 25;
         var root = new THREE.Bone();
         bones.push( root );
 
@@ -96,7 +96,7 @@
           bone.userData.theta = theta;
           bone.userData.euler = new THREE.Euler().copy( bone.rotation );
 
-          bone.add( new THREE.ArrowHelper( up, zero, 50 ) );
+          // bone.add( new THREE.ArrowHelper( up, zero, 50 ) );
 
           root.add( bone );
           bones.push( bone );
