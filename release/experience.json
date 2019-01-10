@@ -1024,7 +1024,7 @@
 				"var playhead = new THREE.Mesh(",
 				"\tnew THREE.SphereBufferGeometry( 5, 32, 32 ),",
 				"\tnew THREE.MeshBasicMaterial( {",
-				"\t\tcolor: Interaction.DefaultColor",
+				"\t\tcolor: 'rgb( 0, 255, 150 )'",
 				"\t} )",
 				");",
 				"",
@@ -1208,7 +1208,7 @@
 				"\tvar progress = event.progress;",
 				"",
 				"\tplayer.currentTime = progress * 170.65599999999998;",
-				"\tplayer.playbackRate = ( event.height / 100 ) + 1;",
+				"//\tplayer.playbackRate = ( event.height / 100 ) + 1;",
 				"",
 				"}"
 			]
