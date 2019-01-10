@@ -345,6 +345,7 @@ function Interaction ( renderer, camera ) {
 Interaction.prototype = Object.create( THREE.Group.prototype );
 Interaction.prototype.constructor = Interaction;
 Interaction.ScaleFactor = 0.2;
+Interaction.DefaultColor = 0x64ffc8;
 
 Interaction.getDefaultController = function() {
 
@@ -415,7 +416,7 @@ Interaction.getDefaultController = function() {
 		new THREE.MeshBasicMaterial( {
 			transparent: true,
 			// blending: THREE.AdditiveBlending,
-			color: 0x64ffc8,
+			color: Interaction.DefaultColor,
 			side: THREE.DoubleSide
 		} )
 	);
