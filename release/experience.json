@@ -1129,7 +1129,7 @@
 				"\t\tvar av = dv[ bandwidth ];",
 				"",
 				"\t\tvar amplitude = lerp( au, av, offset ) / 255;",
-				"\t\tvar scale = 1.33 * amplitude + 0.33;",
+				"\t\tvar scale = 0.2 * amplitude + 0.8;",
 				"",
 				"\t\t// Ease into values",
 				"\t\tbone.scale.x += ( scale - bone.scale.x ) * 0.66;",
