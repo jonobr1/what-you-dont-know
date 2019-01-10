@@ -44,7 +44,7 @@
         var geometry = new THREE.TorusBufferGeometry( radius, thickness, radialSegments, tubularSegments );
         var material = new THREE.MeshPhysicalMaterial( {
           color: 'rgb(255, 255, 255)',
-          emissive: 'red',
+          // emissive: 'red',
           skinning: true,
           // flatShading: true,
           metalness: 0.0,
@@ -183,7 +183,7 @@
           camera.position.z = 1;
 
           renderer.setClearColor( 0xcccccc );
-          renderer.vr.enabled = true;
+          // renderer.vr.enabled = true;
 
           document.body.appendChild( renderer.domElement );
           document.body.appendChild( WEBVR.createButton( renderer ) );
@@ -231,7 +231,7 @@
 
           controls.update();
 
-          var time = Date.now() / 500;
+          var time = Date.now() / 1000;
           var length = root.children.length;
 
           for ( var i = 0; i < length; i++ ) {
@@ -251,7 +251,8 @@
             // Twist
             bone.rotation.x = Math.PI * Math.sin( Math.PI * 2 * pct + time );
             // Bulge
-            bone.scale.setLength( Math.sin( 12 * Math.PI * pct + time * 4 ) + 2 );
+            // bone.scale.setLength( Math.sin( 12 * Math.PI * pct + time * 4 ) + 2 );
+            bone.scale.y = Math.sin( 12 * Math.PI * pct + time ) + 2;
 
           }
 
