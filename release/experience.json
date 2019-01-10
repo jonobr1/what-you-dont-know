@@ -1237,7 +1237,7 @@
 			[
 				"var parameters = {",
 				"\tsource: new FRAME.Parameters.Vector3( 'Source Color', [ 200, 200, 200 ] ),",
-				"\ttarget: new FRAME.Parameters.Vector3( 'Target Color', [ 33, 33, 33 ] )",
+				"\ttarget: new FRAME.Parameters.Vector3( 'Target Color', [ 20, 20, 20 ] )",
 				"};",
 				"var backdrop = resources.get( 'backdrop' );",
 				"",
