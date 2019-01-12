@@ -345,7 +345,7 @@ function Interaction ( renderer, camera ) {
 Interaction.prototype = Object.create( THREE.Group.prototype );
 Interaction.prototype.constructor = Interaction;
 Interaction.ScaleFactor = 0.2;
-Interaction.DefaultColor = 0x64ff96;
+Interaction.DefaultColor = 0x007f4b;
 
 Interaction.getDefaultController = function() {
 
@@ -405,6 +405,8 @@ Interaction.getDefaultController = function() {
 		new THREE.MeshBasicMaterial( {
 			color: 0xefefef,
 			side: THREE.BackSide,
+			blending: THREE.AdditiveBlending,
+			transparent: true
 		} )
 	);
 
@@ -415,7 +417,7 @@ Interaction.getDefaultController = function() {
 		// TODO: Face teal out over distance.
 		new THREE.MeshBasicMaterial( {
 			transparent: true,
-			// blending: THREE.AdditiveBlending,
+			blending: THREE.AdditiveBlending,
 			color: Interaction.DefaultColor,
 			side: THREE.DoubleSide
 		} )
