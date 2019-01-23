@@ -21,14 +21,12 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
-- [ ] Apple / Safari First Verse MP3s mal-encoded
-- [ ] Controller Pressing Animation
-- [ ] Camera Reset when leaving VR
-- [ ] Title Page
-- [ ] Speed Adjustment on Twisted Cylinder
-- [ ] Quantize Verse Changes
-- [ ] Add Verse Between 1.07 and 2.01
-- [ ] Shortcut to Skip "End"
-- [ ] Arm Orientation Model Drift when Turning
-- [ ] Incorporate Solo'ing
-- [ ] Add More Animations
+- [ ] Add Lyrics
+- [ ] Choreograph Particles
+- [ ] Choreograph Ring
+- [ ] Choreograph Backdrop
+- [ ] Fix Multiple VR Controllers
+- [ ] Make Biquad Filter More Apparent (audio / visual)
+- [ ] Add Ghostly Logo
+- [ ] Make Title Page (initial UX)
+- [ ] Create Multiple Camera Angles for non VR Contexts
