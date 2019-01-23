@@ -1721,7 +1721,7 @@
 			[
 				"var scene = resources.get( 'scene' );",
 				"var camera = resources.get( 'camera' );",
-				"var amount = 2500;",
+				"var amount = 10000;",
 				"var radius = 50;",
 				"",
 				"var geometry = new THREE.BufferGeometry();",
@@ -1945,6 +1945,7 @@
 		[
 			"Lyrics",
 			[
+				"/*",
 				"var renderer = resources.get( 'renderer' );",
 				"var camera = resources.get( 'camera' );",
 				"var scene = resources.get( 'scene' );",
@@ -2047,7 +2048,9 @@
 				"",
 				"function setup() {",
 				"",
-				"\tcreateCard( 0 );",
+				"\tif ( group.children.length <= 0 ) {",
+				"\t\tcreateCard( 0 );",
+				"\t}",
 				"",
 				"}",
 				"",
@@ -2138,7 +2141,8 @@
 				"}",
 				"",
 				"scene.add( group );",
-				"resources.set( 'lyrics', group );"
+				"resources.set( 'lyrics', group );",
+				"*/"
 			]
 		]
 	],
