@@ -1945,6 +1945,7 @@
 		[
 			"Lyrics",
 			[
+				"/*",
 				"var renderer = resources.get( 'renderer' );",
 				"var camera = resources.get( 'camera' );",
 				"var scene = resources.get( 'scene' );",
@@ -2134,7 +2135,8 @@
 				"}",
 				"",
 				"scene.add( group );",
-				"resources.set( 'lyrics', group );"
+				"resources.set( 'lyrics', group );",
+				"*/"
 			]
 		]
 	],
