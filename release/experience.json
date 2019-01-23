@@ -1721,7 +1721,7 @@
 			[
 				"var scene = resources.get( 'scene' );",
 				"var camera = resources.get( 'camera' );",
-				"var amount = 10000;",
+				"var amount = 5000;",
 				"var radius = 50;",
 				"",
 				"var geometry = new THREE.BufferGeometry();",
@@ -1945,7 +1945,6 @@
 		[
 			"Lyrics",
 			[
-				"/*",
 				"var renderer = resources.get( 'renderer' );",
 				"var camera = resources.get( 'camera' );",
 				"var scene = resources.get( 'scene' );",
@@ -1964,13 +1963,13 @@
 				"var amount = Math.floor( words.length / rows );",
 				"",
 				"var group = new THREE.Group();",
-				"group.position.y;",
+				"group.visible = false;",
 				"",
 				"var two = new Two( {",
 				"\ttype: Two.Types.canvas,",
-				"\twidth: 256,",
-				"\theight: 256,",
-				"\tratio: 1",
+				"\twidth: 128,",
+				"\theight: 128,",
+				"\tratio: 2",
 				"} ).appendTo( document.body );",
 				"",
 				"two.scene.translation.set( two.width / 2, two.height / 2 );",
@@ -2053,6 +2052,7 @@
 				"function createCard( wid ) {",
 				"",
 				"\tif ( wid >= words.length ) {",
+				"\t\tgroup.visible = true;",
 				"\t\treturn;",
 				"\t}",
 				"",
@@ -2075,6 +2075,7 @@
 				"",
 				"\ttexture.minFilter = THREE.LinearFilter;",
 				"\ttexture.magFilter = THREE.LinearFilter;",
+				"\ttexture.generateMipMaps = false;",
 				"\ttexture.needsUpdate = true;",
 				"",
 				"\tmesh.material.uniforms.image.value = texture;",
@@ -2135,8 +2136,7 @@
 				"}",
 				"",
 				"scene.add( group );",
-				"resources.set( 'lyrics', group );",
-				"*/"
+				"resources.set( 'lyrics', group );"
 			]
 		]
 	],
