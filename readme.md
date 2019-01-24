@@ -21,12 +21,17 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
-- [ ] Add Lyrics
+- [x] Add Lyrics
+- [ ] Add Meta-Lines around Lyrics
+- [ ] Add Child Shapes to Ring
+- [ ] Add Polar Spheres
+- [ ] Increase Height of Playhead.Cylinder
+- [ ] Choreograph Lyrics
 - [ ] Choreograph Particles
 - [ ] Choreograph Ring
 - [ ] Choreograph Backdrop
 - [ ] Fix Multiple VR Controllers
-- [ ] Make Biquad Filter More Apparent (audio / visual)
+- [ ] Make Biquad Filter More Apparent (audio & visual)
 - [ ] Add Ghostly Logo
 - [ ] Make Title Page (initial UX)
 - [ ] Create Multiple Camera Angles for non VR Contexts
