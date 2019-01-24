@@ -1772,7 +1772,7 @@
 				"",
 				"\t  'vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );',",
 				"",
-				"\t  'gl_PointSize = size * 10.0;',// * ( 100.0 / - mvPosition.z );',",
+				"\t  'gl_PointSize = size * 100.0;',// * ( 100.0 / - mvPosition.z );',",
 				"\t  'gl_Position = projectionMatrix * mvPosition;',",
 				"",
 				"\t'}'",
