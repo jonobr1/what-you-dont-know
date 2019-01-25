@@ -29,7 +29,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
 - [ ] Increase Height of Playhead.Cylinder
-- [ ] Make Debris a Sphere
+- [x] Make Debris a Sphere
 - [ ] Choreograph Lyrics
 - [ ] Choreograph Particles
 - [ ] Choreograph Ring

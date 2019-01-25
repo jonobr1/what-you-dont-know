@@ -7,6 +7,7 @@
 		"../release/third-party/vr-controller.js",
 		"../release/third-party/WebVR.js",
 		"../release/third-party/tween.js",
+		"../release/third-party/OrbitControls.js",
 		"../release/src/interaction.js"
 	],
 	"includes": [
@@ -1745,6 +1746,7 @@
 				"\t'varying float lived;',",
 				"\t'varying vec3 particle;',",
 				"\t'varying vec3 up;',",
+				"\t'varying float range;',",
 				"",
 				"\t'float noise( float p ) {',",
 				"\t  'return sin( p );',",
@@ -1752,8 +1754,10 @@
 				"",
 				"\t'void main() {',",
 				"",
+				"\t  'float amp = 1000.0;',",
 				"\t  'float variation = pow( size, 0.33 );',",
-				"\t  'float lifetime = life * 1000.0;',",
+				"\t  'float lifetime = life * amp;',",
+				"\t  'float radius = amp / ( 10.0 * 2.0 );',",
 				"",
 				"\t  'lived = mod( time, lifetime ) / lifetime;',",
 				"",
@@ -1766,11 +1770,11 @@
 				"\t  'field *= turbulence;',",
 				"",
 				"\t  'vec3 pos = mix( destination, destination + field, lived );',",
+				"      'vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );',",
 				"",
 				"\t  'particle = pos;',",
 				"\t  'up = axisRotation;',",
-				"",
-				"\t  'vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );',",
+				"\t  'range = smoothstep( radius * 0.95, radius, length( pos ) );',",
 				"",
 				"\t  'gl_PointSize = size * 10.0;',",
 				"\t  'gl_Position = projectionMatrix * mvPosition;',",
@@ -1790,6 +1794,7 @@
 				"\t'varying float lived;',",
 				"\t'varying vec3 particle;',",
 				"\t'varying vec3 up;',",
+				"\t'varying float range;',",
 				"",
 				"\t'mat3 setCamera( in vec3 ro, in vec3 ta, float cr ) {',",
 				"",
@@ -1898,8 +1903,9 @@
 				"",
 				"\t  'vec3 texel = specular;',",
 				"\t  'float easeInOut = sin( lived * PI );',",
+				"\t  'float spherical = 1.0 - range;',",
 				"",
-				"\t  'gl_FragColor = vec4( texel, alpha * easeInOut );',",
+				"\t  'gl_FragColor = vec4( texel, alpha * easeInOut * spherical );',",
 				"",
 				"\t'}'",
 				"",
@@ -1954,12 +1960,12 @@
 				"var camera = resources.get( 'camera' );",
 				"var scene = resources.get( 'scene' );",
 				"var words = [",
-				"\t\"iâ€™d\", \"beat\", \"up\", \"all\", \"my\", \"cues\", \"for\", \"you\", \"take\", ",
+				"\t\"iÃ¢â‚¬â„¢d\", \"beat\", \"up\", \"all\", \"my\", \"cues\", \"for\", \"you\", \"take\", ",
 				"\t\"it\", \"off\", \"too\", \"soon\", \"some\", \"other\", \"way\", \"to\", \"get\", ",
 				"\t\"now\", \"give\", \"fears\", \"when\", \"know\", \"what\", \"need\", \"and\",",
 				"\t\"did\", \"come\", \"at\", \"me\", \"want\", \"do\", \"anything\", \"but\", \"upset\", ",
 				"\t\" i \", \"feel\", \"like\", \"could\", \"comfort\", \"so\", \"let\", \"by\", \"your\",",
-				"\t\"hand\",\"walk\",\"beside\",\"into\",\"something\",\"good\",\"oh\",\"donâ€™t\"",
+				"\t\"hand\",\"walk\",\"beside\",\"into\",\"something\",\"good\",\"oh\",\"donÃ¢â‚¬â„¢t\"",
 				"];",
 				"",
 				"var radiusOffset = 50;",
@@ -2614,6 +2620,21 @@
 				"\treturn ( b - a ) * t + a;",
 				"}"
 			]
+		],
+		[
+			"Set Default Camera",
+			[
+				"var camera = resources.get( 'camera' );",
+				"",
+				"function start( progress ) {",
+				"\tcamera.position.y = 250;",
+				"\tcamera.rotation.x = - Math.PI / 2;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
+			]
 		]
 	],
 	"animations": [
@@ -2647,6 +2668,14 @@
 			175.98899999999998,
 			5,
 			1,
+			true
+		],
+		[
+			"Editor View",
+			0,
+			2,
+			6,
+			8,
 			true
 		],
 		[
