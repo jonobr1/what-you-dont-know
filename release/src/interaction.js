@@ -616,6 +616,19 @@ Interaction.prototype.ignore = function ( obj ) {
 	return this;
 };
 
+Interaction.prototype.hasIntersections = function () {
+
+	for ( var uuid in this.intersections ) {
+		var intersections = this.intersections[ uuid ];
+		if ( intersections ) {
+			return true;
+		}
+	}
+
+	return false;
+
+};
+
 Interaction.prototype.connect = function() {
 
 	var renderer = this.renderer;
