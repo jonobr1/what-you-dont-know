@@ -22,13 +22,14 @@ Below are more details for each of the pages and how to use them.
 ### Roadmap
 
 - [x] Add Lyrics
-- [ ] Add Meta-Lines around Lyrics
+- [x] Add Meta-Lines around Lyrics
 - [ ] Add Child Shapes to Ring
 - [ ] Add Polar Spheres
 - [ ] Add Biquad Filter More Apparent (audio & visual)
-- [ ] Add Ghostly Logo
+- [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
 - [ ] Increase Height of Playhead.Cylinder
+- [ ] Make Debris a Sphere
 - [ ] Choreograph Lyrics
 - [ ] Choreograph Particles
 - [ ] Choreograph Ring
