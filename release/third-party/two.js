@@ -245,6 +245,7 @@ SOFTWARE.
 
   var sin = Math.sin,
     cos = Math.cos,
+    acos = Math.acos,
     atan2 = Math.atan2,
     sqrt = Math.sqrt,
     round = Math.round,
@@ -455,7 +456,13 @@ SOFTWARE.
      * @name Two.Version
      * @property {String} - The current working version of the library.
      */
-    Version: 'v0.7.0',
+    Version: 'v0.7.0-beta.4',
+
+    /**
+     * @name Two.PublishDate
+     * @property {String} - The automatically generated publish date in the build process to verify version release candidates.
+     */
+    PublishDate: '2019-01-25T16:24:46+01:00',
 
     /**
      * @name Two.Identifier
@@ -488,6 +495,7 @@ SOFTWARE.
       move: 'M',
       line: 'L',
       curve: 'C',
+      arc: 'A',
       close: 'Z'
     },
 
@@ -572,14 +580,16 @@ SOFTWARE.
       /**
        * @name Two.Utils.shim
        * @function
-       * @param {Canvas} CanvasModule - The `Canvas` object provided by `node-canvas`.
-       * @returns {Canvas} Returns an instanced canvas object from the provided `node-canvas` `Canvas` object.
+       * @param {canvas} canvas - The instanced `Canvas` object provided by `node-canvas`.
+       * @param {Image} [Image] - The prototypical `Image` object provided by `node-canvas`. This is only necessary to pass if you're going to load bitmap imagery.
+       * @returns {canvas} Returns the instanced canvas object you passed from with additional attributes needed for Two.js.
        * @description Convenience method for defining all the dependencies from the npm package `node-canvas`. See [node-canvas]{@link https://github.com/Automattic/node-canvas} for additional information on setting up HTML5 `<canvas />` drawing in a node.js environment.
        */
-      shim: function(CanvasModule) {
-        var canvas = new CanvasModule();
+      shim: function(canvas, Image) {
         Two.CanvasRenderer.Utils.shim(canvas);
-        Two.Utils.Image = CanvasModule.Image;
+        if (!_.isUndefined(Image)) {
+          Two.Utils.Image = Image;
+        }
         Two.Utils.isHeadless = true;
         return canvas;
       },
@@ -661,7 +671,7 @@ SOFTWARE.
         Tolerance: {
           distance: 0.25,
           angle: 0,
-          epsilon: 0.01
+          epsilon: Number.EPSILON
         },
 
         // Lookup tables for abscissas and weights with values for n = 2 .. 16.
@@ -1131,6 +1141,9 @@ SOFTWARE.
 
           _.each(commands.slice(0), function(command, i) {
 
+            var number, fid, lid, numbers, first, s;
+            var j, k, ct, l, times;
+
             var type = command[0];
             var lower = type.toLowerCase();
             var items = command.slice(1).trim().split(/[\s,]+|(?=\s?[+\-])/);
@@ -1139,19 +1152,21 @@ SOFTWARE.
 
             // Handle double decimal values e.g: 48.6037.71.8
             // Like: https://m.abcsofchinese.com/images/svg/亼ji2.svg
-            for (var j = 0; j < items.length; j++) {
+            for (j = 0; j < items.length; j++) {
 
-              var number = items[j];
+              number = items[j];
+              fid = number.indexOf('.');
+              lid = number.lastIndexOf('.');
 
-              if (number.indexOf( '.' ) !== number.lastIndexOf( '.' )) {
+              if (fid !== lid) {
 
-                var numbers = number.split('.');
-                var first = numbers[0] + '.' + numbers[1];
+                numbers = number.split('.');
+                first = numbers[0] + '.' + numbers[1];
 
-                items.splice(i, 1, first);
+                items.splice(j, 1, first);
 
-                for (var s = 2; s < numbers.length; s++) {
-                  items.splice(i + s - 1, 0, '0.' + numbers[s]);
+                for (s = 2; s < numbers.length; s++) {
+                  items.splice(j + s - 1, 0, '0.' + numbers[s]);
                 }
 
                 hasDoubleDecimals = true;
@@ -1200,11 +1215,12 @@ SOFTWARE.
                 break;
             }
 
+            // This means we have a polybezier.
             if (bin) {
 
-              for (var j = 0, l = items.length, times = 0; j < l; j+=bin) {
+              for (j = 0, l = items.length, times = 0; j < l; j+=bin) {
 
-                var ct = type;
+                ct = type;
                 if (times > 0) {
 
                   switch (type) {
@@ -1218,7 +1234,7 @@ SOFTWARE.
 
                 }
 
-                result.push([ct].concat(items.slice(j, j + bin)).join(' '));
+                result.push(ct + items.slice(j, j + bin).join(' '));
                 times++;
 
               }
@@ -1456,7 +1472,7 @@ SOFTWARE.
 
                 var rx = parseFloat(coords[0]);
                 var ry = parseFloat(coords[1]);
-                var xAxisRotation = parseFloat(coords[2]) * PI / 180;
+                var xAxisRotation = parseFloat(coords[2]);// * PI / 180;
                 var largeArcFlag = parseFloat(coords[3]);
                 var sweepFlag = parseFloat(coords[4]);
 
@@ -1468,117 +1484,18 @@ SOFTWARE.
                   y4 += y1;
                 }
 
-                // http://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter
+                var anchor = new Two.Anchor(x4, y4);
+                anchor.command = Two.Commands.arc;
+                anchor.rx = rx;
+                anchor.ry = ry;
+                anchor.xAxisRotation = xAxisRotation;
+                anchor.largeArcFlag = largeArcFlag;
+                anchor.sweepFlag = sweepFlag;
 
-                // Calculate midpoint mx my
-                var mx = (x4 - x1) / 2;
-                var my = (y4 - y1) / 2;
+                result = anchor;
 
-                // Calculate x1' y1' F.6.5.1
-                var _x = mx * cos(xAxisRotation) + my * sin(xAxisRotation);
-                var _y = - mx * sin(xAxisRotation) + my * cos(xAxisRotation);
-
-                var rx2 = rx * rx;
-                var ry2 = ry * ry;
-                var _x2 = _x * _x;
-                var _y2 = _y * _y;
-
-                // adjust radii
-                var l = _x2 / rx2 + _y2 / ry2;
-                if (l > 1) {
-                  rx *= sqrt(l);
-                  ry *= sqrt(l);
-                }
-
-                var amp = sqrt(
-                  (rx2 * ry2 - rx2 * _y2 - ry2 * _x2) / (rx2 * _y2 + ry2 * _x2));
-
-                if (_.isNaN(amp)) {
-                  amp = 0;
-                } else if (largeArcFlag != sweepFlag && amp > 0) {
-                  amp *= -1;
-                }
-
-                // Calculate cx' cy' F.6.5.2
-                var _cx = amp * rx * _y / ry;
-                var _cy = - amp * ry * _x / rx;
-
-                // Calculate cx cy F.6.5.3
-                var cx = _cx * cos(xAxisRotation) - _cy * sin(xAxisRotation)
-                  + (x1 + x4) / 2;
-                var cy = _cx * sin(xAxisRotation) + _cy * cos(xAxisRotation)
-                  + (y1 + y4) / 2;
-
-                // vector magnitude
-                var m = function(v) {
-                  return sqrt(pow(v[0], 2) + pow(v[1], 2));
-                };
-                // ratio between two vectors
-                var r = function(u, v) {
-                  return (u[0] * v[0] + u[1] * v[1]) / (m(u) * m(v));
-                };
-                // angle between two vectors
-                var a = function(u, v) {
-                  return (u[0] * v[1] < u[1] * v[0] ? - 1 : 1) * acos(r(u,v));
-                };
-
-                // Calculate theta1 and delta theta F.6.5.4 + F.6.5.5
-                var t1 = a([1, 0], [(_x - _cx) / rx, (_y - _cy) / ry]);
-                var u = [(_x - _cx) / rx, (_y - _cy) / ry];
-                var v = [( - _x - _cx) / rx, ( - _y - _cy) / ry];
-                var dt = a(u, v);
-
-                if (r(u, v) <= -1) dt = PI;
-                if (r(u, v) >= 1) dt = 0;
-
-                // F.6.5.6
-                if (largeArcFlag)  {
-                  dt = mod(dt, PI * 2);
-                }
-
-                if (sweepFlag && dt > 0) {
-                  dt -= PI * 2;
-                }
-
-                var length = Two.Resolution;
-                var pa, pb, pc;
-
-                // Save a projection of our rotation and translation to apply
-                // to the set of points.
-                var projection = new Two.Matrix()
-                  .translate(cx, cy)
-                  .rotate(xAxisRotation);
-
-                // Create a resulting array of Two.Anchor's to export to the
-                // the path.
-                result = _.map(_.range(length), function(i) {
-
-                  var pct = 1 - (i / (length - 1));
-                  var theta = pct * dt + t1;
-
-                  var x = rx * cos(theta);
-                  var y = ry * sin(theta);
-
-                  var projected = projection.multiply(x, y, 1);
-
-                  pa = pb;
-                  pb = pc;
-                  pc = new Two.Anchor(
-                    projected.x, projected.y, 0, 0, 0, 0, Two.Commands.curve);
-
-                  if (pa && pb && pc) {
-                    getControlPoints(pa, pb, pc);
-                  }
-
-                  return pc;
-
-                });
-
-                result.push(
-                  new Two.Anchor(x4, y4, 0, 0, 0, 0, Two.Commands.curve));
-
-                coord = result[result.length - 1];
-                control = coord.controls.left;
+                coord = anchor;
+                control = undefined;
 
                 break;
 
@@ -4215,6 +4132,15 @@ SOFTWARE.
         this.relative = v.relative;
       }
 
+      // TODO: Hack for `Two.Commands.arc`
+      if (this.command === Two.Commands.arc) {
+        this.rx = v.rx;
+        this.ry = v.ry;
+        this.xAxisRotation = v.xAxisRotation;
+        this.largeArcFlag = v.largeArcFlag;
+        this.sweepFlag = v.sweepFlag;
+      }
+
       return this;
 
     },
@@ -4438,7 +4364,7 @@ SOFTWARE.
     set: function(a) {
 
       var elements = a;
-      if (!_.isArray(elements)) {
+      if (arguments.length > 1) {
         elements = _.toArray(arguments);
       }
 
@@ -4876,7 +4802,7 @@ SOFTWARE.
       var l = points.length,
         last = l - 1,
         d, // The elusive last Two.Commands.move point
-        ret = '';
+        string = '';
 
       for (var i = 0; i < l; i++) {
         var b = points[i];
@@ -4888,6 +4814,7 @@ SOFTWARE.
         var c = points[next];
 
         var vx, vy, ux, uy, ar, bl, br, cl;
+        var rx, ry, xAxisRotation, largeArcFlag, sweepFlag;
 
         // Access x and y directly,
         // bypassing the getter
@@ -4898,6 +4825,19 @@ SOFTWARE.
 
           case Two.Commands.close:
             command = Two.Commands.close;
+            break;
+
+          case Two.Commands.arc:
+
+            rx = b.rx;
+            ry = b.ry;
+            xAxisRotation = b.xAxisRotation;
+            largeArcFlag = b.largeArcFlag;
+            sweepFlag = b.sweepFlag;
+
+            command = Two.Commands.arc + ' ' + rx + ' ' + ry + ' '
+              + xAxisRotation + ' ' + largeArcFlag + ' ' + sweepFlag + ' '
+              + x + ' ' + y;
             break;
 
           case Two.Commands.curve:
@@ -4968,17 +4908,20 @@ SOFTWARE.
 
             command +=
               ' C ' + vx + ' ' + vy + ' ' + ux + ' ' + uy + ' ' + x + ' ' + y;
+
           }
 
-          command += ' Z';
+          if (b.command !== Two.Commands.close) {
+            command += ' Z';
+          }
 
         }
 
-        ret += command + ' ';
+        string += command + ' ';
 
       }
 
-      return ret;
+      return string;
 
     },
 
@@ -5223,6 +5166,10 @@ SOFTWARE.
           changed['stroke-miterlimit'] = this._miter;
         }
 
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
+        }
+
         // If there is no attached DOM element yet,
         // create it with all necessary attributes.
         if (!this._renderer.elem) {
@@ -5338,6 +5285,9 @@ SOFTWARE.
         }
         if (this._flagVisible) {
           changed.visibility = this._visible ? 'visible' : 'hidden';
+        }
+        if (this.dashes && this.dashes.length > 0) {
+          changed['stroke-dasharray'] = this.dashes.join(' ');
         }
 
         if (!this._renderer.elem) {
@@ -5730,6 +5680,15 @@ SOFTWARE.
   var mod = Two.Utils.mod, toFixed = Two.Utils.toFixed;
   var getRatio = Two.Utils.getRatio;
   var _ = Two.Utils;
+  var emptyArray = [];
+  var TWO_PI = Math.PI * 2,
+    max = Math.max,
+    min = Math.min,
+    abs = Math.abs,
+    sin = Math.sin,
+    cos = Math.cos,
+    acos = Math.acos,
+    sqrt = Math.sqrt;
 
   // Returns true if this is a non-transforming matrix
   var isDefaultMatrix = function (m) {
@@ -5828,7 +5787,7 @@ SOFTWARE.
 
         var matrix, stroke, linewidth, fill, opacity, visible, cap, join, miter,
             closed, commands, length, last, next, prev, a, b, c, d, ux, uy, vx, vy,
-            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset;
+            ar, bl, br, cl, x, y, mask, clip, defaultMatrix, isOffset, dashes;
 
         // TODO: Add a check here to only invoke _update if need be.
         this._update();
@@ -5847,6 +5806,7 @@ SOFTWARE.
         length = commands.length;
         last = length - 1;
         defaultMatrix = isDefaultMatrix(matrix);
+        dashes = this.dashes;
 
         // mask = this._mask;
         clip = this._clip;
@@ -5904,6 +5864,10 @@ SOFTWARE.
           ctx.globalAlpha = opacity;
         }
 
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
+        }
+
         ctx.beginPath();
 
         for (var i = 0; i < commands.length; i++) {
@@ -5917,6 +5881,23 @@ SOFTWARE.
 
             case Two.Commands.close:
               ctx.closePath();
+              break;
+
+            case Two.Commands.arc:
+
+              var rx = b.rx;
+              var ry = b.ry;
+              var xAxisRotation = b.xAxisRotation;
+              var largeArcFlag = b.largeArcFlag;
+              var sweepFlag = b.sweepFlag;
+
+              prev = closed ? mod(i - 1, length) : max(i - 1, 0);
+              a = commands[prev];
+
+              var ax = toFixed(a.x);
+              var ay = toFixed(a.y);
+
+              canvas.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
 
             case Two.Commands.curve:
@@ -6035,6 +6016,10 @@ SOFTWARE.
           ctx.clip();
         }
 
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
+        }
+
         return this.flagReset();
 
       }
@@ -6057,6 +6042,7 @@ SOFTWARE.
         var defaultMatrix = isDefaultMatrix(matrix);
         var isOffset = fill._renderer && fill._renderer.offset
           && stroke._renderer && stroke._renderer.offset;
+        var dashes = this.dashes;
 
         var a, b, c, d, e, sx, sy;
 
@@ -6113,6 +6099,9 @@ SOFTWARE.
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         if (!clip && !parentClipped) {
@@ -6184,6 +6173,10 @@ SOFTWARE.
         // TODO: Test for text
         if (clip && !parentClipped) {
           ctx.clip();
+        }
+
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(emptyArray);
         }
 
         return this.flagReset();
@@ -6301,6 +6294,67 @@ SOFTWARE.
 
       }
 
+    },
+
+    renderSvgArcCommand: function(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y) {
+
+      xAxisRotation = xAxisRotation * Math.PI / 180;
+
+      // Ensure radii are positive
+      rx = abs(rx);
+      ry = abs(ry);
+
+      // Compute (x1′, y1′)
+      var dx2 = (ax - x) / 2.0;
+      var dy2 = (ay - y) / 2.0;
+      var x1p = cos(xAxisRotation) * dx2 + sin(xAxisRotation) * dy2;
+      var y1p = - sin(xAxisRotation) * dx2 + cos(xAxisRotation) * dy2;
+
+      // Compute (cx′, cy′)
+      var rxs = rx * rx;
+      var rys = ry * ry;
+      var x1ps = x1p * x1p;
+      var y1ps = y1p * y1p;
+
+      // Ensure radii are large enough
+      var cr = x1ps / rxs + y1ps / rys;
+
+      if (cr > 1) {
+
+        // scale up rx,ry equally so cr == 1
+        var s = sqrt(cr);
+        rx = s * rx;
+        ry = s * ry;
+        rxs = rx * rx;
+        rys = ry * ry;
+
+      }
+
+      var dq = (rxs * y1ps + rys * x1ps);
+      var pq = (rxs * rys - dq) / dq;
+      var q = sqrt(max(0, pq));
+      if (largeArcFlag === sweepFlag) q = - q;
+      var cxp = q * rx * y1p / ry;
+      var cyp = - q * ry * x1p / rx;
+
+      // Step 3: Compute (cx, cy) from (cx′, cy′)
+      var cx = cos(xAxisRotation) * cxp
+        - sin(xAxisRotation) * cyp + (ax + x) / 2;
+      var cy = sin(xAxisRotation) * cxp
+        + cos(xAxisRotation) * cyp + (ay + y) / 2;
+
+      // Step 4: Compute θ1 and Δθ
+      var startAngle = svgAngle(1, 0, (x1p - cxp) / rx, (y1p - cyp) / ry);
+      var delta = svgAngle((x1p - cxp) / rx, (y1p - cyp) / ry,
+        (- x1p - cxp) / rx, (- y1p - cyp) / ry) % TWO_PI;
+
+      var endAngle = startAngle + delta;
+
+      var clockwise = sweepFlag === 0;
+
+      renderArcEstimate(ctx, cx, cy, rx, ry, startAngle, endAngle,
+        clockwise, xAxisRotation);
+
     }
 
   };
@@ -6381,6 +6435,85 @@ SOFTWARE.
 
   });
 
+  function renderArcEstimate(ctx, ox, oy, rx, ry, startAngle, endAngle, clockwise, xAxisRotation) {
+
+    var epsilon = Two.Utils.Curve.Tolerance.epsilon;
+    var deltaAngle = endAngle - startAngle;
+    var samePoints = Math.abs(deltaAngle) < epsilon;
+
+    // ensures that deltaAngle is 0 .. 2 PI
+    deltaAngle = mod(deltaAngle, TWO_PI);
+
+    if (deltaAngle < epsilon) {
+
+      if (samePoints) {
+
+        deltaAngle = 0;
+
+      } else {
+
+        deltaAngle = TWO_PI;
+
+      }
+
+    }
+
+    if (clockwise === true && ! samePoints) {
+
+      if (deltaAngle === TWO_PI) {
+
+        deltaAngle = - TWO_PI;
+
+      } else {
+
+        deltaAngle = deltaAngle - TWO_PI;
+
+      }
+
+    }
+
+    for (var i = 0; i < Two.Resolution; i++) {
+
+      var t = i / (Two.Resolution - 1);
+
+      var angle = startAngle + t * deltaAngle;
+      var x = ox + rx * Math.cos(angle);
+      var y = oy + ry * Math.sin(angle);
+
+      if (xAxisRotation !== 0) {
+
+        var cos = Math.cos(xAxisRotation);
+        var sin = Math.sin(xAxisRotation);
+
+        var tx = x - ox;
+        var ty = y - oy;
+
+        // Rotate the point about the center of the ellipse.
+        x = tx * cos - ty * sin + ox;
+        y = tx * sin + ty * cos + oy;
+
+      }
+
+      ctx.lineTo(x, y);
+
+    }
+
+  }
+
+  function svgAngle(ux, uy, vx, vy) {
+
+    var dot = ux * vx + uy * vy;
+    var len = sqrt(ux * ux + uy * uy) *  sqrt(vx * vx + vy * vy);
+    // floating point precision, slightly over values appear
+    var ang = acos(max(-1, min(1, dot / len)));
+    if ((ux * vy - uy * vx) < 0) {
+      ang = - ang;
+    }
+
+    return ang;
+
+  }
+
   function resetTransform(ctx) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
@@ -6401,6 +6534,7 @@ SOFTWARE.
     getRatio = Two.Utils.getRatio,
     getComputedMatrix = Two.Utils.getComputedMatrix,
     toFixed = Two.Utils.toFixed,
+    CanvasUtils = Two[Two.Types.canvas].Utils,
     _ = Two.Utils;
 
   var webgl = {
@@ -6497,6 +6631,11 @@ SOFTWARE.
           }
         }
 
+        for (var i = 0; i < this.children.length; i++) {
+          var child = this.children[i];
+          webgl[child._renderer.type].render.call(child, gl, program);
+        }
+
         this.children.forEach(webgl.group.renderChild, {
           gl: gl,
           program: program
@@ -6544,6 +6683,7 @@ SOFTWARE.
         var join = elem._join;
         var miter = elem._miter;
         var closed = elem._closed;
+        var dashes = elem.dashes;
         var length = commands.length;
         var last = length - 1;
 
@@ -6588,6 +6728,10 @@ SOFTWARE.
           ctx.globalAlpha = opacity;
         }
 
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
+        }
+
         var d;
         ctx.save();
         ctx.scale(scale, scale);
@@ -6605,6 +6749,23 @@ SOFTWARE.
 
             case Two.Commands.close:
               ctx.closePath();
+              break;
+
+            case Two.Commands.arc:
+
+              var rx = b.rx;
+              var ry = b.ry;
+              var xAxisRotation = b.xAxisRotation;
+              var largeArcFlag = b.largeArcFlag;
+              var sweepFlag = b.sweepFlag;
+
+              prev = closed ? mod(i - 1, length) : max(i - 1, 0);
+              a = commands[prev];
+
+              var ax = toFixed(a.x);
+              var ay = toFixed(a.y);
+
+              CanvasUtils.renderSvgArcCommand(ctx, ax, ay, rx, ry, largeArcFlag, sweepFlag, xAxisRotation, x, y);
               break;
 
             case Two.Commands.curve:
@@ -6817,6 +6978,7 @@ SOFTWARE.
           || this._flagStroke || this._flagLinewidth || this._flagOpacity
           || parent._flagOpacity || this._flagVisible || this._flagCap
           || this._flagJoin || this._flagMiter || this._flagScale
+          || (this.dashes && this.dashes.length > 0)
           || !this._renderer.texture;
 
         if (flagParentMatrix || flagMatrix) {
@@ -6911,6 +7073,7 @@ SOFTWARE.
         var linewidth = elem._linewidth * scale;
         var fill = elem._fill;
         var opacity = elem._renderer.opacity || elem._opacity;
+        var dashes = elem.dashes;
 
         canvas.width = Math.max(Math.ceil(elem._renderer.rect.width * scale), 1);
         canvas.height = Math.max(Math.ceil(elem._renderer.rect.height * scale), 1);
@@ -6955,6 +7118,9 @@ SOFTWARE.
         }
         if (_.isNumber(opacity)) {
           ctx.globalAlpha = opacity;
+        }
+        if (dashes && dashes.length > 0) {
+          ctx.setLineDash(dashes);
         }
 
         ctx.save();
@@ -7036,12 +7202,12 @@ SOFTWARE.
         ctx.textBaseline = elem._baseline;
 
         // TODO: Estimate this better
-        var width = ctx.measureText(elem._value).width;
-        var height = Math.max(elem._size || elem._leading);
+        var width = ctx.measureText(elem._value).width * 1.25;
+        var height = Math.max(elem._size, elem._leading) * 1.25;
 
         if (this._linewidth && !webgl.isHidden.test(this._stroke)) {
-          // width += this._linewidth; // TODO: Not sure if the `measure` calcs this.
-          height += this._linewidth;
+          width += this._linewidth * 2;
+          height += this._linewidth * 2;
         }
 
         var w = width / 2;
@@ -7115,6 +7281,7 @@ SOFTWARE.
           || this._flagValue || this._flagFamily || this._flagSize
           || this._flagLeading || this._flagAlignment || this._flagBaseline
           || this._flagStyle || this._flagWeight || this._flagDecoration
+          || (this.dashes && this.dashes.length > 0)
           || !this._renderer.texture;
 
         if (flagParentMatrix || flagMatrix) {
@@ -7710,8 +7877,8 @@ SOFTWARE.
      */
     MakeObservable: function(object) {
 
-      Object.defineProperty(object, 'translation', {
-        enumerable: true,
+      var translation = {
+        enumerable: false,
         get: function() {
           return this._translation;
         },
@@ -7723,7 +7890,10 @@ SOFTWARE.
           this._translation.bind(Two.Events.change, this._renderer.flagMatrix);
           Shape.FlagMatrix.call(this);
         }
-      });
+      };
+
+      Object.defineProperty(object, 'translation', translation);
+      Object.defineProperty(object, 'position', translation);
 
       Object.defineProperty(object, 'rotation', {
         enumerable: true,
@@ -8046,6 +8216,13 @@ SOFTWARE.
      */
     this.automatic = !manual;
 
+    /**
+     * @name Two.Path#dashes
+     * @property {String} - List of dash and gap values.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray} for more information on the SVG stroke-dasharray attribute.
+     */
+    this.dashes = [];
+
   };
 
   _.extend(Path, {
@@ -8071,6 +8248,10 @@ SOFTWARE.
       'beginning',
       'ending'
     ],
+
+    Utils: {
+      getCurveLength: getCurveLength
+    },
 
     /**
      * @name Two.Path.FlagVertices
@@ -8301,7 +8482,12 @@ SOFTWARE.
           }
 
           // Create new Collection with copy of vertices
-          this._collection = new Two.Utils.Collection(vertices || []);//.slice(0));
+          if (vertices instanceof Two.Utils.Collection) {
+            this._collection = vertices;
+          } else {
+            this._collection = new Two.Utils.Collection(vertices || []);
+          }
+
 
           // Listen for Collection changes and bind / unbind
           this._collection
@@ -8549,15 +8735,14 @@ SOFTWARE.
      */
     clone: function(parent) {
 
-      var points = _.map(this.vertices, function(v) {
-        return v.clone();
-      });
+      var clone = new Path();
 
-      var clone = new Path(points, this.closed, this.curved, !this.automatic);
+      clone.vertices = this.vertices;
 
-      _.each(Path.Properties, function(k) {
+      for (var i = 0; i < Path.Properties.length; i++) {
+        var k = Path.Properties[i];
         clone[k] = this[k];
-      }, this);
+      }
 
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
@@ -9102,6 +9287,7 @@ SOFTWARE.
 
         var l = this._collection.length;
         var last = l - 1;
+        var closed = this._closed;
 
         var beginning = Math.min(this._beginning, this._ending);
         var ending = Math.max(this._beginning, this._ending);
@@ -9154,13 +9340,13 @@ SOFTWARE.
 
             if (i === high && contains(this, ending)) {
               right = v;
-              if (right.controls) {
+              if (!closed && right.controls) {
                 right.controls.right.clear();
               }
             } else if (i === low && contains(this, beginning)) {
               left = v;
               left.command = Two.Commands.move;
-              if (left.controls) {
+              if (!closed && left.controls) {
                 left.controls.left.clear();
               }
             }
@@ -9389,8 +9575,8 @@ SOFTWARE.
       new Two.Anchor(),
       new Two.Anchor(),
       new Two.Anchor(),
-      new Two.Anchor(),
       new Two.Anchor()
+      // new Two.Anchor() // TODO: Figure out how to handle this for `beginning` / `ending` animations
     ], true, false, true);
 
     this.width = width;
@@ -9603,8 +9789,10 @@ SOFTWARE.
 
     clone: function(parent) {
 
+      var rx = this.width / 2;
+      var ry = this.height / 2;
       var resolution = this.vertices.length;
-      var clone = new Ellipse(0, 0, this.width, this.height, resolution);
+      var clone = new Ellipse(0, 0, rx, ry, resolution);
 
       clone.translation.copy(this.translation);
       clone.rotation = this.rotation;
@@ -10500,6 +10688,8 @@ SOFTWARE.
         this.translation.y = y;
     }
 
+    this.dashes = [];
+
     if (!_.isObject(styles)) {
       return this;
     }
@@ -10521,7 +10711,7 @@ SOFTWARE.
     Properties: [
       'value', 'family', 'size', 'leading', 'alignment', 'linewidth', 'style',
       'className', 'weight', 'decoration', 'baseline', 'opacity', 'visible',
-      'fill', 'stroke'
+      'fill', 'stroke',
     ],
 
     FlagFill: function() {
@@ -10681,7 +10871,7 @@ SOFTWARE.
         parent.add(clone);
       }
 
-      return clone;
+      return clone._update();
 
     },
 
@@ -11377,6 +11567,14 @@ SOFTWARE.
       return anchor.href;
     },
 
+    loadHeadlessBuffer: new Function('texture', 'loaded', [
+      'var fs = require("fs");',
+      'var buffer = fs.readFileSync(texture.src);',
+
+      'texture.image.src = buffer;',
+      'loaded();'
+    ].join('\n')),
+
     getImage: function(src) {
 
       var absoluteSrc = Texture.getAbsoluteURL(src);
@@ -11459,11 +11657,7 @@ SOFTWARE.
 
         if (Two.Utils.isHeadless) {
 
-          var fs = require('fs');
-          var buffer = fs.readFileSync(texture.src);
-
-          texture.image.src = buffer;
-          loaded();
+          Texture.loadHeadlessBuffer(texture, loaded);
 
         } else {
 
@@ -12577,7 +12771,7 @@ SOFTWARE.
 
       var group = new Group();
       var children = _.map(this.children, function(child) {
-        return child.clone(group);
+        return child.clone();
       });
 
       group.add(children);
@@ -12597,7 +12791,7 @@ SOFTWARE.
         parent.add(group);
       }
 
-      return group;
+      return group._update();
 
     },
 
