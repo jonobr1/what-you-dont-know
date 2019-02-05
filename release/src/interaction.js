@@ -34,7 +34,8 @@ function Interaction ( renderer, camera ) {
 
 		scope.dispatchEvent( {
 		  type: 'primary-down',
-		  controller: mouse
+		  controller: mouse,
+			item: item
 		} );
 
 		return;
@@ -80,7 +81,8 @@ function Interaction ( renderer, camera ) {
 		scope.dispatchEvent( {
 			type: 'primary-down',
 			controller: mouse,
-			isTouch: true
+			isTouch: true,
+			item: item
 		} );
 
 		return;
@@ -144,7 +146,8 @@ function Interaction ( renderer, camera ) {
 
 		scope.dispatchEvent( {
 		  type: 'primary-up',
-		  controller: mouse
+		  controller: mouse,
+			item: item
 		} );
 
 		return;
@@ -188,7 +191,8 @@ function Interaction ( renderer, camera ) {
 		scope.dispatchEvent( {
 			type: 'primary-up',
 			controller: mouse,
-			isTouch: true
+			isTouch: true,
+			item: item
 		} );
 
 		mouse.copy( Interaction.Offscreen );
@@ -238,7 +242,8 @@ function Interaction ( renderer, camera ) {
 
 			scope.dispatchEvent( {
 			  type: 'primary-down',
-			  controller: controller
+			  controller: controller,
+				item: item
 			} );
 
 		}
@@ -260,7 +265,8 @@ function Interaction ( renderer, camera ) {
 
 			scope.dispatchEvent( {
 			  type: 'primary-up',
-			  controller: controller
+			  controller: controller,
+				item: item
 			} );
 
 		}
@@ -282,7 +288,8 @@ function Interaction ( renderer, camera ) {
 
 			scope.dispatchEvent( {
 			  type: 'primary-touchstart',
-			  controller: controller
+			  controller: controller,
+				item: item
 			} );
 
 		}
@@ -304,7 +311,8 @@ function Interaction ( renderer, camera ) {
 
 			scope.dispatchEvent( {
 			  type: 'primary-touchend',
-			  controller: controller
+			  controller: controller,
+				item: item
 			} );
 
 		}
