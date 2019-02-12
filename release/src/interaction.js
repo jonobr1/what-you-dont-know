@@ -16,6 +16,9 @@ function Interaction ( renderer, camera ) {
 	this.controllers = { mouse: this.mouse };
 	this.raycaster = new THREE.Raycaster();
 
+	setupController( renderer.vr.getController( 0 ) );
+	setupController( renderer.vr.getController( 1 ) );
+
 	this.mousedown = function ( event ) {
 
 		if ( !scope.enabled ) {
@@ -201,9 +204,8 @@ function Interaction ( renderer, camera ) {
 
 	};
 
-	this.connectController = function ( event ) {
+	function setupController ( controller ) {
 
-		var controller = event.detail;
 		scope.add( controller );
 
 		controller.standingMatrix = renderer.vr.getStandingMatrix();
@@ -317,36 +319,13 @@ function Interaction ( renderer, camera ) {
 
 		}
 
-		controller.addEventListener( 'primary press began', primaryPressBegan );
-		controller.addEventListener( 'primary press ended', primaryPressEnded );
+		controller.addEventListener( 'selectstart', primaryPressBegan );
+		controller.addEventListener( 'selectend', primaryPressEnded );
 
-		controller.addEventListener( 'primary touch began', primaryTouchBegan );
-		controller.addEventListener( 'primary touch ended', primaryTouchEnded );
+		// controller.addEventListener( 'primary touch began', primaryTouchBegan );
+		// controller.addEventListener( 'primary touch ended', primaryTouchEnded );
 
-		// controller.addEventListener( 'touchpad axes changed', axesChanged );
-
-		controller.addEventListener( 'disconnected', function ( event ) {
-
-			if ( controller.parent ) {
-				controller.parent.remove( controller );
-			}
-
-			controller.removeEventListener( 'primary press began', primaryPressBegan );
-			controller.removeEventListener( 'primary press ended', primaryPressEnded );
-
-			controller.removeEventListener( 'primary touch began', primaryTouchBegan );
-			controller.removeEventListener( 'primary touch ended', primaryTouchEnded );
-
-			delete scope.controllers[ controller.uuid ];
-
-		} );
-
-		scope.dispatchEvent( {
-			type: 'connected',
-			controller: controller
-		} );
-
-	};
+	}
 
 }
 
@@ -642,8 +621,6 @@ Interaction.prototype.connect = function() {
 	var renderer = this.renderer;
 	this.camera.parent.add( this );
 
-	window.addEventListener( 'vr controller connected', this.connectController );
-
 	renderer.domElement.addEventListener( 'mousedown', this.mousedown, false );
 	renderer.domElement.addEventListener( 'mousemove', this.mousemove, false );
 	renderer.domElement.addEventListener( 'mouseup', this.mouseup, false );
@@ -661,8 +638,6 @@ Interaction.prototype.disconnect = function() {
 
 	var renderer = this.renderer;
 	this.camera.parent.remove( this );
-
-	window.removeEventListener( 'vr controller connected', this.connectController );
 
 	renderer.domElement.removeEventListener( 'mousedown', this.mousedown, false );
 	renderer.domElement.removeEventListener( 'mousemove', this.mousemove, false );
