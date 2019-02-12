@@ -14,6 +14,7 @@ function Interaction ( renderer, camera ) {
 	this.searchables = [];
 	this.intersections = {};
 	this.controllers = { mouse: this.mouse };
+	this.XRControllers = [];
 	this.raycaster = new THREE.Raycaster();
 
 	setupController( renderer.vr.getController( 0 ) );
@@ -324,6 +325,7 @@ function Interaction ( renderer, camera ) {
 
 		// controller.addEventListener( 'primary touch began', primaryTouchBegan );
 		// controller.addEventListener( 'primary touch ended', primaryTouchEnded );
+		scope.XRControllers.push( controller );
 
 	}
 
@@ -439,8 +441,6 @@ Interaction.Offscreen = new THREE.Vector2( - 10, - 10 );
 
 Interaction.prototype.update = function() {
 
-	// THREE.VRController.update();
-
 	var renderer = this.renderer;
 	var list = this.searchables;
 	var raycaster = this.raycaster;
@@ -451,11 +451,11 @@ Interaction.prototype.update = function() {
 		return;
 	}
 
-	if ( renderer.vr.isPresenting() && THREE.VRController.controllers.length > 0 ) {
+	if ( renderer.vr.isPresenting() && this.XRControllers.length > 0 ) {
 
-		for ( var i = 0; i < THREE.VRController.controllers.length; i++ ) {
+		for ( var i = 0; i < this.XRControllers.length; i++ ) {
 
-			var controller = THREE.VRController.controllers[ i ];
+			var controller = this.XRControllers[ i ];
 
 			if ( !controller ) {
 				continue;
