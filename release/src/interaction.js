@@ -11,6 +11,8 @@ function Interaction ( renderer, camera ) {
 	this.enabled = true;
 
 	this.mouse = new THREE.Vector2().copy( Interaction.Offscreen );
+	this.mouse.uuid = 'mouse';
+
 	this.searchables = [];
 	this.intersections = {};
 	this.controllers = { mouse: this.mouse };
