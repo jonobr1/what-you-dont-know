@@ -27,7 +27,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Polar Spheres
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
-- [ ] Increase Height of Playhead.Cylinder
+- [x] Increase Height of Playhead.Cylinder
 - [x] Make Debris a Sphere
 - [ ] Make Biquad Filter More Apparent (audio & visual)
 - [ ] Choreograph Lyrics
@@ -35,7 +35,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Ring
 - [ ] Choreograph Backdrop
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
-- [ ] Fix Multiple VR Controllers
+- [x] Fix Multiple VR Controllers
 - [ ] Fix Safari Playback Issues
 - [x] Remove `THREE.VRController` Dependency
 - [x] Update to r101
