@@ -1025,19 +1025,16 @@
 				"",
 				"var interaction = new Interaction( renderer, camera );",
 				"",
-				"interaction.addEventListener( 'connected', connected );",
 				"interaction.connect();",
 				"",
-				"resources.set( 'interaction', interaction );",
-				"",
-				"function connected( event ) {",
-				"\tif ( !event.controller ) {",
-				"\t\treturn;",
-				"\t}",
-				"\tvar laser = event.controller.userData.laser;",
+				"for ( var i = 0; i < interaction.XRControllers.length; i++ ) {",
+				"\tvar controller = interaction.XRControllers[ i ];",
+				"\tvar laser = controller.userData.laser;",
 				"\tvar material = laser.material;",
 				"\tmaterial.emissive = backdrop.material.uniforms.cSource.value;",
-				"}"
+				"}",
+				"",
+				"resources.set( 'interaction', interaction );"
 			]
 		],
 		[
