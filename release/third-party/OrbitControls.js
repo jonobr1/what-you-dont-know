@@ -98,6 +98,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	};
 
+	this.getState = function () {
+		return state;
+	};
+
 	this.saveState = function () {
 
 		scope.target0.copy( scope.target );
