@@ -36,6 +36,6 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Backdrop
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [x] Fix Multiple VR Controllers
-- [ ] Fix Safari Playback Issues
+- [x] Fix Safari Playback Issues
 - [x] Remove `THREE.VRController` Dependency
 - [x] Update to r101
