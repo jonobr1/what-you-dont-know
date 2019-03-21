@@ -25,11 +25,15 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Meta-Lines around Lyrics
 - [ ] Add Child Shapes to Ring
 - [ ] Add Polar Spheres
+- [ ] Add Lyric Interaction
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
 - [x] Increase Height of Playhead.Cylinder
 - [x] Make Debris a Sphere
 - [ ] Make Biquad Filter More Apparent (audio & visual)
+- [ ] Make Bones Scale Based on Paddle Track FFT
+- [ ] Add Color Palette Changes on Speed Modification
+- [ ] Modify OrbitControls to Ease Rotation
 - [ ] Choreograph Lyrics
 - [ ] Choreograph Particles
 - [ ] Choreograph Ring
@@ -37,5 +41,6 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [x] Fix Multiple VR Controllers
 - [x] Fix Safari Playback Issues
+- [ ] Fix touch events for Paddles
 - [x] Remove `THREE.VRController` Dependency
 - [x] Update to r101
