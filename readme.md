@@ -40,6 +40,6 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [x] Fix Multiple VR Controllers
 - [x] Fix Safari Playback Issues
-- [ ] Fix touch events for Paddles
+- [x] Fix touch events for Paddles
 - [x] Remove `THREE.VRController` Dependency
 - [x] Update to r101

@@ -2722,6 +2722,7 @@
 				"\tif ( orbit ) {",
 				"\t\tif ( isPresenting || interacting ) {",
 				"\t\t\torbit.enabled = false;",
+				"\t\t\torbit.setState( - 1 );",
 				"\t\t} else {",
 				"\t\t\torbit.enabled = true;",
 				"\t\t\torbit.update();",
