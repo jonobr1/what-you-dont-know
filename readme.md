@@ -32,7 +32,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Make Debris a Sphere
 - [x] Make Biquad Filter More Apparent (audio & visual)
 - [x] Add Color Palette Changes on Speed Modification
-- [ ] Modify OrbitControls to Ease Rotation
+- [x] Modify OrbitControls to Ease Rotation
 - [ ] Choreograph Lyrics
 - [ ] Choreograph Particles
 - [ ] Choreograph Ring
