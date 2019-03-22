@@ -3054,6 +3054,7 @@
 				"\t\tcamera.userData.controls.enableDamping = true;",
 				"\t\tcamera.userData.controls.maxDistance = 1000;",
 				"\t\tcamera.userData.controls.dampingFactor = 0.16;",
+				"\t\tcamera.userData.controls.rotateSpeed = 0.33;",
 				"\t}",
 				"",
 				"}",
