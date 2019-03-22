@@ -2527,7 +2527,7 @@
 			]
 		],
 		[
-			"AV Features",
+			"VJ Features",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"var backdrop = resources.get( 'backdrop' );",
