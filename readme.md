@@ -28,6 +28,8 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Lyric Interaction
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
+- [ ] Instance Green Buttons
+- [ ] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
 - [x] Make Debris a Sphere
 - [x] Make Biquad Filter More Apparent (audio & visual)
