@@ -40,20 +40,28 @@
         var radialSegments = 4;
         var tubularSegments = 512;
         var ring = createRing( radius, thickness, radialSegments, tubularSegments );
+        var disruptors = createDisruptors( ring, 12 );
 
         setup();
 
         function setup() {
 
-          scene.add( ring );
+          renderer.shadowMap.enabled = true;
+          renderer.shadowMap.type = THREE.PCFShadowMap;
+
+          scene.add( ring, disruptors );
 
           camera.position.z = 100;
           camera.userData.controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-          for ( var i = 0; i < ring.userData.tracks; i++ ) {
+          for ( var i = 0; i < 4; i++ ) {
 
-            var pct = i / ( 10 - 1 );
+            var pct = i / ( 4 - 1 );
             var light = new THREE.DirectionalLight( '#fff', 0.3 );
+            light.castShadow = true;
+            light.shadow.camera.near = 1;
+            light.shadow.camera.far = 5000;
+            light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
 
             light.position.y = 500 * pct - 250;
             light.lookAt( ring.position );
@@ -66,7 +74,11 @@
 
           document.body.appendChild( renderer.domElement );
 
-          window.addEventListener('resize', resize, false);
+          window.addEventListener( 'resize', resize, false );
+          window.addEventListener( 'click', function() {
+            var d = disruptors.userData.next();
+            d.userData.tweens.start();
+          }, false );
           resize();
           renderer.setAnimationLoop( animate );
 
@@ -84,6 +96,10 @@
         }
 
         function animate( time ) {
+
+          TWEEN.update( time );
+
+          disruptors.userData.update();
 
           var tick = time / 300;
           var points = ring.userData.spline.points;
@@ -106,13 +122,115 @@
               .setScale( i, scale );
 
             var light = lights[ i ];
-            light.position.x = 250 * Math.sin( 6 * TWO_PI * pct + tick * 0.1 );
+            if ( light ) {
+              light.rotation.x = Math.PI * Math.sin( 6 * TWO_PI * pct + tick * 0.1 );
+            }
 
           }
 
           ring.userData.update();
 
           renderer.render( scene, camera );
+
+        }
+
+        function createDisruptors( ring, amount ) {
+
+          var sphereRadius = 25;
+          var geometry = new THREE.SphereBufferGeometry( sphereRadius, 32, 32 );
+          var material = new THREE.MeshBasicMaterial( {
+            color: 'red'
+          } );
+
+          var group = new THREE.Group();
+
+          group.userData.index = 0;
+
+          group.userData.next = function() {
+            var index = group.userData.index;
+            group.userData.index = ( index + 1 ) % group.children.length;
+            return group.children[ index ];
+          };
+
+          group.userData.setRing = function( obj ) {
+            ring = obj;
+            return group;
+          };
+
+          group.userData.update = function() {
+
+            if ( !ring ) {
+              return;
+            }
+
+            for ( var i = 0; i < group.children.length; i++ ) {
+
+              var mesh = group.children[ i ];
+              var elapsed = mesh.userData.elapsed;
+              var start = mesh.userData.startAngle
+              var end = mesh.userData.endAngle;
+
+              var t = elapsed * ( end - start ) + start;
+              var scale = elapsed + 0.1;
+
+              ring.userData.spline.getPoint( t, mesh.position );
+              ring.userData.spline.scales.getPoint( t, point );
+
+              mesh.position.y += 0.5 * scale * sphereRadius + ( ring.userData.thickness * point.y ) / 2;
+              mesh.scale.set( scale, scale, scale );
+
+            }
+
+          };
+
+          while ( amount > 0 ) {
+            group.add( createMesh() );
+            amount--;
+          }
+
+          function createMesh() {
+
+            var mesh = new THREE.Mesh(
+              geometry, material
+            );
+
+            mesh.visible = false;
+            mesh.userData.elapsed = 0;
+            mesh.userData.startAngle = 0;
+            mesh.userData.endAngle = 1;
+
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+
+            mesh.userData.tweens = {
+
+              in: new TWEEN.Tween( mesh.userData )
+                .easing( TWEEN.Easing.Circular.Out )
+                .to( { elapsed: 1 }, 5000 ),
+
+              start: function() {
+
+                var range = Math.random() * 0.25 + 0.25;
+                mesh.visible = true;
+                mesh.userData.elapsed = 0;
+                mesh.userData.startAngle = Math.random();
+                mesh.userData.endAngle = mesh.userData.startAngle
+                  + ( Math.random() > 0.5 ? range : - range );
+                mesh.userData.tweens.in.start();
+
+              }
+
+            };
+
+            mesh.userData.tweens.in.onComplete( function() {
+              mesh.visible = false;
+            } );
+
+            return mesh;
+
+          }
+
+          return group;
 
         }
 
@@ -126,6 +244,8 @@
             skinning: true,
             metalness: 0.0,
             reflectivity: 0.0,
+            // transparent: true,
+            // opacity: 0.1,
             roughness: 0.25,
             clearCoat: 1,
             clearCoatRoughness: 0.5
@@ -284,6 +404,7 @@
           var torus = new THREE.SkinnedMesh( geometry, material );
 
           torus.receiveShadow = true;
+          torus.castShadow = true;
 
           torus.userData.tracks = instruments;
           torus.userData.root = root;
