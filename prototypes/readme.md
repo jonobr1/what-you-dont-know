@@ -35,6 +35,7 @@
 + [Controller](./controller.html)
 + [Particle System](./sparks.html)
 + [Bone Based Ring](./ring.html)
++ [Spline Based Ring](./spline-ring.html)
 
 ## Visuals
 

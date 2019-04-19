@@ -1,0 +1,395 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      div.script {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scripts">
+      <script src="../release/third-party/three.js"></script>
+      <script src="../release/third-party/tween.js"></script>
+      <script src="../release/third-party/OrbitControls.js"></script>
+      <script>
+
+        var TWO_PI = Math.PI * 2;
+        var point = new THREE.Vector3();
+        var quaternion = new THREE.Quaternion();
+
+        var lights = [];
+        var renderer = new THREE.WebGLRenderer( { antialias: true } );
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera( 75 );
+
+        var radius = 250;
+        var thickness = 33 * 2;
+        var radialSegments = 4;
+        var tubularSegments = 512;
+        var ring = createRing( radius, thickness, radialSegments, tubularSegments );
+
+        setup();
+
+        function setup() {
+
+          scene.add( ring );
+
+          camera.position.z = 100;
+          camera.userData.controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+          for ( var i = 0; i < ring.userData.tracks; i++ ) {
+
+            var pct = i / ( 10 - 1 );
+            var light = new THREE.DirectionalLight( '#fff', 0.3 );
+
+            light.position.y = 500 * pct - 250;
+            light.lookAt( ring.position );
+
+            scene.add( light );
+            scene.add( new THREE.DirectionalLightHelper( light ) );
+            lights.push( light );
+
+          }
+
+          document.body.appendChild( renderer.domElement );
+
+          window.addEventListener('resize', resize, false);
+          resize();
+          renderer.setAnimationLoop( animate );
+
+        }
+
+        function resize() {
+
+          var width = window.innerWidth;
+          var height = window.innerHeight;
+
+          renderer.setSize(width, height);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+
+        }
+
+        function animate( time ) {
+
+          var tick = time / 300;
+          var points = ring.userData.spline.points;
+          var rotations = ring.userData.spline.rotations.points;
+          var scales = ring.userData.spline.scales.points;
+
+          for ( var i = 0; i < ring.userData.tracks; i++ ) {
+
+            var pct = i / ( points.length - 1 );
+            var radius = 50 * Math.sin(
+              3 * Math.sin( tick * 0.25 ) * (tick * 0.001 + pct) * Math.PI );
+
+            var y = radius * Math.sin( 3 * TWO_PI * pct + tick );
+            var rotation = Math.sin( TWO_PI * pct + tick * 0.5 );
+            var scale = ( Math.sin( 4 * TWO_PI * pct + tick ) + 1 ) / 2 + 0.5;
+
+            ring.userData
+              .setPositionY( i, y )
+              .setRotation( i, rotation )
+              .setScale( i, scale );
+
+            var light = lights[ i ];
+            light.position.x = 250 * Math.sin( 6 * TWO_PI * pct + tick * 0.1 );
+
+          }
+
+          ring.userData.update();
+
+          renderer.render( scene, camera );
+
+        }
+
+        function createRing( radius, thickness, radialSegments, tubularSegments ) {
+
+          var instruments = 8;
+          var bonesNeedUpdate = true;
+
+          var geometry = new THREE.TorusBufferGeometry( radius, thickness / 2, radialSegments, tubularSegments );
+          var material = new THREE.MeshPhysicalMaterial( {
+            skinning: true,
+            metalness: 0.0,
+            reflectivity: 0.0,
+            roughness: 0.25,
+            clearCoat: 1,
+            clearCoatRoughness: 0.5
+          } );
+
+          geometry.rotateX( Math.PI / 2 );
+
+          var splinePositions = [];
+          var splineRotations = [];
+          var splineScales = [];
+
+          var bones = [];
+          var amount = 24;
+          var root = new THREE.Bone();
+          bones.push( root );
+
+          for ( var i = 0; i < amount; i++ ) {
+
+            var pct = i / amount;
+            var theta = pct * Math.PI * 2;
+            var bone = new THREE.Bone();
+
+            bone.position.x = radius * Math.cos( theta );
+            bone.position.z = radius * Math.sin( theta );
+            bone.rotation.order = 'YXZ';
+            bone.rotation.y = Math.atan2( - bone.position.x, - bone.position.z );
+
+            bone.userData.theta = theta;
+            bone.userData.euler = new THREE.Euler().copy( bone.rotation );
+            // bone.add( new THREE.AxesHelper( 50 ) );
+
+            root.add( bone );
+            bones.push( bone );
+
+            // TODO: Make this number the amount of
+            // instruments / tracks in the song
+            if ( i < instruments ) {
+
+              pct = i / instruments;
+              theta = pct * Math.PI * 2;
+
+              var ct = Math.cos( theta );
+              var st = Math.sin( theta );
+
+              splinePositions.push( new THREE.Vector3( radius * ct, 0, radius * st ) );
+              splineRotations.push( new THREE.Vector3( ct, 0, st ) );
+              splineScales.push( new THREE.Vector3( ct, 1, st ) );
+
+            }
+
+          }
+
+          var distanceBetweenBones = bones[ 5 ].position.distanceTo( bones[ 6 ].position );
+          var positions = geometry.attributes.position;
+
+          var weightResolution = 4;
+          var indices = [];
+          var weights = [];
+
+          var v1 = new THREE.Vector3();
+          var v2 = new THREE.Vector3();
+
+          var sortedBones = [];
+
+          for ( var i = 0; i < bones.length; i ++ ) {
+
+            var bone = bones[ i ];
+            sortedBones.push( { id: i, bone: bone, distance: 0 } );
+
+          }
+
+          function getNearestBones( vertex ) {
+
+            for ( var i = 0; i < sortedBones.length; i ++ ) {
+
+              var boneData = sortedBones[ i ];
+              boneData.bone.getWorldPosition( v2 );
+              boneData.distance = vertex.distanceTo( v2 );
+
+            }
+
+            sortedBones.sort( function ( a, b ) { return a.distance - b.distance } );
+
+            return sortedBones;
+
+          }
+
+          for ( var i = 0, j = 0; i < positions.count * weightResolution; i += weightResolution, j += 3 ) {
+
+            v1.fromArray( positions.array, j );
+
+            var data = getNearestBones( v1 );
+
+            var d0 = data[ 0 ];
+            var d1 = data[ 1 ];
+            var d2 = data[ 2 ];
+            var d3 = data[ 3 ];
+
+            var dd0 = d0.distance;
+            var dd1 = d1.distance;
+            var dd2 = d2.distance;
+            var dd3 = d3.distance;
+
+            var shortest = dd0;
+            var farthest = dd3;
+            var spread = distanceBetweenBones;
+            var smooth = TWEEN.Easing.Sinusoidal.Out;
+
+            var wd0 = ( ( dd0 - shortest ) / spread );
+            var wd1 = ( ( dd1 - shortest ) / spread );
+            var wd2 = ( ( dd2 - shortest ) / spread );
+            var wd3 = ( ( dd3 - shortest ) / spread );
+
+            wd0 = Math.min( wd0, 1 );
+            wd1 = Math.min( wd1, 1 );
+            wd2 = Math.min( wd2, 1 );
+            wd3 = Math.min( wd3, 1 );
+
+            wd0 = smooth( wd0 );
+            wd1 = smooth( wd1 );
+            wd2 = smooth( wd2 );
+            wd3 = smooth( wd3 );
+
+            wd0 = Math.floor( 100 * wd0 ) / 100;
+            wd1 = Math.floor( 100 * wd1 ) / 100;
+            wd2 = Math.floor( 100 * wd2 ) / 100;
+            wd3 = Math.floor( 100 * wd3 ) / 100;
+
+            wd0 = 1 - wd0;
+            wd1 = 1 - wd1;
+            wd2 = 1 - wd2;
+            wd3 = 1 - wd3;
+
+            var sum = wd0 + wd1 + wd2 + wd3;
+
+            wd0 /= sum;
+            wd1 /= sum;
+            wd2 /= sum;
+            wd3 /= sum;
+
+            indices[ i + 0 ] = d0.id;
+            indices[ i + 1 ] = d1.id;
+            indices[ i + 2 ] = d2.id;
+            indices[ i + 3 ] = d3.id;
+
+            weights[ i + 0 ] = wd0;
+            weights[ i + 1 ] = wd1;
+            weights[ i + 2 ] = wd2;
+            weights[ i + 3 ] = wd3;
+
+          }
+
+          geometry.addAttribute( 'skinIndex', new THREE.Float32BufferAttribute( indices, weightResolution ) );
+          geometry.addAttribute( 'skinWeight', new THREE.Float32BufferAttribute( weights, weightResolution ) );
+
+          var torus = new THREE.SkinnedMesh( geometry, material );
+
+          torus.receiveShadow = true;
+
+          torus.userData.tracks = instruments;
+          torus.userData.root = root;
+          torus.userData.radius = radius;
+          torus.userData.thickness = thickness;
+          torus.userData.skeleton = new THREE.Skeleton( bones );
+
+          torus.add( root );
+          torus.bind( torus.userData.skeleton );
+
+          // Generate Spline from bones
+
+          geometry = new THREE.BufferGeometry();
+          geometry.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array( tubularSegments * 3 ), 3 ) );
+
+          var spline = new THREE.CatmullRomCurve3( splinePositions, true );
+          spline.rotations = new THREE.CatmullRomCurve3( splineRotations, true );
+          spline.scales = new THREE.CatmullRomCurve3( splineScales, true );
+
+          spline.type = 'centripetal';
+          spline.mesh = new THREE.Line( geometry, new THREE.LineBasicMaterial( {
+            linewidth: 1,
+            color: 'yellow'
+          } ) );
+
+          torus.userData.spline = spline;
+          torus.userData.update = function() {
+
+            var position;
+
+            if ( !bonesNeedUpdate ) {
+              return torus;
+            }
+
+            bonesNeedUpdate = false;
+
+            if ( spline.mesh.visible ) {
+
+              position = geometry.attributes.position;
+
+              for ( var i = 0; i < tubularSegments; i++ ) {
+                var t = i / ( tubularSegments - 1 );
+                spline.getPoint( t, point );
+                position.setXYZ( i, point.x, point.y, point.z );
+              }
+
+              position.needsUpdate = true;
+
+            }
+
+            for ( var j = 0; j < root.children.length; j++ ) {
+
+              var bone = root.children[ j ];
+              var t = bone.userData.theta / TWO_PI;
+
+              spline.getPoint( t, bone.position );
+              spline.getPoint( t + 1 / amount, point );
+
+              var hypotenuse = point.distanceTo( bone.position );
+              var opposite = point.y - bone.position.y;
+              var angle = Math.asin( opposite / hypotenuse );
+
+              // Calculate the ring's twist
+              spline.rotations.getPoint( t, point );
+
+              bone.rotation.z = angle;
+              bone.rotation.x = Math.PI * point.y * 0.66;
+
+              // Calculate scale
+              spline.scales.getPoint( t, point );
+              bone.scale.set( point.y, point.y, point.y );
+
+            }
+
+            return torus;
+
+          };
+
+          torus.userData.setPositionY = function( index, y ) {
+            var points = ring.userData.spline.points;
+            points[ index % points.length ].y = y;
+            bonesNeedUpdate = true;
+            return torus.userData;
+          };
+          torus.userData.setRotation = function( index, rotation ) {
+            var points = ring.userData.spline.rotations.points;
+            points[ index % points.length ].y = rotation;
+            bonesNeedUpdate = true;
+            return torus.userData;
+          };
+          torus.userData.setScale = function( index, scale ) {
+            var points = ring.userData.spline.scales.points;
+            points[ index % points.length ].y = scale;
+            bonesNeedUpdate = true;
+            return torus.userData;
+          };
+
+          torus.userData.update();
+
+          torus.add( spline.mesh );
+
+          return torus;
+
+        }
+
+      </script>
+    </div>
+  </body>
+</html>
