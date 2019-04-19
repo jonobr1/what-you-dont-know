@@ -361,19 +361,29 @@
             return torus;
 
           };
-
+          /**
+           * In world space units, 0 is default
+           */
           torus.userData.setPositionY = function( index, y ) {
             var points = ring.userData.spline.points;
             points[ index % points.length ].y = y;
             bonesNeedUpdate = true;
             return torus.userData;
           };
+
+          /**
+           * From - 1 to 1
+           */
           torus.userData.setRotation = function( index, rotation ) {
             var points = ring.userData.spline.rotations.points;
             points[ index % points.length ].y = rotation;
             bonesNeedUpdate = true;
             return torus.userData;
           };
+
+          /**
+           * From 0 to 1
+           */
           torus.userData.setScale = function( index, scale ) {
             var points = ring.userData.spline.scales.points;
             points[ index % points.length ].y = scale;
