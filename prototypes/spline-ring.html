@@ -39,8 +39,8 @@
 
         var radius = 250;
         var thickness = 33 * 2;
-        var radialSegments = 4;
-        var tubularSegments = 128;
+        var radialSegments = 8;
+        var tubularSegments = 512;
         var ring = createRing( radius, thickness, radialSegments, tubularSegments );
         var disruptors = createDisruptors( ring, 12 );
 
@@ -49,27 +49,28 @@
         function setup() {
 
           renderer.shadowMap.enabled = true;
-          renderer.shadowMap.type = THREE.PCFShadowMap;
+          renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
           scene.add( ring, disruptors );
 
           camera.position.z = 100;
           camera.userData.controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-          for ( var i = 0; i < 4; i++ ) {
+          for ( var i = 0; i < 1; i++ ) {
 
-            var pct = i / ( 4 - 1 );
-            var light = new THREE.DirectionalLight( '#fff', 0.3 );
+            var pct = i / ( 1 );
+            var light = new THREE.PointLight( '#fff', 1, 1000, 0 );
             light.castShadow = true;
-            light.shadow.camera.near = 1;
-            light.shadow.camera.far = 5000;
-            light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
+            // light.shadow.camera.near = 1;
+            // light.shadow.camera.far = 5000;
+            // light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
 
-            light.position.y = 500 * pct - 250;
+            // light.position.y = ;
+            // light.rotation.x = Math
             light.lookAt( ring.position );
 
             scene.add( light );
-            scene.add( new THREE.DirectionalLightHelper( light ) );
+            // scene.add( new THREE.DirectionalLightHelper( light ) );
             lights.push( light );
 
           }
@@ -119,18 +120,18 @@
             var scale = ( Math.sin( 4 * TWO_PI * pct + tick ) + 1 ) / 2 + 0.5;
 
             ring.userData
-              // .setPositionY( i, y )
-              // .setRotation( i, rotation )
-              // .setScale( i, scale );
+              .setPositionY( i, y )
+              .setRotation( i, rotation )
+              .setScale( i, scale );
 
-            var light = lights[ i ];
-            if ( light ) {
-              light.rotation.x = Math.PI * Math.sin( 6 * TWO_PI * pct + tick * 0.1 );
-            }
+            // var light = lights[ i ];
+            // if ( light ) {
+            //   light.rotation.x = Math.PI * Math.sin( 6 * TWO_PI * pct + tick * 0.1 );
+            // }
 
           }
 
-          ring.userData.setRotation( i, Math.sin( TWO_PI + tick * 0.5 ) );
+          // ring.userData.setRotation( i, Math.sin( TWO_PI + tick * 0.5 ) );
 
           ring.userData.update();
 
@@ -144,8 +145,8 @@
           // var geometry = new THREE.SphereBufferGeometry( sphereRadius, 32, 32 );
           var geometry = new THREE.BoxBufferGeometry( 10, 10, 50 );
           var material = new THREE.MeshBasicMaterial( {
-            color: 'white',
-            map: loader.load( '../assets/textures/renderman/mrblpapr.jpg' ),
+            color: 'red',
+            // map: loader.load( '../assets/textures/renderman/mrblpapr.jpg' ),
             // normalMap: loader.load( '../assets/textures/renderman/mrblpapr_Normal.jpg' ),
             // roughnessMap: loader.load( '../assets/textures/renderman/mrblpapr_Roughness.jpg' ),
             // metalness: 0,
@@ -198,6 +199,12 @@
               var offsetAngle = ring.userData.normalToRadians( point.y );
 
               ring.userData.spline.getPoint( t, mesh.position );
+              ring.userData.spline.getPoint( t + 0.001, point );
+
+              var hypotenuse = point.distanceTo( mesh.position );
+              var opposite = mesh.position.y - point.y;
+              mesh.rotation.x = Math.asin( opposite / hypotenuse );
+
               ring.userData.spline.scales.getPoint( t, point );
               mesh.scale.set( scale, scale, scale );
 
@@ -222,14 +229,7 @@
 
               // Rotate mesh as if it was rolling
               mesh.rotation.y = HALF_PI + Math.atan2( - mesh.position.x, - mesh.position.z );
-              // mesh.rotation.x = offsetAngle * 0.25;
-              // // mesh.rotation.z = angle;
-              //
-              // if ( ( start - end ) * ( cs ) > 0 ) {
-              //   mesh.rotation.x += 0.1;
-              // } else {
-              //   mesh.rotation.x -= 0.1;
-              // }
+              mesh.rotation.z = Math.atan2( - cs, - ca );
 
             }
 
@@ -253,10 +253,8 @@
             mesh.userData.elapsed = 0;
             mesh.userData.startAngle = 0;
             mesh.userData.endAngle = 1;
-            mesh.userData.startRotation = new THREE.Euler();
 
             mesh.castShadow = true;
-            mesh.receiveShadow = true;
 
             mesh.userData.tweens = {
 
@@ -273,9 +271,6 @@
                 mesh.userData.startAngle = Math.random();
                 mesh.userData.endAngle = mesh.userData.startAngle
                   + ( Math.random() > 0.5 ? range : - range );
-                // mesh.userData.startRotation.x = Math.random() * TWO_PI;
-                // mesh.userData.startRotation.y = Math.random() * TWO_PI;
-                // mesh.userData.startRotation.z = Math.random() * TWO_PI;
                 mesh.userData.tweens.in.start();
 
               }
@@ -283,7 +278,7 @@
             };
 
             mesh.userData.tweens.in.onComplete( function() {
-              mesh.visible = false;
+              // mesh.visible = false;
             } );
 
             return mesh;
@@ -464,7 +459,6 @@
           var torus = new THREE.SkinnedMesh( geometry, material );
 
           torus.receiveShadow = true;
-          torus.castShadow = true;
 
           torus.userData.tracks = instruments;
           torus.userData.root = root;
@@ -521,7 +515,7 @@
               var t = bone.userData.theta / TWO_PI;
 
               spline.getPoint( t, bone.position );
-              spline.getPoint( t + 1 / amount, point );
+              spline.getPoint( t + 0.001, point );
 
               var hypotenuse = point.distanceTo( bone.position );
               var opposite = point.y - bone.position.y;
