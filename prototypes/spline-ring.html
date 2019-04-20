@@ -39,10 +39,10 @@
 
         var radius = 250;
         var thickness = 33 * 2;
-        var radialSegments = 8;
+        var radialSegments = 4;
         var tubularSegments = 512;
         var ring = createRing( radius, thickness, radialSegments, tubularSegments );
-        var disruptors = createDisruptors( ring, 12 );
+        var disruptors = createDisruptors( ring, 50 );
 
         setup();
 
@@ -56,21 +56,19 @@
           camera.position.z = 100;
           camera.userData.controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-          for ( var i = 0; i < 1; i++ ) {
+          for ( var i = 0; i < 4; i++ ) {
 
-            var pct = i / ( 1 );
-            var light = new THREE.PointLight( '#fff', 1, 1000, 0 );
+            var pct = i / ( 4 - 1 );
+            var light = new THREE.DirectionalLight( '#fff', 0.2 );
             light.castShadow = true;
-            // light.shadow.camera.near = 1;
-            // light.shadow.camera.far = 5000;
-            // light.shadow.bias = - 0.005; // reduces self-shadowing on double-sided objects
+            light.shadow.camera.zoom = 0.01;
+            light.position.set( pct * 100, 200, 0 );
 
-            // light.position.y = ;
-            // light.rotation.x = Math
             light.lookAt( ring.position );
 
             scene.add( light );
-            // scene.add( new THREE.DirectionalLightHelper( light ) );
+            scene.add( new THREE.DirectionalLightHelper( light ) );
+            scene.add( new THREE.CameraHelper( light.shadow.camera ) );
             lights.push( light );
 
           }
@@ -79,8 +77,10 @@
 
           window.addEventListener( 'resize', resize, false );
           window.addEventListener( 'click', function() {
-            var d = disruptors.userData.next();
-            d.userData.tweens.start();
+            for (var i = 0; i < 50; i++) {
+              var d = disruptors.userData.next();
+              d.userData.tweens.start();
+            }
           }, false );
           resize();
           renderer.setAnimationLoop( animate );
@@ -193,7 +193,7 @@
               var end = mesh.userData.endAngle;
 
               var t = elapsed * ( end - start ) + start;
-              var scale = elapsed + 0.1;
+              var scale = 0.99 * Math.sin( elapsed * Math.PI ) + 0.01;
 
               ring.userData.spline.rotations.getPoint( t, point );
               var offsetAngle = ring.userData.normalToRadians( point.y );
@@ -260,7 +260,7 @@
 
               in: new TWEEN.Tween( mesh.userData )
                 .easing( TWEEN.Easing.Circular.Out )
-                .to( { elapsed: 1 }, 5000 ),
+                .to( { elapsed: 1 }, 1000 ),
 
               start: function() {
 
@@ -278,7 +278,7 @@
             };
 
             mesh.userData.tweens.in.onComplete( function() {
-              // mesh.visible = false;
+              mesh.visible = false;
             } );
 
             return mesh;
