@@ -27,6 +27,7 @@
       <script>
 
         var TWO_PI = Math.PI * 2;
+        var HALF_PI = Math.PI / 2;
         var point = new THREE.Vector3();
         var quaternion = new THREE.Quaternion();
 
@@ -34,11 +35,12 @@
         var renderer = new THREE.WebGLRenderer( { antialias: true } );
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera( 75 );
+        var loader = new THREE.TextureLoader();
 
         var radius = 250;
         var thickness = 33 * 2;
         var radialSegments = 4;
-        var tubularSegments = 512;
+        var tubularSegments = 128;
         var ring = createRing( radius, thickness, radialSegments, tubularSegments );
         var disruptors = createDisruptors( ring, 12 );
 
@@ -117,9 +119,9 @@
             var scale = ( Math.sin( 4 * TWO_PI * pct + tick ) + 1 ) / 2 + 0.5;
 
             ring.userData
-              .setPositionY( i, y )
-              .setRotation( i, rotation )
-              .setScale( i, scale );
+              // .setPositionY( i, y )
+              // .setRotation( i, rotation )
+              // .setScale( i, scale );
 
             var light = lights[ i ];
             if ( light ) {
@@ -127,6 +129,8 @@
             }
 
           }
+
+          ring.userData.setRotation( i, Math.sin( TWO_PI + tick * 0.5 ) );
 
           ring.userData.update();
 
@@ -137,9 +141,18 @@
         function createDisruptors( ring, amount ) {
 
           var sphereRadius = 25;
-          var geometry = new THREE.SphereBufferGeometry( sphereRadius, 32, 32 );
+          // var geometry = new THREE.SphereBufferGeometry( sphereRadius, 32, 32 );
+          var geometry = new THREE.BoxBufferGeometry( 10, 10, 50 );
           var material = new THREE.MeshBasicMaterial( {
-            color: 'red'
+            color: 'white',
+            map: loader.load( '../assets/textures/renderman/mrblpapr.jpg' ),
+            // normalMap: loader.load( '../assets/textures/renderman/mrblpapr_Normal.jpg' ),
+            // roughnessMap: loader.load( '../assets/textures/renderman/mrblpapr_Roughness.jpg' ),
+            // metalness: 0,
+            // roughness: 1,
+            // reflectivity: 0,
+            // clearCoat: 0,
+            // clearCoatRoughness: 0
           } );
 
           var group = new THREE.Group();
@@ -163,9 +176,17 @@
               return;
             }
 
+            var thickness = ring.userData.thickness;
+            var rotations = 7;
+
             for ( var i = 0; i < group.children.length; i++ ) {
 
               var mesh = group.children[ i ];
+
+              if ( !mesh.visible ) {
+                continue;
+              }
+
               var elapsed = mesh.userData.elapsed;
               var start = mesh.userData.startAngle
               var end = mesh.userData.endAngle;
@@ -173,11 +194,42 @@
               var t = elapsed * ( end - start ) + start;
               var scale = elapsed + 0.1;
 
+              ring.userData.spline.rotations.getPoint( t, point );
+              var offsetAngle = ring.userData.normalToRadians( point.y );
+
               ring.userData.spline.getPoint( t, mesh.position );
               ring.userData.spline.scales.getPoint( t, point );
-
-              mesh.position.y += 0.5 * scale * sphereRadius + ( ring.userData.thickness * point.y ) / 2;
               mesh.scale.set( scale, scale, scale );
+
+              // Place on the surface of ring
+              var theta = t * TWO_PI;
+              var angle = mesh.userData.originAngle + offsetAngle;
+
+              var weightX = Math.cos( theta );
+              var weightZ = Math.sin( theta );
+
+              var ca = Math.cos( angle );
+              var cs = Math.sin( angle );
+              var amplitude = 0.5 * scale * sphereRadius
+                + ( thickness * point.y ) * 0.5;
+
+              var x = amplitude * weightX * ca;
+              var y = amplitude * cs;
+              var z = amplitude * weightZ * ca;
+              point.set( x, y, z );
+
+              mesh.position.add( point );
+
+              // Rotate mesh as if it was rolling
+              mesh.rotation.y = HALF_PI + Math.atan2( - mesh.position.x, - mesh.position.z );
+              // mesh.rotation.x = offsetAngle * 0.25;
+              // // mesh.rotation.z = angle;
+              //
+              // if ( ( start - end ) * ( cs ) > 0 ) {
+              //   mesh.rotation.x += 0.1;
+              // } else {
+              //   mesh.rotation.x -= 0.1;
+              // }
 
             }
 
@@ -195,9 +247,13 @@
             );
 
             mesh.visible = false;
+            mesh.rotation.order = 'YXZ';
+
+            mesh.userData.originAngle = 0;
             mesh.userData.elapsed = 0;
             mesh.userData.startAngle = 0;
             mesh.userData.endAngle = 1;
+            mesh.userData.startRotation = new THREE.Euler();
 
             mesh.castShadow = true;
             mesh.receiveShadow = true;
@@ -212,10 +268,14 @@
 
                 var range = Math.random() * 0.25 + 0.25;
                 mesh.visible = true;
+                mesh.userData.originAngle = Math.random() * TWO_PI;
                 mesh.userData.elapsed = 0;
                 mesh.userData.startAngle = Math.random();
                 mesh.userData.endAngle = mesh.userData.startAngle
                   + ( Math.random() > 0.5 ? range : - range );
+                // mesh.userData.startRotation.x = Math.random() * TWO_PI;
+                // mesh.userData.startRotation.y = Math.random() * TWO_PI;
+                // mesh.userData.startRotation.z = Math.random() * TWO_PI;
                 mesh.userData.tweens.in.start();
 
               }
@@ -245,7 +305,7 @@
             metalness: 0.0,
             reflectivity: 0.0,
             // transparent: true,
-            // opacity: 0.1,
+            // opacity: 0.5,
             roughness: 0.25,
             clearCoat: 1,
             clearCoatRoughness: 0.5
@@ -471,7 +531,7 @@
               spline.rotations.getPoint( t, point );
 
               bone.rotation.z = angle;
-              bone.rotation.x = Math.PI * point.y * 0.66;
+              bone.rotation.x = torus.userData.normalToRadians( point.y );
 
               // Calculate scale
               spline.scales.getPoint( t, point );
@@ -510,6 +570,14 @@
             points[ index % points.length ].y = scale;
             bonesNeedUpdate = true;
             return torus.userData;
+          };
+
+          /**
+           * Used in conjunction with `torus.userData.splines.rotations`
+           * angle calculations.
+           */
+          torus.userData.normalToRadians = function( v ) {
+            return Math.PI * v * 0.66;
           };
 
           torus.userData.update();
