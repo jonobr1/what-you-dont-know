@@ -123,7 +123,7 @@
           for ( var i = 0; i < ring.userData.tracks; i++ ) {
 
             var pct = i / ( points.length - 1 );
-            var radius = 50 * Math.sin(
+            var radius = 100 * Math.sin(
               3 * Math.sin( tick * 0.25 ) * ( tick * 0.001 + pct ) * Math.PI );
 
             var y = radius * Math.sin( 3 * TWO_PI * pct + tick );
@@ -213,7 +213,8 @@
               var end = mesh.userData.endAngle;
 
               var t = elapsed * ( end - start ) + start;
-              var scale = 0.999 * Math.sin( elapsed * Math.PI ) + 0.001;
+              var eased = TWEEN.Easing.Sinusoidal.InOut( elapsed );
+              var scale = 0.999 * Math.sin( eased * Math.PI ) + 0.001;
 
               ring.userData.spline.rotations.getPoint( t, point );
               var offsetAngle = ring.userData.normalToRadians( point.y );
@@ -284,14 +285,13 @@
             mesh.userData.tweens = {
 
               in: new TWEEN.Tween( mesh.userData )
-                .easing( TWEEN.Easing.Sinusoidal.InOut )
+                // .easing( TWEEN.Easing.Sinusoidal.InOut )
                 .delay( Math.random() * 1000 )
-                .to( { elapsed: 1 }, 5000 - Math.random() * 1000 ),
+                .to( { elapsed: 1 }, 2000 - Math.random() * 1000 ),
 
               start: function() {
 
                 var range = Math.random() * 0.25 + 0.25;
-                mesh.visible = true;
                 mesh.userData.originAngle = Math.random() * TWO_PI;
                 mesh.userData.elapsed = 0;
                 mesh.userData.startAngle = Math.random();
@@ -306,6 +306,10 @@
               }
 
             };
+
+            mesh.userData.tweens.in.onStart( function() {
+              mesh.visible = true;
+            } );
 
             mesh.userData.tweens.in.onComplete( function() {
               mesh.visible = false;
