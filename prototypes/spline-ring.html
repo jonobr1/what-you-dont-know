@@ -22,6 +22,7 @@
   <body>
     <div class="scripts">
       <script src="../release/third-party/three.js"></script>
+      <script src="../release/third-party/WebVR.js"></script>
       <script src="../release/third-party/tween.js"></script>
       <script src="../release/third-party/OrbitControls.js"></script>
       <script>
@@ -62,7 +63,7 @@
             var light = new THREE.DirectionalLight( '#fff', 0.2 );
             light.castShadow = true;
             light.shadow.camera.zoom = 0.01;
-            light.position.set( pct * 100, 200, 0 );
+            light.position.set( pct * 250, 200, 0 );
 
             light.lookAt( ring.position );
 
@@ -74,14 +75,10 @@
           }
 
           document.body.appendChild( renderer.domElement );
+          document.body.appendChild( WEBVR.createButton( renderer ) );
 
           window.addEventListener( 'resize', resize, false );
-          window.addEventListener( 'click', function() {
-            for (var i = 0; i < 50; i++) {
-              var d = disruptors.userData.next();
-              d.userData.tweens.start();
-            }
-          }, false );
+          window.addEventListener( 'click', trigger, false );
           resize();
           renderer.setAnimationLoop( animate );
 
@@ -98,9 +95,17 @@
 
         }
 
+        var frameCount = 0;
+
         function animate( time ) {
 
           TWEEN.update( time );
+
+          frameCount++;
+
+          if ( !( frameCount % 100 ) ) {
+            trigger();
+          }
 
           disruptors.userData.update();
 
@@ -137,6 +142,13 @@
 
           renderer.render( scene, camera );
 
+        }
+
+        function trigger() {
+          for (var i = 0; i < 50; i++) {
+            var d = disruptors.userData.next();
+            d.userData.tweens.start();
+          }
         }
 
         function createDisruptors( ring, amount ) {
@@ -220,6 +232,8 @@
               var amplitude = 0.5 * scale * sphereRadius
                 + ( thickness * point.y ) * 0.5;
 
+              amplitude *= mesh.userData.distanceScalar;
+
               var x = amplitude * weightX * ca;
               var y = amplitude * cs;
               var z = amplitude * weightZ * ca;
@@ -253,6 +267,7 @@
             mesh.userData.elapsed = 0;
             mesh.userData.startAngle = 0;
             mesh.userData.endAngle = 1;
+            mesh.userData.distanceScalar = 1;
 
             mesh.castShadow = true;
 
@@ -271,6 +286,9 @@
                 mesh.userData.startAngle = Math.random();
                 mesh.userData.endAngle = mesh.userData.startAngle
                   + ( Math.random() > 0.5 ? range : - range );
+
+                mesh.userData.distanceScalar = Math.random();
+
                 mesh.userData.tweens.in.start();
 
               }
@@ -303,7 +321,7 @@
             // opacity: 0.5,
             roughness: 0.25,
             clearCoat: 1,
-            clearCoatRoughness: 0.5
+            clearCoatRoughness: 0.1
           } );
 
           geometry.rotateX( Math.PI / 2 );
