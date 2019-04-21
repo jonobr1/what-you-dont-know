@@ -43,7 +43,7 @@
         var radialSegments = 4;
         var tubularSegments = 256;
         var ring = createRing( radius, thickness, radialSegments, tubularSegments );
-        var disruptors = createDisruptors( ring, 10 );
+        // var disruptors = createDisruptors( ring, 10 );
 
         setup();
 
@@ -52,7 +52,8 @@
           renderer.shadowMap.enabled = true;
           renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-          scene.add( ring, disruptors );
+          scene.add( ring );
+          // scene.add( disruptors );
 
           camera.position.z = 100;
           camera.userData.controls = new THREE.OrbitControls( camera, renderer.domElement );
@@ -107,7 +108,7 @@
             trigger();
           }
 
-          disruptors.userData.update();
+          // disruptors.userData.update();
 
           var tick = time / 300;
           var points = ring.userData.spline.points;
@@ -145,6 +146,9 @@
         }
 
         function trigger() {
+          if ( !disruptors ) {
+            return;
+          }
           for (var i = 0; i < 50; i++) {
             var d = disruptors.userData.next();
             d.userData.tweens.start();
