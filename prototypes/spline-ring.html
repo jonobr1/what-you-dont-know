@@ -82,7 +82,7 @@
           document.body.appendChild( WEBVR.createButton( renderer ) );
 
           window.addEventListener( 'resize', resize, false );
-          window.addEventListener( 'click', trigger, false );
+          // window.addEventListener( 'click', trigger, false );
           resize();
           renderer.setAnimationLoop( animate );
 
@@ -107,22 +107,24 @@
 
           frameCount++;
 
-          if ( !( frameCount % 100 ) ) {
+          if ( !( frameCount % 500 ) ) {
             trigger();
           }
 
           disruptors.userData.update();
 
-          var tick = time / 300;
+          var tick = ( time ) / 1000;
           var points = ring.userData.spline.points;
           var rotations = ring.userData.spline.rotations.points;
           var scales = ring.userData.spline.scales.points;
+
+
 
           for ( var i = 0; i < ring.userData.tracks; i++ ) {
 
             var pct = i / ( points.length - 1 );
             var radius = 50 * Math.sin(
-              3 * Math.sin( tick * 0.25 ) * (tick * 0.001 + pct) * Math.PI );
+              3 * Math.sin( tick * 0.25 ) * ( tick * 0.001 + pct ) * Math.PI );
 
             var y = radius * Math.sin( 3 * TWO_PI * pct + tick );
             var rotation = Math.sin( TWO_PI * pct + tick * 0.5 );
@@ -149,7 +151,7 @@
         }
 
         function trigger() {
-          for (var i = 0; i < 50; i++) {
+          for (var i = 0; i < disruptors.children.length; i++) {
             var d = disruptors.userData.next();
             d.userData.tweens.start();
           }
@@ -158,10 +160,12 @@
         function createDisruptors( ring, amount ) {
 
           var sphereRadius = 25;
+          var boxDepth = 3;
           // var geometry = new THREE.SphereBufferGeometry( sphereRadius, 32, 32 );
-          var geometry = new THREE.BoxBufferGeometry( 10, 10, 50 );
-          var material = new THREE.MeshBasicMaterial( {
-            color: 'red',
+          var geometry = new THREE.BoxBufferGeometry( 3, 3, 30 );
+          var material = new THREE.MeshPhysicalMaterial( {
+            color: 'white',
+            emissive: 0x777777
             // map: loader.load( '../assets/textures/renderman/mrblpapr.jpg' ),
             // normalMap: loader.load( '../assets/textures/renderman/mrblpapr_Normal.jpg' ),
             // roughnessMap: loader.load( '../assets/textures/renderman/mrblpapr_Roughness.jpg' ),
@@ -209,7 +213,7 @@
               var end = mesh.userData.endAngle;
 
               var t = elapsed * ( end - start ) + start;
-              var scale = 0.99 * Math.sin( elapsed * Math.PI ) + 0.01;
+              var scale = 0.999 * Math.sin( elapsed * Math.PI ) + 0.001;
 
               ring.userData.spline.rotations.getPoint( t, point );
               var offsetAngle = ring.userData.normalToRadians( point.y );
@@ -222,7 +226,8 @@
               mesh.rotation.x = Math.asin( opposite / hypotenuse );
 
               ring.userData.spline.scales.getPoint( t, point );
-              mesh.scale.set( scale, scale, scale );
+              // mesh.scale.x = scale;
+              mesh.scale.z = scale;
 
               // Place on the surface of ring
               var theta = t * TWO_PI;
@@ -233,8 +238,9 @@
 
               var ca = Math.cos( angle );
               var cs = Math.sin( angle );
-              var amplitude = 0.5 * scale * sphereRadius
-                + ( thickness * point.y ) * 0.5;
+              // var amplitude = 0.5 * boxDepth
+                // + ( thickness * point.y ) * 0.5;
+              var amplitude = thickness * point.y * 0.5;
 
               amplitude *= mesh.userData.distanceScalar;
 
@@ -278,8 +284,9 @@
             mesh.userData.tweens = {
 
               in: new TWEEN.Tween( mesh.userData )
-                .easing( TWEEN.Easing.Circular.Out )
-                .to( { elapsed: 1 }, 2000 ),
+                .easing( TWEEN.Easing.Sinusoidal.InOut )
+                .delay( Math.random() * 1000 )
+                .to( { elapsed: 1 }, 5000 - Math.random() * 1000 ),
 
               start: function() {
 
@@ -289,9 +296,10 @@
                 mesh.userData.elapsed = 0;
                 mesh.userData.startAngle = Math.random();
                 mesh.userData.endAngle = mesh.userData.startAngle
-                  + ( Math.random() > 0.5 ? range : - range );
+                  + range;
+                  // + ( Math.random() > 0.5 ? range : - range );
 
-                mesh.userData.distanceScalar = Math.random();
+                mesh.userData.distanceScalar = 1;
 
                 mesh.userData.tweens.in.start();
 
