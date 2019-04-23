@@ -24,7 +24,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
 - [ ] Add Child Shapes to Ring
-- [ ] Add Polar Spheres
+- [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
 - [ ] Add Lyric Interaction
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
