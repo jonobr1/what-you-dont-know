@@ -11,6 +11,16 @@
 	],
 	"includes": [
 		[
+			"Params",
+			[
+				"resources.set( 'params', {",
+				"",
+				"\tdrag: 0.2",
+				"",
+				"} );"
+			]
+		],
+		[
 			"AudioManager",
 			[
 				"var tracks = {",
@@ -2769,16 +2779,6 @@
 				"\tambient.userData.tween.start();",
 				"",
 				"}"
-			]
-		],
-		[
-			"Params",
-			[
-				"resources.set( 'params', {",
-				"",
-				"\tdrag: 0.2",
-				"",
-				"} );"
 			]
 		]
 	],
