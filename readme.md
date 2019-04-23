@@ -23,12 +23,14 @@ Below are more details for each of the pages and how to use them.
 
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
-- [ ] Add Child Shapes to Ring
+- [x] Add Child Shapes to Ring
 - [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
 - [ ] Add Lyric Interaction
+- [ ] Hide Controller on Leaving VR
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
 - [ ] Instance Green Buttons
+- [ ] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
 - [x] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
 - [x] Make Debris a Sphere
