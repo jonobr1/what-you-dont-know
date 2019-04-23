@@ -247,12 +247,16 @@ function WebAudio( context ) {
 WebAudio.getContext = function() {
 
 	if ( WebAudio.context ) {
-		WebAudio.context.resume();
+		if ( /suspended/i.test( WebAudio.context.state ) ) {
+			WebAudio.context.resume();
+		}
 		return WebAudio.context;
 	}
 
 	WebAudio.context = new ( window.AudioContext || window.webkitAudioContext )();
-	WebAudio.context.resume();
+	if ( /suspended/i.test( WebAudio.context.state ) ) {
+		WebAudio.context.resume();
+	}
 
 	return WebAudio.context;
 
