@@ -25,10 +25,15 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Meta-Lines around Lyrics
 - [ ] Add Child Shapes to Ring
 - [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
-- [ ] Add Lyric Interaction
+- [-] Add Lyric Interaction
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
-- [ ] Instance Green Buttons
+- [-] Instance Green Buttons
+- [ ] Add `renderer.initMaterial( material )` to All Materials on Setup
+- [ ] Add Reset Button to Each filter
+- [ ] Add Label to Each Filter
+- [ ] Add Compass to Orient the World Based on Audio Time
+- [ ] Remove Twist `CatmullRomCurve3` Calculations
 - [x] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
 - [x] Make Debris a Sphere
@@ -40,6 +45,8 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Ring
 - [ ] Choreograph Backdrop
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
+- [ ] Choreograph Boids
+  - [ ] Diversify Geometries
 - [x] Fix Multiple VR Controllers
 - [x] Fix Safari Playback Issues
 - [x] Fix touch events for Paddles
