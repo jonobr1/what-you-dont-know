@@ -40,6 +40,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Make Biquad Filter More Apparent (audio & visual)
 - [x] Add Color Palette Changes on Speed Modification
 - [x] Modify OrbitControls to Ease Rotation
+- [ ] Modify Materials on Buttons to be from Pixar 130
 - [ ] Choreograph Lyrics
 - [ ] Choreograph Particles
 - [ ] Choreograph Ring
