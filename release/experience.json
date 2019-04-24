@@ -978,7 +978,7 @@
 				"var camera = resources.get( 'camera' );",
 				"",
 				"var renderer = new THREE.WebGLRenderer( {",
-				"//\tantialias: true,",
+				"\tantialias: true,",
 				"\tpreserveDrawingBuffer: true",
 				"} );",
 				"renderer.setClearColor( 0x000000, 1 );",
