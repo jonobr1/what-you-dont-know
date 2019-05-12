@@ -31,8 +31,8 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Title Page (UX)
 - [ ] ~~Instance Green Buttons~~
 - [x] Add `renderer.initMaterial( material )` to All Materials on Setup
-- [ ] Add Reset Button to Each filter
-- [ ] Add Label to Each Filter
+- [ ] ~~Add Reset Button to Each filter~~
+- [x] Add Label to Each Filter
 - [ ] Add Compass to Orient the World Based on Audio Time
 - [ ] Remove Twist `CatmullRomCurve3` Calculations
 - [x] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
