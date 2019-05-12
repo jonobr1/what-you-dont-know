@@ -35,7 +35,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Label to Each Filter
 - [ ] Add Compass to Orient the World Based on Audio Time
 - [ ] Remove Twist `CatmullRomCurve3` Calculations
-- [ ] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
+- [x] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
 - [x] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
 - [x] Make Debris a Sphere
