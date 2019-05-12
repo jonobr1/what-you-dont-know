@@ -6,6 +6,7 @@ button {
 	text-transform: uppercase;
 	cursor: pointer;
 	outline: none;
+	font-size: 13px;
 }
 
 	button:hover {
