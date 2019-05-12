@@ -30,7 +30,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
 - [ ] ~~Instance Green Buttons~~
-- [ ] Add `renderer.initMaterial( material )` to All Materials on Setup
+- [x] Add `renderer.initMaterial( material )` to All Materials on Setup
 - [ ] Add Reset Button to Each filter
 - [ ] Add Label to Each Filter
 - [ ] Add Compass to Orient the World Based on Audio Time

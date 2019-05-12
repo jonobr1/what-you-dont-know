@@ -2981,6 +2981,22 @@
 				"",
 				"}"
 			]
+		],
+		[
+			"Initialize",
+			[
+				"/**",
+				" * Initializes all materials to the renderer.",
+				" * This stops the \"hiccup\" incurred when first",
+				" * scrubbing the playhead / changing the",
+				" * `playbackRate` of the track.",
+				" */",
+				"var renderer = resources.get( 'renderer' );",
+				"var scene = resources.get( 'scene' );",
+				"var camera = resources.get( 'camera' );",
+				"",
+				"renderer.compile( scene, camera );"
+			]
 		]
 	],
 	"effects": [
