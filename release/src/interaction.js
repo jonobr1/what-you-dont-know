@@ -337,7 +337,7 @@ function Interaction ( renderer, camera ) {
 Interaction.prototype = Object.create( THREE.Group.prototype );
 Interaction.prototype.constructor = Interaction;
 Interaction.ScaleFactor = 0.2;
-Interaction.DefaultColor = 0x007f4b;
+Interaction.DefaultColor = 0x002814;
 
 Interaction.getDefaultController = function() {
 
