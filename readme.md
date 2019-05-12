@@ -25,10 +25,11 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Meta-Lines around Lyrics
 - [x] Add Child Shapes to Ring
 - [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
-- [-] Add Lyric Interaction
+- [ ] ~~Add Lyric Interaction~~
+- [x] Hide Controller on Leaving VR
 - [x] Add Ghostly Logo
 - [ ] Add Title Page (UX)
-- [-] Instance Green Buttons
+- [ ] ~~Instance Green Buttons~~
 - [ ] Add `renderer.initMaterial( material )` to All Materials on Setup
 - [ ] Add Reset Button to Each filter
 - [ ] Add Label to Each Filter

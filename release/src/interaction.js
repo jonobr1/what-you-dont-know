@@ -9,6 +9,7 @@ function Interaction ( renderer, camera ) {
 	this.camera = camera;
 
 	this.enabled = true;
+	this.autoHideControllers = false;
 
 	this.mouse = new THREE.Vector2().copy( Interaction.Offscreen );
 	this.mouse.uuid = 'mouse';
@@ -448,6 +449,7 @@ Interaction.prototype.update = function() {
 	var raycaster = this.raycaster;
 	var mouse = this.mouse;
 	var camera = this.camera;
+	var i;
 
 	if ( list.length <= 0 || !this.enabled ) {
 		return;
@@ -455,7 +457,7 @@ Interaction.prototype.update = function() {
 
 	if ( renderer.vr.isPresenting() && this.XRControllers.length > 0 ) {
 
-		for ( var i = 0; i < this.XRControllers.length; i++ ) {
+		for ( i = 0; i < this.XRControllers.length; i++ ) {
 
 			var controller = this.XRControllers[ i ];
 
@@ -463,8 +465,10 @@ Interaction.prototype.update = function() {
 				continue;
 			}
 
+			controller.visible = true;
+
 			// TODO: David found an error in Oculus Touch ( though this is presumably
-			// with any device that supports more than on controller at a time )
+			// with any device that supports more than one controller at a time )
 			// Interactions can start with a specific hand.., but position always
 			// falls on the same hand.
 
@@ -575,6 +579,21 @@ Interaction.prototype.update = function() {
 
 			this.intersections.mouse = null;
 			renderer.domElement.style.cursor = 'default';
+
+		}
+
+		if ( this.autoHideControllers ) {
+
+			for ( i = 0; i < this.XRControllers.length; i++ ) {
+
+				var controller = this.XRControllers[ i ];
+				if ( !controller ) {
+					continue;
+				}
+
+				controller.visible = false;
+
+			}
 
 		}
 

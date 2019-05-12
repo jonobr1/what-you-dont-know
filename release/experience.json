@@ -1111,6 +1111,7 @@
 				"",
 				"var interaction = new Interaction( renderer, camera );",
 				"",
+				"interaction.autoHideControllers = true;",
 				"interaction.connect();",
 				"",
 				"for ( var i = 0; i < interaction.XRControllers.length; i++ ) {",
