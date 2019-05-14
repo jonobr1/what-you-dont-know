@@ -30,6 +30,7 @@
 		<script src="js/Code.js"></script>
 		<script src="js/Config.js"></script>
 		<script src="js/Menubar.js"></script>
+		<script src="js/Menubar.SaveIcon.js"></script>
 		<script src="js/Menubar.File.js"></script>
 		<script src="js/Menubar.Edit.js"></script>
 		<script src="js/Menubar.Examples.js"></script>
@@ -92,6 +93,7 @@
 				timeout = setTimeout( function () {
 
 					editor.config.setKey( 'state', JSON.stringify( editor.toJSON() ) );
+					menubar.saveIcon.removeClass( Menubar.SaveIcon.DirtyMarker );
 
 				}, 1000 );
 
