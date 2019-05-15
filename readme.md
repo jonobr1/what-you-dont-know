@@ -36,6 +36,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Compass to Orient the World Based on Audio Time
 - [ ] Fix Orientation Offset by Compass on Playhead + Lights Animations
 - [ ] Remove Twist `CatmullRomCurve3` Calculations on Boids
+- [ ] Match Lighting on Boids
 - [x] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
 - [x] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
