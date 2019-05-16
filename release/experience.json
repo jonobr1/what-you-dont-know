@@ -3021,6 +3021,8 @@
 				"\t} )",
 				");",
 				"",
+				"sphere.renderOrder = 100;",
+				"",
 				"interaction.listen( sphere );",
 				"sphere.visible = false;",
 				"",
