@@ -35,8 +35,8 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Label to Each Filter
 - [x] Add Compass to Orient the World Based on Audio Time
 - [x] Fix Orientation Offset by Compass on Playhead + Lights Animations
-- [ ] Remove Twist `CatmullRomCurve3` Calculations on Boids
-- [ ] Match Lighting on Boids
+- [x] Remove Twist `CatmullRomCurve3` Calculations on Boids
+- [x] Match Lighting on Boids
 - [x] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
 - [x] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
@@ -46,12 +46,19 @@ Below are more details for each of the pages and how to use them.
 - [x] Modify OrbitControls to Ease Rotation
 - [ ] Modify Materials on Buttons to be from Pixar 130
 - [ ] Choreograph Lyrics
+  - [ ] Line Based Animations from One Word to Another
 - [ ] Choreograph Particles
+  - [ ] Experiment with amount of visible Particles
+  - [ ] Experiment with regions of Particles
+  - [ ] Experiment with size through FFT
 - [ ] Choreograph Ring
+  - [ ] Experiment with changing x / z rotation
 - [ ] Choreograph Backdrop
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [ ] Choreograph Boids
   - [ ] Diversify Geometries
+  - [ ] Animate / Oscillate Distance from Ring
+  - [ ] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
 - [x] Fix Multiple VR Controllers
 - [x] Fix Safari Playback Issues
 - [x] Fix touch events for Paddles
