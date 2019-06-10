@@ -21,14 +21,33 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
+- [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
+- [ ] Add Title Page (UX)
+- [ ] Make Playhead First Read (UX)
+- [ ] Add Arrows to Compass to Guide Dragging
+- [ ] Add Global Reset Button
+- [ ] Create Clear UI for EQ Changes
+- [ ] Choreograph Lyrics
+  - [ ] Line Based Animations from One Word to Another
+- [ ] Choreograph Debris
+  - [ ] Experiment with amount of visible Debris
+  - [ ] Experiment with regions of Debris
+  - [ ] Experiment with size through FFT
+- [ ] Choreograph Ring
+  - [ ] Experiment with changing x / z rotation
+- [ ] Choreograph Backdrop
+- [ ] Choreograph Multiple Camera Angles for non VR Contexts
+- [ ] Choreograph Boids
+  - [ ] Diversify Geometries
+  - [ ] Animate / Oscillate Distance from Ring
+  - [x] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
+
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
 - [x] Add Child Shapes to Ring
-- [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
 - [ ] ~~Add Lyric Interaction~~
 - [x] Hide Controller on Leaving VR
 - [x] Add Ghostly Logo
-- [ ] Add Title Page (UX)
 - [ ] ~~Instance Green Buttons~~
 - [x] Add `renderer.initMaterial( material )` to All Materials on Setup
 - [ ] ~~Add Reset Button to Each filter~~
@@ -37,10 +56,6 @@ Below are more details for each of the pages and how to use them.
 - [x] Fix Orientation Offset by Compass on Playhead + Lights Animations
 - [x] Remove Twist `CatmullRomCurve3` Calculations on Boids
 - [x] Match Lighting on Boids
-- [ ] Make Playhead First Read (UX)
-- [ ] Add Arrows to Compass to Guide Dragging
-- [ ] Add Reset Button
-- [ ] Create Clear UI for EQ Changes
 - [x] Create Secondary Instance of `TWEEN` Bound to Frame.Player.currentTime
 - [x] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
 - [x] Improve Scheduler on Audio Sequencing
@@ -50,20 +65,6 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Color Palette Changes on Speed Modification
 - [x] Modify OrbitControls to Ease Rotation
 - [ ] ~~Modify Materials on Buttons to be from Pixar 130~~
-- [ ] Choreograph Lyrics
-  - [ ] Line Based Animations from One Word to Another
-- [ ] Choreograph Particles
-  - [ ] Experiment with amount of visible Particles
-  - [ ] Experiment with regions of Particles
-  - [ ] Experiment with size through FFT
-- [ ] Choreograph Ring
-  - [ ] Experiment with changing x / z rotation
-- [ ] Choreograph Backdrop
-- [ ] Choreograph Multiple Camera Angles for non VR Contexts
-- [ ] Choreograph Boids
-  - [ ] Diversify Geometries
-  - [ ] Animate / Oscillate Distance from Ring
-  - [ ] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
 - [x] Fix Multiple VR Controllers
 - [x] Fix Safari Playback Issues
 - [x] Fix touch events for Paddles
