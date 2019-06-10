@@ -41,6 +41,7 @@ Below are more details for each of the pages and how to use them.
   - [ ] Diversify Geometries
   - [ ] Animate / Oscillate Distance from Ring
   - [x] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
+- [ ] Add Custom `THREE.LightProbe`
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
 - [x] Add Child Shapes to Ring
