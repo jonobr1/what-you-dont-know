@@ -37,6 +37,11 @@ Below are more details for each of the pages and how to use them.
 - [x] Fix Orientation Offset by Compass on Playhead + Lights Animations
 - [x] Remove Twist `CatmullRomCurve3` Calculations on Boids
 - [x] Match Lighting on Boids
+- [ ] Make Playhead First Read (UX)
+- [ ] Add Arrows to Compass to Guide Dragging
+- [ ] Add Reset Button
+- [ ] Create Clear UI for EQ Changes
+- [ ] Create Secondary Instance of `TWEEN` Bound to Frame.Player.currentTime
 - [x] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
 - [x] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
@@ -44,7 +49,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Make Biquad Filter More Apparent (audio & visual)
 - [x] Add Color Palette Changes on Speed Modification
 - [x] Modify OrbitControls to Ease Rotation
-- [ ] Modify Materials on Buttons to be from Pixar 130
+- [ ] ~~Modify Materials on Buttons to be from Pixar 130~~
 - [ ] Choreograph Lyrics
   - [ ] Line Based Animations from One Word to Another
 - [ ] Choreograph Particles
