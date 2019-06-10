@@ -41,7 +41,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Arrows to Compass to Guide Dragging
 - [ ] Add Reset Button
 - [ ] Create Clear UI for EQ Changes
-- [ ] Create Secondary Instance of `TWEEN` Bound to Frame.Player.currentTime
+- [x] Create Secondary Instance of `TWEEN` Bound to Frame.Player.currentTime
 - [x] `playbackRate` Persists on `loop`, but Colors Reset to Gray (default)
 - [x] Improve Scheduler on Audio Sequencing
 - [x] Increase Height of Playhead.Cylinder
