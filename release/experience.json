@@ -1157,12 +1157,8 @@
 			"Scene",
 			[
 				"var scene = new THREE.Scene();",
-				"var ringScene = new THREE.Group();",
-				"ringScene.position.y = 1.6;",
-				"scene.add(ringScene);",
 				"",
-				"resources.set( 'scene', scene );",
-				"resources.set( 'ringScene', ringScene );"
+				"resources.set( 'scene', scene );"
 			]
 		],
 		[
@@ -1228,7 +1224,7 @@
 		[
 			"Backdrop",
 			[
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var params = resources.get( 'params' );",
 				"",
 				"var backdrop = new THREE.Mesh(",
@@ -1340,7 +1336,7 @@
 				"var TWO_PI = Math.PI * 2;",
 				"var HALF_PI = Math.PI / 2;",
 				"",
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var backdrop = resources.get( 'backdrop' );",
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -1748,7 +1744,7 @@
 			"Playhead & Timeline",
 			[
 				"var ring = resources.get( 'ring' );",
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var interaction = resources.get( 'interaction' );",
 				"var manager = resources.get( 'audio-manager' );",
 				"var Button = resources.get( 'Button' );",
@@ -1877,7 +1873,7 @@
 				"",
 				"\t\t\t// Assumes camera is at 0, 0, 0",
 				"\t\t\tvar point = intersection.point;",
-				"\t\t\tvar line = Math.round( 4 * ( point.y - scene.position.y ) / cylinder.scale.y );",
+				"\t\t\tvar line = Math.round( 4 * point.y / cylinder.scale.y );",
 				"",
 				"\t\t\ttheta = Math.atan2( point.z, point.x ) - HALF_PI;",
 				"\t\t\ttheta += timeline.rotation.y;",
@@ -2062,7 +2058,7 @@
 				"",
 				"var Text = resources.get( 'alternate-gothic-3d' );",
 				"var manager = resources.get( 'audio-manager' );",
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var interaction = resources.get( 'interaction' );",
 				"var ring = resources.get( 'ring' );",
 				"var Button = resources.get( 'Button' );",
@@ -2326,7 +2322,7 @@
 				"",
 				"\t\t\t\t// Assumes camera is at 0, 0, 0 ~ish",
 				"\t\t\t\tvar point = intersection.point;",
-				"\t\t\t\tvar y = Math.max( Math.min( point.y - scene.position.y, halfRange ), - halfRange );",
+				"\t\t\t\tvar y = Math.max( Math.min( point.y, halfRange ), - halfRange );",
 				"",
 				"\t\t\t\tif ( current.position.y !== y ) {",
 				"\t\t\t\t\tvar t = y / halfRange;",
@@ -2405,7 +2401,7 @@
 		[
 			"Lights",
 			[
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var paddles = resources.get( 'paddles' );",
 				"var params = resources.get( 'params' );",
 				"",
@@ -2502,7 +2498,7 @@
 		[
 			"Debris",
 			[
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var camera = resources.get( 'camera' );",
 				"var amount = 10000;",
 				"var radius = 1;",
@@ -2738,7 +2734,7 @@
 			"Boids",
 			[
 				"var manager = resources.get( 'audio-manager' );",
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var backdrop = resources.get( 'backdrop' );",
 				"var ring = resources.get( 'ring' );",
 				"",
@@ -2919,7 +2915,7 @@
 				"var Text = resources.get( 'alternate-gothic-3d' );",
 				"var renderer = resources.get( 'renderer' );",
 				"var camera = resources.get( 'camera' );",
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var words = [",
 				"\t\"i'd\", \"beat\", \"up\", \"all\", \"my\", \"cues\", \"for\", \"you\", \"take\", ",
 				"\t\"it\", \"off\", \"too\", \"soon\", \"some\", \"other\", \"way\", \"to\", \"get\", ",
@@ -3090,7 +3086,7 @@
 		[
 			"Compass",
 			[
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"var Button = resources.get( 'Button' );",
 				"var interaction = resources.get( 'interaction' );",
 				"",
@@ -3421,7 +3417,7 @@
 		[
 			"Polar Spheres",
 			[
-				"var scene = resources.get( 'ringScene' );",
+				"var scene = resources.get( 'scene' );",
 				"",
 				"var group = new THREE.Group();",
 				"var loader = new THREE.TextureLoader();",
