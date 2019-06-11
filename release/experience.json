@@ -2381,7 +2381,7 @@
 				"\tpaddle.position.y = t * range * 0.5;",
 				"\tfilter.setTransform( t );",
 				"",
-				"\tvar sign = t > 0 ? 1 : - 1;",
+				"\tvar sign = t > 0 ? - 1 : 1;",
 				"\tvar magnitude = Math.abs( t );",
 				"",
 				"\tt = sign * Math.pow( magnitude, 0.5 );",
