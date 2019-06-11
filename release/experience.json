@@ -1071,7 +1071,7 @@
 				"\t\twidth: 128,",
 				"\t\theight: 128,",
 				"\t\tratio: resolution",
-				"\t} ).appendTo( document.body );",
+				"\t} );",
 				"",
 				"\ttwo.scene.translation.set( two.width / 2, two.height / 2 );",
 				"\ttwo.scene.rotation = Math.PI / 2;",
