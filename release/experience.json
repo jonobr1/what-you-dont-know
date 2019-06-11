@@ -1157,8 +1157,12 @@
 			"Scene",
 			[
 				"var scene = new THREE.Scene();",
+				"var ringScene = new THREE.Group();",
+				"ringScene.position.y = 1.6;",
+				"scene.add(ringScene);",
 				"",
-				"resources.set( 'scene', scene );"
+				"resources.set( 'scene', scene );",
+				"resources.set( 'ringScene', ringScene );"
 			]
 		],
 		[
@@ -1224,7 +1228,7 @@
 		[
 			"Backdrop",
 			[
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var params = resources.get( 'params' );",
 				"",
 				"var backdrop = new THREE.Mesh(",
@@ -1336,7 +1340,7 @@
 				"var TWO_PI = Math.PI * 2;",
 				"var HALF_PI = Math.PI / 2;",
 				"",
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var backdrop = resources.get( 'backdrop' );",
 				"var manager = resources.get( 'audio-manager' );",
 				"",
@@ -1744,7 +1748,7 @@
 			"Playhead & Timeline",
 			[
 				"var ring = resources.get( 'ring' );",
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var interaction = resources.get( 'interaction' );",
 				"var manager = resources.get( 'audio-manager' );",
 				"var Button = resources.get( 'Button' );",
@@ -1891,11 +1895,12 @@
 				"",
 				"\t} else {",
 				"",
+				"\t\ttheta = progress * TWO_PI + Math.PI * 1.5;",
+				"",
 				"\t\tripple.material.uniforms.time.value = manager.duration * progress;",
-				"\t\tripple.lookAt( ring.position );",
+				"\t\tripple.rotation.y = - theta;",
 				"\t\tripple.visible = true;",
 				"",
-				"\t\ttheta = progress * TWO_PI + Math.PI * 1.5;",
 				"",
 				"\t}",
 				"",
@@ -2034,7 +2039,8 @@
 				"\t\t].join( '\\n' ),",
 				"",
 				"\t\ttransparent: true,",
-				"\t\tdepthWrite: false",
+				"\t\tdepthWrite: false,",
+				"\t\tside: THREE.BackSide",
 				"",
 				"\t} );",
 				"",
@@ -2056,7 +2062,7 @@
 				"",
 				"var Text = resources.get( 'alternate-gothic-3d' );",
 				"var manager = resources.get( 'audio-manager' );",
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var interaction = resources.get( 'interaction' );",
 				"var ring = resources.get( 'ring' );",
 				"var Button = resources.get( 'Button' );",
@@ -2399,7 +2405,7 @@
 		[
 			"Lights",
 			[
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var paddles = resources.get( 'paddles' );",
 				"var params = resources.get( 'params' );",
 				"",
@@ -2496,7 +2502,7 @@
 		[
 			"Debris",
 			[
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var camera = resources.get( 'camera' );",
 				"var amount = 10000;",
 				"var radius = 1;",
@@ -2732,7 +2738,7 @@
 			"Boids",
 			[
 				"var manager = resources.get( 'audio-manager' );",
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var backdrop = resources.get( 'backdrop' );",
 				"var ring = resources.get( 'ring' );",
 				"",
@@ -2913,7 +2919,7 @@
 				"var Text = resources.get( 'alternate-gothic-3d' );",
 				"var renderer = resources.get( 'renderer' );",
 				"var camera = resources.get( 'camera' );",
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var words = [",
 				"\t\"i'd\", \"beat\", \"up\", \"all\", \"my\", \"cues\", \"for\", \"you\", \"take\", ",
 				"\t\"it\", \"off\", \"too\", \"soon\", \"some\", \"other\", \"way\", \"to\", \"get\", ",
@@ -3084,7 +3090,7 @@
 		[
 			"Compass",
 			[
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"var Button = resources.get( 'Button' );",
 				"var interaction = resources.get( 'interaction' );",
 				"",
@@ -3415,7 +3421,7 @@
 		[
 			"Polar Spheres",
 			[
-				"var scene = resources.get( 'scene' );",
+				"var scene = resources.get( 'ringScene' );",
 				"",
 				"var group = new THREE.Group();",
 				"var loader = new THREE.TextureLoader();",
@@ -3825,7 +3831,7 @@
 				"\t}",
 				"\t*/",
 				"",
-				"\tcamera.position.y = 0.013;",
+				"\tcamera.position.y = 1.6;",
 				"\tcamera.position.z = 0.01;",
 				"",
 				"\tif ( !camera.userData.controls ) {",
@@ -3836,6 +3842,7 @@
 				"\t\tcamera.userData.controls.maxDistance = 1000;",
 				"\t\tcamera.userData.controls.dampingFactor = params.drag;",
 				"\t\tcamera.userData.controls.rotateSpeed = 0.1;",
+				"\t\tcamera.userData.controls.target.y = 1.6;",
 				"\t}",
 				"",
 				"}",
