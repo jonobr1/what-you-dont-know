@@ -2197,7 +2197,7 @@
 				"\t\tpaddle.userData.label = label;",
 				"",
 				"\t\tlabel.position.x = paddle.position.x;",
-				"\t\tlabel.position.y = - 60;",
+				"\t\tlabel.position.y = - 0.6;",
 				"\t\tlabel.position.z = paddle.position.z;",
 				"",
 				"\t\tlabel.rotation.order = 'YXZ';",
