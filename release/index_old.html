@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>What You Don't Know</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        height: 100%;
+        margin: 0px;
+        overflow: hidden;
+      }
+      #container {
+        height: 100%;
+      }
+      #play {
+        position: absolute;
+        display: block;
+        top: 20px;
+        left: 20px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="styles/spinner.css">
+  </head>
+  <body>
+    <div id="container"></div>
+    <div id="loading" class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+
+    <script src="../release/third-party/Frame.js"></script>
+
+    <script>
+
+      var resources = new FRAME.Resources();
+      var container = document.getElementById( 'container' );
+      resources.set( 'dom', container );
+
+      var timeline = new FRAME.Timeline();
+      var player = new FRAME.Player();
+
+      var playButton = document.createElement( 'button' );
+      playButton.id = 'play';
+      playButton.textContent = 'Start Experience';
+      playButton.addEventListener( 'click', function() {
+        player.play();
+        document.body.removeChild( playButton );
+      }, false );
+
+      //
+
+      timeline.load( './experience_old.json', function () {
+
+        timeline.compile( resources, player );
+        resources.onLoad( function () {
+          document.body.removeChild( document.getElementById( 'loading' ) );
+          document.body.appendChild( playButton );
+          resources.get( 'renderer' ).setAnimationLoop( animate );
+        } );
+
+      } );
+
+      //
+
+      var prevTime = null;
+      function animate( time ) {
+
+        if ( prevTime === null ) {
+          prevTime = time;
+        }
+
+        player.tick( time - prevTime );
+        timeline.update( player.currentTime );
+        prevTime = time;
+
+      }
+
+    </script>
+  </body>
+</html>
