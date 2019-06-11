@@ -3720,7 +3720,7 @@
 				"",
 				"\t\tvar theta = i % 2;",
 				"\t\tvar phase = 2 * theta - 1;",
-				"\t\tvar y = 100 * amplitude * phase;",
+				"\t\tvar y = amplitude * phase;",
 				"",
 				"\t\tring.userData.setPositionY( i, y );",
 				"",
