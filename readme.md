@@ -42,6 +42,8 @@ Below are more details for each of the pages and how to use them.
   - [ ] Animate / Oscillate Distance from Ring
   - [x] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
 - [ ] Add Custom `THREE.LightProbe`
+- [ ] Remove `playbackRate` Change on Playhead (keep it simple)
+- [ ] Make Text Geometry Based Instead of Based out of a Texture
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
 - [x] Add Child Shapes to Ring
