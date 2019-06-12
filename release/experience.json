@@ -2229,7 +2229,7 @@
 				"\t\tvar index = '0' + ( i + 1 ) + '. ';",
 				"",
 				"\t\tvar label = Text.create( index + filter.name.toUpperCase(), options );",
-				"\t\tvar scale = 0.66 * range / label.userData.scale;",
+				"\t\tvar scale = 0.5 * range / label.userData.scale;",
 				"",
 				"\t\tpaddle.userData.label = label;",
 				"",
