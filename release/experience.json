@@ -3914,7 +3914,7 @@
 			]
 		],
 		[
-			"Lights Change",
+			"Randomize Colors",
 			[
 				"var lights = resources.get( 'lights' );",
 				"var backdrop = resources.get( 'backdrop' );",
