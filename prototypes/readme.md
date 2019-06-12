@@ -1,4 +1,5 @@
 ## Previous Builds
++ [v4-05-2019: Ring Playback Rate](./frame-player.html?file=2019-05-experience.json)
 + [v3-10-2018: Cards & Ring 360°](./frame-player.html?file=2018-10-experience.json)
 + [v2-08-2018: Caged User](./frame-player.html?file=./nonlinear-stages-prototype.json)
 + [v1-05-2018: Basic Sequencing](./frame-player.html?file=./tower-interaction-intro.json)
