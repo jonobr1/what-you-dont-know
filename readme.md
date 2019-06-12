@@ -26,13 +26,15 @@ Below are more details for each of the pages and how to use them.
 - [x] Make Playhead First Read (UX)
 - [ ] Add Arrows to Compass to Guide Dragging
 - [ ] Add Global Reset Button
-- [ ] Create Clear UI for EQ Changes
+- [ ] ~~Create Clear UI for EQ Changes~~
 - [ ] Choreograph Lyrics
   - [ ] Line Based Animations from One Word to Another
 - [ ] Choreograph Debris
   - [ ] Experiment with amount of visible Debris
   - [ ] Experiment with regions of Debris
   - [ ] Experiment with size through FFT
+  - [ ] Experiment with Field Movement
+  - [ ] Experiment with Turbulence
 - [ ] Choreograph Ring
   - [ ] Experiment with changing x / z rotation
 - [ ] Choreograph Backdrop
@@ -43,7 +45,7 @@ Below are more details for each of the pages and how to use them.
   - [x] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
 - [ ] Add Custom `THREE.LightProbe`
 - [ ] Remove `playbackRate` Change on Playhead (keep it simple)
-- [ ] Make Text Geometry Based Instead of Based out of a Texture
+- [ ] ~~Make Text Geometry Based Instead of Based out of a Texture~~
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
 - [x] Add Child Shapes to Ring

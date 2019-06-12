@@ -1791,7 +1791,7 @@
 				"var loader = new THREE.TextureLoader();",
 				"var timeline = new THREE.Group();",
 				"",
-				"var size = 12;",
+				"var size = 15;",
 				"var playhead = Button.create( size );",
 				"var outline = playhead.userData.outline;",
 				"",
@@ -2145,7 +2145,7 @@
 				"",
 				"\tvar filter = filters[ i ];",
 				"",
-				"\tvar paddle = Button.create( 8, 'square' );",
+				"\tvar paddle = Button.create( 6, 'square' );",
 				"\tvar theta = TWO_PI * ( i * beatOffset ) / beats;",
 				"",
 				"\tvar ct = Math.cos( theta );",
@@ -2422,7 +2422,7 @@
 				"\tvar magnitude = Math.abs( t );",
 				"",
 				"\tt = sign * Math.pow( magnitude, 0.5 );",
-				"\tring.userData.setTwist( index, t );",
+				"\tring.userData.setTwist( index, Math.PI * 0.33 * t );",
 				"\t",
 				"\t// TODO: This is where you'd scale the bones",
 				"\t// based on the FFT of that audio track, I think",
@@ -3363,13 +3363,10 @@
 				"function scrub ( e ) {",
 				"",
 				"\tvar line = e.line;",
-				"\tvar pct = ( 2 + line ) / 5;",
-				"\tvar index = Math.floor( pct * palette.length );",
+				"\tvar pct = line / 5;",
 				"",
-				"\tvar color = palette[ index ];",
-				"",
-				"\tbackdrop.userData.setSourceColor( color.source );",
-				"\tbackdrop.userData.setTargetColor( color.target );",
+				"\tlights.userData.ambient.intensity = 1.33 * pct + 1;",
+				"\t",
 				"",
 				"}",
 				"",
@@ -3604,6 +3601,7 @@
 				"",
 				"\tplayer.currentTime = progress * manager.duration;",
 				"",
+				"\t/*",
 				"\tvar line = event.line;",
 				"\tvar rate = 1;",
 				"",
@@ -3628,6 +3626,7 @@
 				"\t}",
 				"",
 				"\tplayer.playbackRate = rate;",
+				"\t*/",
 				"",
 				"}"
 			]
@@ -3843,7 +3842,7 @@
 				"function update( progress ) {",
 				"",
 				"\tvar analysers = manager.analysers.list;",
-				"\tvar bandwidth = 0;",
+				"\tvar bandwidth = 2;",
 				"",
 				"\tfor ( var i = 0; i < analysers.length; i++ ) {",
 				"",
@@ -3851,8 +3850,8 @@
 				"\t\tvar data = analysers[ i ].data;",
 				"\t\tamplitude += ( data[ bandwidth ] / 255 - amplitude ) * params.drag;",
 				"",
-				"\t\tvar scale = 0.8 * amplitude + 0.1;",
-				"\t\tring.userData.setScale( i, scale );",
+				"\t\tvar scale = 2 * amplitude + 0.1;",
+				"\t\tring.userData.setScale( i, scale * scale );",
 				"",
 				"\t}",
 				"",
@@ -3960,7 +3959,7 @@
 		[
 			"",
 			0,
-			21.35054347826087,
+			1,
 			4,
 			9,
 			true
@@ -3992,7 +3991,7 @@
 		[
 			"",
 			21.263586956521742,
-			42.61413043478262,
+			22.26,
 			4,
 			9,
 			true
@@ -4000,7 +3999,7 @@
 		[
 			"",
 			42.61413043478262,
-			63.964673913043505,
+			43.61,
 			4,
 			9,
 			true
@@ -4016,7 +4015,7 @@
 		[
 			"",
 			63.964673913043505,
-			85.31521739130439,
+			64.96,
 			4,
 			9,
 			true
@@ -4064,7 +4063,7 @@
 		[
 			"",
 			85.31521739130439,
-			106.66576086956528,
+			86.32,
 			4,
 			9,
 			true
@@ -4112,7 +4111,7 @@
 		[
 			"",
 			106.66576086956528,
-			128.01630434782618,
+			107.67,
 			4,
 			9,
 			true
@@ -4168,7 +4167,7 @@
 		[
 			"",
 			128.01630434782618,
-			149.36684782608708,
+			129.02,
 			4,
 			9,
 			true
@@ -4184,7 +4183,7 @@
 		[
 			"",
 			149.36684782608708,
-			170.71739130434798,
+			150.37,
 			4,
 			9,
 			true
