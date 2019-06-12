@@ -637,6 +637,31 @@ Interaction.prototype.hasIntersections = function () {
 
 };
 
+Interaction.prototype.vibrate = function ( value, duration ) {
+
+	var renderer = this.renderer;
+
+	for ( var i = 0; i < 2; i ++ ) {
+
+		var controller = renderer.vr.getController( i );
+		var gamepad = controller.userData.gamepad;
+
+		if ( gamepad ) {
+
+			var hapticActuators = gamepad.hapticActuators;
+
+			if ( hapticActuators && hapticActuators.length > 0 ) {
+
+				gamepad.hapticActuators[ 0 ].pulse( value, duration );
+
+			}
+
+		}
+
+	}
+
+};
+
 Interaction.prototype.connect = function() {
 
 	var renderer = this.renderer;
