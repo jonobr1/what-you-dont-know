@@ -24,6 +24,8 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
 - [ ] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
+- [ ] Create Zen Mode
+- [ ] Create Random Parameterizer
 - [ ] Add Arrows to Compass to Guide Dragging
 - [ ] Add Global Reset Button
 - [ ] ~~Create Clear UI for EQ Changes~~
