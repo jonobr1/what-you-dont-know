@@ -24,10 +24,10 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
 - [ ] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
-- [ ] Create Zen Mode
-- [ ] Create Random Parameterizer
 - [ ] Add Arrows to Compass to Guide Dragging
 - [ ] Add Global Reset Button
+- [ ] Add Zen Mode (Hide UI)
+- [ ] Add Random Parameterizer
 - [ ] Add Custom Sound / Noise When Scrubbing
 - [ ] ~~Create Clear UI for EQ Changes~~
 - [ ] Choreograph Lyrics
@@ -39,10 +39,10 @@ Below are more details for each of the pages and how to use them.
   - [ ] Experiment with Field Movement
   - [ ] Experiment with Turbulence
 - [ ] Choreograph Ring
-  - [ ] Experiment with changing x / z rotation
-  - [ ] Choreograph Alpha Map Texturing on "Oh" Vocals
-  - [ ] Opacity Inversely Tied to SFX
-  - [ ] Y Position Oscillation Tied to Instrumental
+  - [ ] Experiment with Changing x / z Rotation
+  - [ ] Choreograph Alpha Map Texture Repeat on "Oh" Vocals
+  - [ ] Opacity Inversely Tied to SFX - Alpha Map Intensity
+  - [ ] ~~Y Position Oscillation Tied to Instrumental~~
 - [ ] Choreograph Backdrop
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [ ] Choreograph Boids
