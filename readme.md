@@ -28,6 +28,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Create Random Parameterizer
 - [ ] Add Arrows to Compass to Guide Dragging
 - [ ] Add Global Reset Button
+- [ ] Add Custom Sound / Noise When Scrubbing
 - [ ] ~~Create Clear UI for EQ Changes~~
 - [ ] Choreograph Lyrics
   - [ ] Line Based Animations from One Word to Another
@@ -39,6 +40,7 @@ Below are more details for each of the pages and how to use them.
   - [ ] Experiment with Turbulence
 - [ ] Choreograph Ring
   - [ ] Experiment with changing x / z rotation
+  - [ ] Choreograph Alpha Map Texturing
 - [ ] Choreograph Backdrop
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [ ] Choreograph Boids
