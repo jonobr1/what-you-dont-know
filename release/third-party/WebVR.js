@@ -9,15 +9,14 @@ var WEBVR = {
 
 	createButton: function ( renderer, options ) {
 
-		if ( options && options.frameOfReferenceType ) {
+		if ( options && options.referenceSpaceType ) {
 
-			renderer.vr.setFrameOfReferenceType( options.frameOfReferenceType );
+			renderer.vr.setReferenceSpaceType( options.referenceSpaceType );
 
 		}
 
 		function showEnterVR( device ) {
 
-			renderer.vr.enabled = true;
 			button.style.display = '';
 
 			button.style.cursor = 'pointer';
@@ -48,7 +47,7 @@ var WEBVR = {
 				session.addEventListener( 'end', onSessionEnded );
 
 				renderer.vr.setSession( session );
-				button.textContent = 'EXIT VR';
+				button.textContent = 'EXIT XR';
 
 				currentSession = session;
 
@@ -59,7 +58,7 @@ var WEBVR = {
 				currentSession.removeEventListener( 'end', onSessionEnded );
 
 				renderer.vr.setSession( null );
-				button.textContent = 'ENTER VR';
+				button.textContent = 'ENTER XR';
 
 				currentSession = null;
 
@@ -73,7 +72,7 @@ var WEBVR = {
 			button.style.left = 'calc(50% - 50px)';
 			button.style.width = '100px';
 
-			button.textContent = 'ENTER VR';
+			button.textContent = 'ENTER XR';
 
 			button.onmouseenter = function () { button.style.opacity = '1.0'; };
 			button.onmouseleave = function () { button.style.opacity = '0.5'; };
@@ -82,7 +81,7 @@ var WEBVR = {
 
 				if ( currentSession === null ) {
 
-					device.requestSession( { immersive: true, exclusive: true /* DEPRECATED */ } ).then( onSessionStarted );
+					navigator.xr.requestSession( 'immersive-vr' ).then( onSessionStarted );
 
 				} else {
 
@@ -91,8 +90,6 @@ var WEBVR = {
 				}
 
 			};
-
-			renderer.vr.setDevice( device );
 
 		}
 
@@ -132,20 +129,14 @@ var WEBVR = {
 
 		}
 
-		if ( 'xr' in navigator ) {
+		if ( 'xr' in navigator && 'supportsSession' in navigator.xr ) {
 
 			var button = document.createElement( 'button' );
 			button.style.display = 'none';
 
 			stylizeElement( button );
 
-			navigator.xr.requestDevice().then( function ( device ) {
-
-				device.supportsSession( { immersive: true, exclusive: true /* DEPRECATED */ } )
-					.then( function () { showEnterXR( device ); } )
-					.catch( showVRNotFound );
-
-			} ).catch( showVRNotFound );
+			navigator.xr.supportsSession( 'immersive-vr' ).then( showEnterXR );
 
 			return button;
 
