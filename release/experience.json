@@ -1250,7 +1250,7 @@
 				"domElement.appendChild( renderer.domElement );",
 				"",
 				"renderer.vr.enabled = true;",
-				"var WebVRButton = WEBVR.createButton( renderer, { referenceSpaceType: 'local' } );",
+				"var WebVRButton = WEBVR.createButton( renderer, { referenceSpaceType: 'eye-level' } );",
 				"WebVRButton.style.zIndex = 'unset';",
 				"domElement.appendChild( WebVRButton );",
 				"",
