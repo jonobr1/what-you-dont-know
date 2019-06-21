@@ -22056,14 +22056,14 @@
 
 		function onVRDisplayPresentChange() {
 
+			currentPixelRatio = renderer.getPixelRatio();
+			renderer.getSize( currentSize );
+
 			if ( isPresenting() ) {
 
 				var eyeParameters = device.getEyeParameters( 'left' );
 				renderWidth = 2 * eyeParameters.renderWidth * framebufferScaleFactor;
 				renderHeight = eyeParameters.renderHeight * framebufferScaleFactor;
-
-				currentPixelRatio = renderer.getPixelRatio();
-				renderer.getSize( currentSize );
 
 				renderer.setDrawingBufferSize( renderWidth, renderHeight, 1 );
 
