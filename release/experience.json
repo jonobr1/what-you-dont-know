@@ -1249,7 +1249,7 @@
 				"var domElement = resources.get( 'dom' );",
 				"domElement.appendChild( renderer.domElement );",
 				"",
-				"// renderer.vr.enabled = true;",
+				"renderer.vr.enabled = true;",
 				"var WebVRButton = WEBVR.createButton( renderer, { referenceSpaceType: 'local' } );",
 				"WebVRButton.style.zIndex = 'unset';",
 				"domElement.appendChild( WebVRButton );",
