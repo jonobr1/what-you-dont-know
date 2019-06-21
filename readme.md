@@ -28,7 +28,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Global Reset Button
 - [ ] Add Zen Mode (Hide UI)
 - [ ] Add Random Parameterizer
-- [ ] Add Custom Sound / Noise When Scrubbing
+- [x] Add Custom Sound / Noise When Scrubbing
 - [ ] ~~Create Clear UI for EQ Changes~~
 - [ ] Choreograph Lyrics
   - [ ] Line Based Animations from One Word to Another
@@ -51,7 +51,7 @@ Below are more details for each of the pages and how to use them.
   - [ ] Three Part Melody Should Trigger be Boids
   - [x] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
 - [ ] Add Custom `THREE.LightProbe`
-- [ ] Remove `playbackRate` Change on Playhead (keep it simple)
+- [x] Remove `playbackRate` Change on Playhead (keep it simple)
 - [ ] ~~Make Text Geometry Based Instead of Based out of a Texture~~
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
