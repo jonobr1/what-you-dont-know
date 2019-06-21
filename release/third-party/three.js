@@ -22052,18 +22052,21 @@
 
 		}
 
+		var vrDisplayPresentChanged = false;
 		var currentSize = new Vector2(), currentPixelRatio;
 
 		function onVRDisplayPresentChange() {
 
-			currentPixelRatio = renderer.getPixelRatio();
-			renderer.getSize( currentSize );
+			vrDisplayPresentChanged = true;
 
 			if ( isPresenting() ) {
 
 				var eyeParameters = device.getEyeParameters( 'left' );
 				renderWidth = 2 * eyeParameters.renderWidth * framebufferScaleFactor;
 				renderHeight = eyeParameters.renderHeight * framebufferScaleFactor;
+
+				currentPixelRatio = renderer.getPixelRatio();
+				renderer.getSize( currentSize );
 
 				renderer.setDrawingBufferSize( renderWidth, renderHeight, 1 );
 
@@ -22242,8 +22245,13 @@
 
 			if ( isPresenting() === false ) {
 
-				camera.position.set( 0, userHeight, 0 );
-				camera.rotation.set( 0, 0, 0 );
+				if ( vrDisplayPresentChanged ) {
+
+					camera.position.set( 0, userHeight, 0 );
+					camera.rotation.set( 0, 0, 0 );
+					vrDisplayPresentChanged = false;
+
+				}
 
 				return camera;
 
