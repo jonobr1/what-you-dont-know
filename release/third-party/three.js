@@ -22053,6 +22053,7 @@
 		}
 
 		var vrDisplayPresentChanged = false;
+		var originalCameraPosition = new THREE.Vector3();
 		var currentSize = new Vector2(), currentPixelRatio;
 
 		function onVRDisplayPresentChange() {
@@ -22247,13 +22248,19 @@
 
 				if ( vrDisplayPresentChanged ) {
 
-					camera.position.set( 0, userHeight, 0 );
+					camera.position.copy( originalCameraPosition );
+					camera.position.y += userHeight;
 					camera.rotation.set( 0, 0, 0 );
 					vrDisplayPresentChanged = false;
 
 				}
 
 				return camera;
+
+			} else if ( vrDisplayPresentChanged ) {
+
+				originalCameraPosition.copy( camera.position );
+				vrDisplayPresentChanged = false;
 
 			}
 
