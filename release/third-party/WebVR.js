@@ -17,7 +17,6 @@ var WEBVR = {
 
 		function showEnterVR( device ) {
 
-			renderer.vr.enabled = true;
 			button.style.display = '';
 
 			button.style.cursor = 'pointer';
