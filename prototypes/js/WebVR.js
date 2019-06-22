@@ -61,8 +61,8 @@ var WEBVR = {
 
 				currentSession.removeEventListener( 'end', onSessionEnded );
 
-				renderer.vr.enabled = false;
 				renderer.vr.setSession( null );
+				renderer.vr.enabled = false;
 				button.textContent = 'ENTER VR';
 
 				currentSession = null;
