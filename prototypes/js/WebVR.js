@@ -28,8 +28,8 @@ var WEBVR = {
 					device.exitPresent();
 					renderer.vr.enabled = false;
 				} else {
-					device.requestPresent( [ { source: renderer.domElement } ] );
 					renderer.vr.enabled = true;
+					device.requestPresent( [ { source: renderer.domElement } ] );
 				}
 
 			};
