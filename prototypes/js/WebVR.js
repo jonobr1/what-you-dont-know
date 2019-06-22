@@ -24,7 +24,13 @@ var WEBVR = {
 
 			button.onclick = function () {
 
-				device.isPresenting ? device.exitPresent() : device.requestPresent( [ { source: renderer.domElement } ] );
+				if ( device.isPresenting ) {
+					device.exitPresent();
+					renderer.vr.enabled = false;
+				} else {
+					device.requestPresent( [ { source: renderer.domElement } ] );
+					renderer.vr.enabled = true;
+				}
 
 			};
 
@@ -43,6 +49,7 @@ var WEBVR = {
 
 				session.addEventListener( 'end', onSessionEnded );
 
+				renderer.vr.enabled = true;
 				renderer.vr.setSession( session, options );
 				button.textContent = 'EXIT VR';
 
@@ -54,6 +61,7 @@ var WEBVR = {
 
 				currentSession.removeEventListener( 'end', onSessionEnded );
 
+				renderer.vr.enabled = false;
 				renderer.vr.setSession( null );
 				button.textContent = 'ENTER VR';
 
