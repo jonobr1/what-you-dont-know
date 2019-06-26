@@ -30,8 +30,9 @@ var WEBVR = {
 
 			button.onclick = function () {
 
-				if ( device.isPresenting) {
+				if ( device.isPresenting ) {
 					device.exitPresent();
+					renderer.vr.enabled = false;
 				} else {
 					renderer.vr.enabled = true;
 					device.requestPresent( [ { source: renderer.domElement } ] )
@@ -39,13 +40,19 @@ var WEBVR = {
 
 			};
 
-			renderer.vr.addEventListener( 'sessionend', onSessionEnded );
+			if ( typeof window !== 'undefined' && 'VRFrameData' in window ) {
+
+				window.addEventListener( 'vrdisplaypresentchange', onVRDisplayPresentChange, false );
+
+			}
 
 			renderer.vr.setDevice( device );
 
-			function onSessionEnded() {
+			function onVRDisplayPresentChange() {
 
-				renderer.vr.enabled = false;
+				if ( !renderer.vr.isPresenting() && renderer.vr.enabled ) {
+					renderer.vr.enabled = false;
+				}
 
 			}
 
@@ -71,7 +78,7 @@ var WEBVR = {
 				currentSession.removeEventListener( 'end', onSessionEnded );
 
 				renderer.vr.setSession( null );
-        renderer.vr.enabled = false;
+				renderer.vr.enabled = false;
 				button.textContent = 'ENTER XR';
 
 				currentSession = null;
@@ -95,7 +102,7 @@ var WEBVR = {
 
 				if ( currentSession === null ) {
 
-          renderer.vr.enabled = true;
+					renderer.vr.enabled = true;
 					navigator.xr.requestSession( 'immersive-vr' ).then( onSessionStarted );
 
 				} else {
