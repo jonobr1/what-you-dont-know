@@ -21,7 +21,7 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
-- [ ] Add Polar Spheres ([Reference](https://www.are.na/block/2122848))
+- [ ] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) [Reference 2](https://www.are.na/block/2122776))
 - [ ] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
 - [x] Add Arrows to Compass to Guide Dragging
@@ -32,7 +32,7 @@ Below are more details for each of the pages and how to use them.
 - [x] ~~Create Clear UI for EQ Changes~~
 - [ ] Spatialize Audio Tracks
 - [ ] Choreograph Lyrics
-  - [ ] Line Based Animations from One Word to Another
+  - [ ] Opacity Animation Based on Vocals
 - [ ] Choreograph Debris
   - [ ] Experiment with amount of visible Debris
   - [ ] Experiment with regions of Debris
