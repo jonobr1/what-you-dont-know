@@ -25,9 +25,9 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
 - [x] Add Arrows to Compass to Guide Dragging
-- [ ] Add Global Reset Button
-- [ ] Add Zen Mode (Hide UI)
-- [ ] Add Random Parameterizer
+- [x] Add Global Reset Button
+- [x] Add Zen Mode (Hide UI)
+- [x] Add Random Parameterizer
 - [x] Add Custom Sound / Noise When Scrubbing
 - [x] ~~Create Clear UI for EQ Changes~~
 - [ ] Spatialize Audio Tracks
