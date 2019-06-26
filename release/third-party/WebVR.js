@@ -39,7 +39,6 @@ var WEBVR = {
 
 			};
 
-      renderer.vr
 			renderer.vr.addEventListener( 'sessionend', onSessionEnded );
 
 			renderer.vr.setDevice( device );
