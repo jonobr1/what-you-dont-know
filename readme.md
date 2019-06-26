@@ -29,7 +29,8 @@ Below are more details for each of the pages and how to use them.
 - [ ] Add Zen Mode (Hide UI)
 - [ ] Add Random Parameterizer
 - [x] Add Custom Sound / Noise When Scrubbing
-- [ ] ~~Create Clear UI for EQ Changes~~
+- [x] ~~Create Clear UI for EQ Changes~~
+- [ ] Spatialize Audio Tracks
 - [ ] Choreograph Lyrics
   - [ ] Line Based Animations from One Word to Another
 - [ ] Choreograph Debris
