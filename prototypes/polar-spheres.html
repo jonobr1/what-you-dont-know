@@ -19,12 +19,16 @@
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera( 75 );
         var controls = new THREE.OrbitControls( camera, renderer.domElement );
+        var loader = new THREE.TextureLoader();
 
         var sphere = new THREE.Mesh(
-          new THREE.SphereBufferGeometry( 5, 64, 64 ),
+          new THREE.SphereBufferGeometry( 5, 128, 128 ),
           new THREE.ShaderMaterial( {
             uniforms: {
-              time: { type: 'f', value: 0 }
+              time: { type: 'f', value: 0 },
+              cSource: { type: 'c', value: new THREE.Color( 0x000000 ) },
+              cTarget: { type: 'c', value: new THREE.Color( 0xffffff ) },
+              image: { type: 'c', value: loader.load( './textures/ghostly.png' ) }
             },
             vertexShader: [
 
@@ -32,6 +36,7 @@
 
               'uniform float time;',
 
+              'varying vec2 vUv;',
               'varying vec3 vReflect;',
               'varying float vRim;',
 
@@ -41,6 +46,10 @@
 
                 'float qpi = PI * 0.25;',
                 'float phi = PI * ( cos( qpi * n.x ) + sin( qpi * n.z ) );',
+
+                // 'float qpi = PI * 0.5;',
+                // 'float amp = 5.0 * sin( time / 10.0 ) + 5.0;',
+                // 'float phi = amp * ( sin( PI * uv.y ) + cos( qpi * n.x ) + sin( qpi * n.z ) );',
 
                 'float osc = sin( time + phi );',
                 'float radius = 0.5 * osc + 4.0;',
@@ -76,6 +85,7 @@
 
               'void main() {',
 
+                'vUv = uv;',
                 'vec2 eps;',
                 'vec3 pos = getPosition( position );',
 
@@ -105,24 +115,76 @@
             ].join( '\n' ),
             fragmentShader: [
 
-              'const float PI = ' + Math.PI + ';',
+              '#define RECIPROCAL_PI 0.31830988618',
+              '#define RECIPROCAL_PI2 0.15915494',
 
+              'const float PI = ' + Math.PI + ';',
+              'const vec3 white = vec3( 1.0 );',
+
+              'uniform float time;',
+              'uniform vec3 cSource;',
+              'uniform vec3 cTarget;',
+              'uniform sampler2D image;',
+
+              'varying vec2 vUv;',
               'varying vec3 vReflect;',
               'varying float vRim;',
+
+              'float noise( vec2 p ) {',
+                'return sin( p.x * 6.0 ) * sin( p.y * ( 6.0 + sin( 0.05 * time ) ) ) + 0.2;',
+              '}',
+
+              'mat2 rotate( float angle ) {',
+                'return mat2( cos( angle ), - sin( angle ), sin( angle ), cos( angle ) );',
+              '}',
+
+              'float fbm( vec2 p ) {',
+                'p *= 1.1;',
+                'float f = 0.0;',
+                'float amp = 0.2;',
+                'for( int i = 0; i < 3; i++ ) {',
+                  'mat2 modify = rotate( 0.01 * time * float( i * i ) );',
+                  'f += amp * noise( p );',
+                  'p = modify * p;',
+                  'p *= 2.0;',
+                  'amp /= 2.2;',
+                '}',
+                'return f;',
+              '}',
+
+              'float pattern( vec2 p ) {',
+                'vec2 q = vec2( fbm( p + vec2( 1.0 ) ), fbm( rotate( 0.01 * time ) * p + vec2( 3.0 ) ) );',
+                'vec2 r = vec2( fbm( rotate( 0.2 ) * q + vec2( 0.0 ) ), fbm( q + vec2( 0.0 ) ) );',
+                'return fbm( p + 1.0 * r );',
+              '}',
 
               'void main() {',
 
                 'vec3 reflectVec = normalize( vReflect );',
+                'float inverseReflect = asin( reflectVec.y );',
 
-                // - HALF_PI to HALF_PI
-                'float reflection = asin( reflectVec.y ) / ( PI * 0.5 ) + 0.5;',
-                'reflection = clamp( reflection, 0.0, 1.0 );',
-                'vec4 envColor = vec4( vec3( reflection ).xyz, 1.0 );',
+                'vec2 mirrorUV = vec2( vUv.xy );',
+                'mirrorUV.x = sin( mirrorUV.x * PI );',
 
+                'float shading = inverseReflect / ( PI * 0.5 ) + 0.5;',
+                'float reflection = pow( ( 1.0 + inverseReflect ) * 0.5, 3.0 );',
                 'float rim = smoothstep( 0.75, 1.0, vRim );',
-                'vec3 highlight = vec3( 1.0, 1.0, 1.0 );',
 
-                'gl_FragColor = vec4( mix( envColor.xyz, highlight, rim ), 1.0 );',
+                'vec3 fill = mix( cSource, cTarget, pattern( mirrorUV ) );',
+                'vec3 highlight = fill + cTarget;',
+
+                'vec2 sampleUV = vec2( 0.0 );',
+                'sampleUV.y = inverseReflect / ( PI * 0.5 ) + 0.5;',
+                'sampleUV.x = - ( atan( reflectVec.z, reflectVec.x ) / ( PI * 0.5 ) + 0.5 );',
+                'sampleUV.x = mod( sampleUV.x, 2.0 );',
+                'vec4 texel = texture2D( image, sampleUV );',
+
+                'fill *= mix( cSource, cTarget, shading );',
+                'fill = mix( fill, highlight, rim );',
+                'fill = mix( fill, texel.rgb, step( 0.5, texel.a ) );',
+                'fill = mix( fill, white, reflection + smoothstep( 0.975, 1.0, vRim ) );',
+
+                'gl_FragColor = vec4( fill.xyz, 1.0 );',
 
               '}'
 
@@ -140,8 +202,25 @@
 
           document.body.appendChild( renderer.domElement );
           window.addEventListener( 'resize', resize, false );
+          window.addEventListener( 'click', changeColor, false );
           resize();
           renderer.setAnimationLoop( draw );
+
+        }
+
+        function changeColor() {
+
+          sphere.material.uniforms.cSource.value.setRGB(
+            Math.random(),
+            Math.random(),
+            Math.random()
+          );
+
+          sphere.material.uniforms.cTarget.value.setRGB(
+            Math.random(),
+            Math.random(),
+            Math.random()
+          );
 
         }
 
