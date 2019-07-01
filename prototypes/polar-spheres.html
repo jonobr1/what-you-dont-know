@@ -22,19 +22,21 @@
         var loader = new THREE.TextureLoader();
 
         var sphere = new THREE.Mesh(
-          new THREE.SphereBufferGeometry( 5, 128, 128 ),
+          new THREE.SphereBufferGeometry( 5, 64, 64 ),
           new THREE.ShaderMaterial( {
             uniforms: {
               time: { type: 'f', value: 0 },
               cSource: { type: 'c', value: new THREE.Color( 0x000000 ) },
               cTarget: { type: 'c', value: new THREE.Color( 0xffffff ) },
-              image: { type: 'c', value: loader.load( './textures/ghostly.png' ) }
+              image: { type: 'c', value: loader.load( './textures/ghostly.png' ) },
+              frequency: { type: 'f', value: 1 }
             },
             vertexShader: [
 
               'const float PI = ' + Math.PI + ';',
 
               'uniform float time;',
+              'uniform float frequency;',
 
               'varying vec2 vUv;',
               'varying vec3 vReflect;',
@@ -45,7 +47,8 @@
                 'vec3 n = normalize( position );',
 
                 'float qpi = PI * 0.25;',
-                'float phi = PI * ( cos( qpi * n.x ) + sin( qpi * n.z ) );',
+                'float amp = PI * frequency;',
+                'float phi = amp * ( cos( qpi * n.x ) + sin( qpi * n.z ) );',
 
                 // 'float qpi = PI * 0.5;',
                 // 'float amp = 5.0 * sin( time / 10.0 ) + 5.0;',
@@ -176,7 +179,9 @@
                 'vec2 sampleUV = vec2( 0.0 );',
                 'sampleUV.y = inverseReflect / ( PI * 0.5 ) + 0.5;',
                 'sampleUV.x = - ( atan( reflectVec.z, reflectVec.x ) / ( PI * 0.5 ) + 0.5 );',
-                'sampleUV.x = mod( sampleUV.x, 2.0 );',
+                'sampleUV *= 0.75;',
+                // 'sampleUV.y = mod( sampleUV.y + time, 1.0 );',
+                'sampleUV.x = mod( sampleUV.x, 1.5 );',
                 'vec4 texel = texture2D( image, sampleUV );',
 
                 'fill *= mix( cSource, cTarget, shading );',
@@ -198,7 +203,10 @@
         function setup() {
 
           scene.add( sphere );
-          camera.position.z = 10;
+          camera.position.z = 5;
+          camera.position.x = 5;
+
+          camera.lookAt( sphere.position );
 
           document.body.appendChild( renderer.domElement );
           window.addEventListener( 'resize', resize, false );
