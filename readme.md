@@ -41,6 +41,7 @@ Below are more details for each of the pages and how to use them.
   - [ ] Experiment with Turbulence
 - [ ] Choreograph Ring
   - [ ] Experiment with Changing x / z Rotation
+  - [ ] Experiment with x / z Position
   - [ ] Choreograph Alpha Map Texture Repeat on "Oh" Vocals
   - [ ] Opacity Inversely Tied to SFX - Alpha Map Intensity
   - [ ] ~~Y Position Oscillation Tied to Instrumental~~
@@ -49,7 +50,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Boids
   - [ ] Diversify Geometries
   - [ ] Animate / Oscillate Distance from Ring
-  - [ ] Three Part Melody Should Trigger be Boids
+  - [ ] Three Part Melody Should Trigger Boids
   - [x] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
 - [ ] Add Custom `THREE.LightProbe`
 - [x] Remove `playbackRate` Change on Playhead (keep it simple)
