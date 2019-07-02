@@ -3629,7 +3629,7 @@
 				"",
 				"var group = new THREE.Group();",
 				"",
-				"var geometry = new THREE.SphereBufferGeometry( 1, 64, 64 );",
+				"var geometry = new THREE.SphereBufferGeometry( 1, 40, 40 );",
 				"var material = new THREE.ShaderMaterial( {",
 				"\tuniforms: {",
 				"\t\ttime: { type: 'f', value: 0 },",
