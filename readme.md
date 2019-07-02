@@ -34,9 +34,9 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Polar Spheres
   - [ ] Separate Blob (vertex) Animation and Liquid (fragment) Animation
   - [ ] Rotate and Position in Relation to the Ring
-  - [ ] Set Lyrics and Credits via the `polarSpheres.userData.setTexture` method
-- [ ] Choreograph Lyrics
-  - [ ] Opacity Animation Based on Vocals
+  - [x] Set Lyrics and Credits via the `polarSpheres.userData.setTexture` method
+- [x] Choreograph Lyrics
+  - [x] Opacity Animation Based on Vocals
 - [ ] Choreograph Debris
   - [ ] Experiment with amount of visible Debris
   - [ ] Experiment with regions of Debris
