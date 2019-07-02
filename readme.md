@@ -21,7 +21,7 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
-- [ ] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) [Reference 2](https://www.are.na/block/2122776))
+- [x] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) [Reference 2](https://www.are.na/block/2122776))
 - [ ] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
 - [x] Add Arrows to Compass to Guide Dragging
