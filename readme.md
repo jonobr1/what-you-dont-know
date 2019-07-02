@@ -21,7 +21,7 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
-- [x] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) [Reference 2](https://www.are.na/block/2122776))
+- [x] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) • [Reference 2](https://www.are.na/block/2122776))
 - [ ] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
 - [x] Add Arrows to Compass to Guide Dragging
@@ -31,6 +31,10 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Custom Sound / Noise When Scrubbing
 - [x] ~~Create Clear UI for EQ Changes~~
 - [ ] Spatialize Audio Tracks
+- [ ] Choreograph Polar Spheres
+  - [ ] Separate Blob (vertex) Animation and Liquid (fragment) Animation
+  - [ ] Rotate and Position in Relation to the Ring
+  - [ ] Set Lyrics and Credits via the `polarSpheres.userData.setTexture` method
 - [ ] Choreograph Lyrics
   - [ ] Opacity Animation Based on Vocals
 - [ ] Choreograph Debris
