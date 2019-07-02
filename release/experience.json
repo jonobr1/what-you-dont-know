@@ -4554,7 +4554,7 @@
 			]
 		],
 		[
-			"1.03 Update Lyrics",
+			"I'd Beat Up All My Cues For You",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"var lyrics = resources.get( 'lyrics' );",
@@ -4695,7 +4695,7 @@
 			]
 		],
 		[
-			"1.04 Update Lyrics",
+			"For You I'd Take It Off Too Soon",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"var lyrics = resources.get( 'lyrics' );",
@@ -4835,7 +4835,7 @@
 			]
 		],
 		[
-			"1.05 Update Lyrics",
+			"Some Other Way To Get To You",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"var lyrics = resources.get( 'lyrics' );",
@@ -4975,7 +4975,7 @@
 			]
 		],
 		[
-			"1.06 Update Lyrics",
+			"Now Give Up All My Fears For You",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"var lyrics = resources.get( 'lyrics' );",
@@ -5115,7 +5115,7 @@
 			]
 		],
 		[
-			"1.07 Update Lyrics",
+			"I'd Beat Up",
 			[
 				"var manager = resources.get( 'audio-manager' );",
 				"var lyrics = resources.get( 'lyrics' );",
@@ -5372,6 +5372,14 @@
 			43.61,
 			5,
 			9,
+			true
+		],
+		[
+			"1.08 Lyrics",
+			42.668,
+			53.336,
+			4,
+			14,
 			true
 		],
 		[
