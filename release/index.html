@@ -18,12 +18,6 @@
       #container {
         height: 100%;
       }
-      #play {
-        position: absolute;
-        display: block;
-        top: 20px;
-        left: 20px;
-      }
     </style>
     <link rel="stylesheet" type="text/css" href="styles/spinner.css">
   </head>
@@ -46,14 +40,6 @@
       var timeline = new FRAME.Timeline();
       var player = new FRAME.Player();
 
-      var playButton = document.createElement( 'button' );
-      playButton.id = 'play';
-      playButton.textContent = 'Start Experience';
-      playButton.addEventListener( 'click', function() {
-        player.play();
-        document.body.removeChild( playButton );
-      }, false );
-
       //
 
       timeline.load( './experience.json', function () {
@@ -61,7 +47,6 @@
         timeline.compile( resources, player );
         resources.onLoad( function () {
           document.body.removeChild( document.getElementById( 'loading' ) );
-          document.body.appendChild( playButton );
           resources.get( 'renderer' ).setAnimationLoop( animate );
         } );
 
