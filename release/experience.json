@@ -7839,6 +7839,24 @@
 				"",
 				"function update( progress ){}"
 			]
+		],
+		[
+			"Set Polar Spheres WYDK Texture",
+			[
+				"var polarSpheres = resources.get( 'polar-spheres' );",
+				"var loader = new THREE.TextureLoader();",
+				"var texture = loader.load( '../assets/textures/wydk-title.png', resources.queue() );",
+				"",
+				"function start( progress ) {",
+				"",
+				"\tpolarSpheres.userData.setTexture( texture );",
+				"",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {}"
+			]
 		]
 	],
 	"animations": [
@@ -7864,6 +7882,14 @@
 			29,
 			2,
 			3,
+			true
+		],
+		[
+			"Title",
+			0,
+			2,
+			3,
+			32,
 			true
 		],
 		[
