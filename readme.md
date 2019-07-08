@@ -22,7 +22,7 @@ Below are more details for each of the pages and how to use them.
 ### Roadmap
 
 - [x] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) • [Reference 2](https://www.are.na/block/2122776))
-- [ ] Add Title Page (UX)
+- [x] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
 - [x] Add Arrows to Compass to Guide Dragging
 - [x] Add Global Reset Button
@@ -34,6 +34,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Polar Spheres
   - [ ] Separate Blob (vertex) Animation and Liquid (fragment) Animation
   - [ ] Rotate and Position in Relation to the Ring
+  - [ ] Place Initial Position at Normal Viewing Position
   - [x] Set Lyrics and Credits via the `polarSpheres.userData.setTexture` method
 - [x] Choreograph Lyrics
   - [x] Opacity Animation Based on Vocals
