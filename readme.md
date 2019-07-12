@@ -30,7 +30,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Random Parameterizer
 - [x] Add Custom Sound / Noise When Scrubbing
 - [x] ~~Create Clear UI for EQ Changes~~
-- [ ] Spatialize Audio Tracks
+- [x] Spatialize Audio Tracks
 - [ ] Choreograph Polar Spheres
   - [ ] Separate Blob (vertex) Animation and Liquid (fragment) Animation
   - [ ] Rotate and Position in Relation to the Ring
