@@ -337,7 +337,7 @@ function Interaction ( renderer, camera ) {
 Interaction.prototype = Object.create( THREE.Group.prototype );
 Interaction.prototype.constructor = Interaction;
 Interaction.ScaleFactor = 0.2;
-Interaction.DefaultColor = 0x002814;
+Interaction.DefaultColor = 0x00ffc8;
 
 Interaction.getDefaultController = function() {
 
@@ -405,13 +405,13 @@ Interaction.getDefaultController = function() {
 	controller.add( outline );
 
 	var pointer = new THREE.Mesh(
-		new THREE.CylinderBufferGeometry( 0.01, 0.01, 1, 8, 1 ),
-		// TODO: Face teal out over distance.
+		new THREE.CylinderBufferGeometry( 0.005, 0.005, 1, 3, 1 ),
+		// TODO: Fade teal out over distance.
 		new THREE.MeshBasicMaterial( {
-			transparent: true,
-			blending: THREE.AdditiveBlending,
 			color: Interaction.DefaultColor,
-			side: THREE.DoubleSide
+			side: THREE.DoubleSide,
+			transparent: true,
+			opacity: 0.9
 		} )
 	);
 	pointer.geometry.translate( 0, 0.5, 0 );
