@@ -8134,6 +8134,104 @@
 				"\tparams.ring.amplitude = t * ( target - source ) + source;",
 				"}"
 			]
+		],
+		[
+			"Keyframe Ring Offset",
+			[
+				"var params = resources.get( 'params' );",
+				"var manager = resources.get( 'audio-manager' );",
+				"",
+				"var index = 0;",
+				"var iteration = 0;",
+				"",
+				"var playbackRate = 1;",
+				"var acceleration = 0;",
+				"var drag = params.drag;",
+				"",
+				"var keyframes = [",
+				"\t// Taken from Ableton Project",
+				"\t0.330, 1.192, 1.850",
+				"];",
+				"function start( progress ) {",
+				"\treset( progress );",
+				"}",
+				"",
+				"function end( progress ) {",
+				"}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ 'melody' ];",
+				"",
+				"\tif ( analysis.playbackRate !== playbackRate ) {",
+				"\t\treset( progress );",
+				"\t}",
+				"",
+				"\tvar unitDuration = manager.unitDuration;",
+				"\tvar maxIterations = Math.ceil( playbackRate );",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"\tvar currentIteration = Math.floor( currentTime / duration );",
+				"",
+				"\tvar keyframe = keyframes[ index ] / unitDuration;",
+				"",
+				"\tvar ca = currentIteration < maxIterations;",
+				"\tvar cb = currentIteration === iteration;",
+				"\tvar cc = currentPct >= keyframe;",
+				"",
+				"\tif ( ca && cb && cc ) {",
+				"\t\ttrigger( currentPct );",
+				"\t}",
+				"",
+				"\tparams.ring.offset += acceleration;",
+				"\tacceleration += ( 0 - acceleration ) * drag;",
+				"",
+				"}",
+				"",
+				"function trigger( startPct ) {",
+				"",
+				"\tacceleration = Math.random() * 0.5 + 1;",
+				"",
+				"\tif ( Math.random() > 0.5 ) {",
+				"\t\tacceleration *= - 1;",
+				"\t}",
+				"",
+				"\tindex ++;",
+				"\tif ( index >= keyframes.length ) {",
+				"\t\tindex = 0;",
+				"\t\titeration ++;",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function reset( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ 'melody' ];",
+				"\tvar unitDuration = manager.unitDuration;",
+				"",
+				"\tplaybackRate = analysis.playbackRate;",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"",
+				"\titeration = Math.floor( currentTime / duration );",
+				"",
+				"\tfor ( var i = 0; i < keyframes.length; i++ ) {",
+				"\t\tindex = i;",
+				"\t\tif ( keyframes[ i ] / unitDuration > currentPct ) {",
+				"\t\t\tbreak;",
+				"\t\t}",
+				"\t}",
+				"",
+				"}"
+			]
 		]
 	],
 	"animations": [
@@ -8173,7 +8271,7 @@
 			"Editor View",
 			0,
 			10,
-			5,
+			6,
 			3,
 			true
 		],
@@ -8181,7 +8279,7 @@
 			"",
 			0,
 			1,
-			6,
+			7,
 			4,
 			true
 		],
@@ -8189,7 +8287,7 @@
 			"Video",
 			0,
 			175.98899999999998,
-			7,
+			8,
 			1,
 			true
 		],
@@ -8221,7 +8319,7 @@
 			"1.03 Lyrics",
 			15.96875,
 			26.667,
-			4,
+			5,
 			5,
 			true
 		],
@@ -8245,7 +8343,7 @@
 			"1.04 Lyrics",
 			21.332,
 			32,
-			5,
+			6,
 			6,
 			true
 		],
@@ -8253,7 +8351,7 @@
 			"",
 			21.333,
 			22.333,
-			6,
+			7,
 			4,
 			true
 		],
@@ -8269,7 +8367,7 @@
 			"1.05 Lyrics",
 			26.666,
 			37.332,
-			4,
+			5,
 			7,
 			true
 		],
@@ -8285,7 +8383,7 @@
 			"1.06 Lyrics",
 			32,
 			42.668,
-			5,
+			6,
 			8,
 			true
 		],
@@ -8301,7 +8399,7 @@
 			"1.07 Lyrics",
 			37.332,
 			47.998000000000005,
-			4,
+			5,
 			9,
 			true
 		],
@@ -8325,7 +8423,7 @@
 			"",
 			42.667,
 			43.667,
-			6,
+			7,
 			4,
 			true
 		],
@@ -8333,7 +8431,7 @@
 			"1.08 Lyrics",
 			42.668,
 			53.336,
-			5,
+			6,
 			9,
 			true
 		],
@@ -8357,7 +8455,7 @@
 			"2.01 Lyrics",
 			48,
 			58.666,
-			4,
+			5,
 			10,
 			true
 		],
@@ -8381,7 +8479,7 @@
 			"2.02 Lyrics",
 			53.336,
 			64.00399999999999,
-			5,
+			6,
 			11,
 			true
 		],
@@ -8405,7 +8503,7 @@
 			"2.03 Lyrics",
 			58.666,
 			69.332,
-			4,
+			5,
 			12,
 			true
 		],
@@ -8429,7 +8527,7 @@
 			"2.04A Lyrics",
 			64.00399999999999,
 			74.666,
-			5,
+			6,
 			13,
 			true
 		],
@@ -8453,7 +8551,7 @@
 			"2.04B Lyrics",
 			69.3320000000001,
 			79.99800000000008,
-			4,
+			5,
 			14,
 			true
 		],
@@ -8493,7 +8591,7 @@
 			"3.01 Lyrics",
 			74.666,
 			85.328,
-			5,
+			6,
 			15,
 			true
 		],
@@ -8501,8 +8599,16 @@
 			"",
 			74.667,
 			75.67,
-			6,
+			7,
 			4,
+			true
+		],
+		[
+			"Melody",
+			77.25,
+			82.583,
+			4,
+			34,
 			true
 		],
 		[
@@ -8541,7 +8647,7 @@
 			"3.02 Lyrics",
 			79.99800000000008,
 			90.66400000000006,
-			4,
+			5,
 			16,
 			true
 		],
@@ -8559,6 +8665,14 @@
 			83,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			82.583,
+			87.916,
+			4,
+			34,
 			true
 		],
 		[
@@ -8597,8 +8711,16 @@
 			"3.03 Lyrics",
 			85.328,
 			95.99000000000001,
-			5,
+			6,
 			15,
+			true
+		],
+		[
+			"Melody",
+			87.916,
+			93.249,
+			4,
+			34,
 			true
 		],
 		[
@@ -8629,7 +8751,7 @@
 			"3.04 Lyrics",
 			90.66400000000006,
 			101.33000000000004,
-			4,
+			5,
 			17,
 			true
 		],
@@ -8639,6 +8761,14 @@
 			92.25,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			93.249,
+			98.582,
+			4,
+			34,
 			true
 		],
 		[
@@ -8661,7 +8791,7 @@
 			"3.05  Lyrics",
 			95.99000000000001,
 			106.65200000000002,
-			5,
+			6,
 			15,
 			true
 		],
@@ -8671,6 +8801,14 @@
 			101.32699999999997,
 			3,
 			31,
+			true
+		],
+		[
+			"Melody",
+			98.582,
+			103.91499999999999,
+			4,
+			34,
 			true
 		],
 		[
@@ -8701,7 +8839,7 @@
 			"4.01 Lyrics",
 			101.33000000000004,
 			111.99600000000002,
-			4,
+			5,
 			17,
 			true
 		],
@@ -8711,6 +8849,14 @@
 			103.25,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			103.91499999999999,
+			109.24799999999999,
+			4,
+			34,
 			true
 		],
 		[
@@ -8733,7 +8879,7 @@
 			"4.02  Lyrics",
 			106.65200000000002,
 			117.31400000000002,
-			5,
+			6,
 			18,
 			true
 		],
@@ -8754,10 +8900,18 @@
 			true
 		],
 		[
+			"Melody",
+			109.24799999999999,
+			114.58099999999999,
+			4,
+			34,
+			true
+		],
+		[
 			"",
 			109.333,
 			110.333,
-			6,
+			7,
 			4,
 			true
 		],
@@ -8797,7 +8951,7 @@
 			"4.03 Lyrics",
 			111.99600000000002,
 			122.662,
-			4,
+			5,
 			19,
 			true
 		],
@@ -8815,6 +8969,14 @@
 			115,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			114.58099999999999,
+			119.91399999999999,
+			4,
+			34,
 			true
 		],
 		[
@@ -8845,7 +9007,7 @@
 			"4.04  Lyrics",
 			117.31400000000002,
 			127.97600000000003,
-			5,
+			6,
 			20,
 			true
 		],
@@ -8855,6 +9017,14 @@
 			122.65899999999996,
 			3,
 			31,
+			true
+		],
+		[
+			"Melody",
+			119.91399999999999,
+			125.24699999999999,
+			4,
+			34,
 			true
 		],
 		[
@@ -8877,7 +9047,7 @@
 			"4.05 Lyrics",
 			122.662,
 			133.32799999999997,
-			4,
+			5,
 			21,
 			true
 		],
@@ -8895,6 +9065,14 @@
 			125.78483981965505,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			125.24699999999999,
+			130.57999999999998,
+			4,
+			34,
 			true
 		],
 		[
@@ -8925,7 +9103,7 @@
 			"5.01  Lyrics",
 			127.97600000000003,
 			138.63800000000003,
-			5,
+			6,
 			22,
 			true
 		],
@@ -8933,7 +9111,7 @@
 			"",
 			127.98,
 			128.98,
-			6,
+			7,
 			4,
 			true
 		],
@@ -8959,6 +9137,14 @@
 			131,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			130.57999999999998,
+			135.91299999999998,
+			4,
+			34,
 			true
 		],
 		[
@@ -8997,7 +9183,7 @@
 			"5.02 Lyrics",
 			133.32799999999997,
 			143.99399999999994,
-			4,
+			5,
 			23,
 			true
 		],
@@ -9015,6 +9201,14 @@
 			136.5,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			135.91299999999998,
+			141.24599999999998,
+			4,
+			34,
 			true
 		],
 		[
@@ -9045,7 +9239,7 @@
 			"5.03  Lyrics",
 			138.63800000000003,
 			149.30000000000004,
-			5,
+			6,
 			24,
 			true
 		],
@@ -9071,6 +9265,14 @@
 			141.75,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			141.24599999999998,
+			146.57899999999998,
+			4,
+			34,
 			true
 		],
 		[
@@ -9109,7 +9311,7 @@
 			"5.04A Lyrics",
 			143.99399999999994,
 			154.6599999999999,
-			4,
+			5,
 			25,
 			true
 		],
@@ -9119,6 +9321,14 @@
 			145.75,
 			2,
 			28,
+			true
+		],
+		[
+			"Melody",
+			146.57899999999998,
+			151.91199999999998,
+			4,
+			34,
 			true
 		],
 		[
@@ -9141,7 +9351,7 @@
 			"5.04B  Lyrics",
 			149.30000000000004,
 			159.96200000000005,
-			5,
+			6,
 			14,
 			true
 		],
@@ -9170,6 +9380,14 @@
 			true
 		],
 		[
+			"Melody",
+			151.91199999999998,
+			157.24499999999998,
+			4,
+			34,
+			true
+		],
+		[
 			"Oh",
 			152.25,
 			153.5,
@@ -9189,7 +9407,7 @@
 			"",
 			154.57,
 			155.57,
-			6,
+			7,
 			4,
 			true
 		],
@@ -9237,7 +9455,7 @@
 			"",
 			159.96,
 			162.14598453251023,
-			4,
+			5,
 			26,
 			true
 		],
