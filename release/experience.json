@@ -7810,7 +7810,7 @@
 			]
 		],
 		[
-			"Keyframe Scale",
+			"Keyframe Ring Scale",
 			[
 				"var params = resources.get( 'params' );",
 				"var manager = resources.get( 'audio-manager' );",
@@ -7825,16 +7825,6 @@
 				"",
 				"var keyframes = [",
 				"\t// Taken from Ableton Project",
-				"\t/*",
-				"\t0.339, 0.550, 0.658,",
-				"\t0.854, 1.020, 1.210, 1.132,",
-				"\t1.532, 1.675, 1.852, 2.014, // Stress",
-				"\t2.169, 2.328, 2.513, 2.660,",
-				"\t2.871, 3.010, 3.227, 3.331,",
-				"\t3.520, 3.658, 3.872, 3.995,",
-				"\t4.169, 4.335, 4.515, 4.681, // Stress",
-				"\t4.830, 5.024, 5.176",
-				"\t*/",
 				"\t0.000, 0.667, 1.333,",
 				"\t2.000, 2.333, 2.667,",
 				"\t3.332, 4.002, 4.665, 4.999",
@@ -7875,17 +7865,22 @@
 				"\t}",
 				"",
 				"\tvar spline = ring.userData.splines.scales;",
+				"\tvar points = spline.points;",
 				"\tvar threshold = restingScale + 0.001;",
 				"",
-				"\tfor ( var i = 0; i < spline.points.length; i++ ) {",
-				"\t\tvar v = spline.points[ i ];",
+				"\tfor ( var i = 0; i < points.length; i++ ) {",
+				"",
+				"\t\tvar v = points[ i ];",
 				"\t\tvar d = restingScale - v.y;",
+				"\t\tvar y;",
+				"",
 				"\t\tif ( d < 0 ) {",
-				"\t\t\tv.y += ( restingScale - v.y ) * drag;",
-				"\t\t\tring.userData.setScale( i, v.y );",
+				"\t\t\ty = ( restingScale - v.y ) * drag + v.y;",
+				"\t\t\tring.userData.setScale( i, y );",
 				"\t\t} else if ( d !== 0 ) {",
 				"\t\t\tring.userData.setScale( i, restingScale );",
 				"\t\t}",
+				"",
 				"\t}",
 				"",
 				"}",
@@ -7969,6 +7964,120 @@
 				"",
 				"}"
 			]
+		],
+		[
+			"Keyframe Ring Position",
+			[
+				"var params = resources.get( 'params' );",
+				"var manager = resources.get( 'audio-manager' );",
+				"var ring = resources.get( 'ring' );",
+				"",
+				"var index = 0;",
+				"var iteration = 0;",
+				"",
+				"var phi = 1;",
+				"var playbackRate = 1;",
+				"var drag = params.drag / 8;",
+				"var restingScale = 0.25;",
+				"",
+				"var keyframes = [",
+				"\t// Taken from Ableton Project",
+				"\t0.993, 1.816, 2.668,",
+				"\t3.668, 4.485, 5.333",
+				"];",
+				"",
+				"function start( progress ) {",
+				"\treset( progress );",
+				"}",
+				"",
+				"function end( progress ) {",
+				"}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ 'summation' ];",
+				"",
+				"\tif ( analysis.playbackRate !== playbackRate ) {",
+				"\t\treset( progress );",
+				"\t}",
+				"",
+				"\tvar unitDuration = manager.unitDuration;",
+				"\tvar maxIterations = Math.ceil( playbackRate );",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"\tvar currentIteration = Math.floor( currentTime / duration );",
+				"",
+				"\tvar keyframePct = keyframes[ index ] / unitDuration;",
+				"",
+				"\tvar spline = ring.userData.splines.positions;",
+				"\tvar points = spline.points;",
+				"\tvar startPct = ( keyframes[ index - 1 ] || 0 ) / unitDuration;",
+				"\tvar pct = ( currentPct - startPct ) / ( keyframePct - startPct );",
+				"\tvar amp = Math.sin( Math.PI * pct );",
+				"\tvar radius = 0.33 * TWEEN.Easing.Sinusoidal.InOut( amp );",
+				"",
+				"\tfor ( var i = 0; i < points.length; i++ ) {",
+				"",
+				"\t\tvar pct = i / points.length;",
+				"\t\tvar theta = phi * Math.PI * pct;",
+				"",
+				"\t\tvar v = points[ i ];",
+				"\t\tvar y = radius * Math.sin( theta );",
+				"",
+				"\t\tring.userData.setPositionY( i, y );",
+				"",
+				"\t}",
+				"",
+				"\tvar ca = currentIteration < maxIterations;",
+				"\tvar cb = currentIteration === iteration;",
+				"\tvar cc = currentPct > keyframePct;",
+				"",
+				"\tif ( ca && cb && cc ) {",
+				"\t\ttrigger( currentPct );",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function trigger( startPct ) {",
+				"",
+				"\tphi = Math.floor( Math.random() * 9 + 1 ) * 2;",
+				"",
+				"\tindex ++;",
+				"\tif ( index >= keyframes.length ) {",
+				"\t\tindex = 0;",
+				"\t\titeration ++;",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function reset( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ 'summation' ];",
+				"\tvar unitDuration = manager.unitDuration;",
+				"",
+				"\tplaybackRate = analysis.playbackRate;",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"",
+				"\titeration = Math.floor( currentTime / duration );",
+				"",
+				"\tfor ( var i = 0; i < keyframes.length; i++ ) {",
+				"\t\tindex = i;",
+				"\t\tif ( keyframes[ i ] / unitDuration > currentPct ) {",
+				"\t\t\tbreak;",
+				"\t\t}",
+				"\t}",
+				"",
+				"}"
+			]
 		]
 	],
 	"animations": [
@@ -8029,11 +8138,43 @@
 			true
 		],
 		[
+			"Summation",
+			5.333,
+			10.666,
+			3,
+			31,
+			true
+		],
+		[
+			"Summation",
+			10.666,
+			15.999,
+			3,
+			31,
+			true
+		],
+		[
 			"1.03 Lyrics",
 			15.96875,
-			26.63475,
+			26.667,
 			4,
 			5,
+			true
+		],
+		[
+			"Summation",
+			15.999,
+			21.332,
+			3,
+			31,
+			true
+		],
+		[
+			"Summation",
+			21.332,
+			26.665,
+			3,
+			31,
 			true
 		],
 		[
@@ -8053,6 +8194,14 @@
 			true
 		],
 		[
+			"Summation",
+			26.665,
+			31.997999999999998,
+			3,
+			31,
+			true
+		],
+		[
 			"1.05 Lyrics",
 			26.666,
 			37.332,
@@ -8061,11 +8210,27 @@
 			true
 		],
 		[
+			"Summation",
+			31.997999999999998,
+			37.330999999999996,
+			3,
+			31,
+			true
+		],
+		[
 			"1.06 Lyrics",
 			32,
 			42.668,
 			5,
 			8,
+			true
+		],
+		[
+			"Summation",
+			37.330999999999996,
+			42.663999999999994,
+			3,
+			31,
 			true
 		],
 		[
@@ -8082,6 +8247,14 @@
 			47.96999999999999,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			42.663999999999994,
+			47.99699999999999,
+			3,
+			31,
 			true
 		],
 		[
@@ -8109,6 +8282,14 @@
 			true
 		],
 		[
+			"Summation",
+			47.99699999999999,
+			53.32999999999999,
+			3,
+			31,
+			true
+		],
+		[
 			"2.01 Lyrics",
 			48,
 			58.666,
@@ -8122,6 +8303,14 @@
 			58.62999999999999,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			53.32999999999999,
+			58.66299999999999,
+			3,
+			31,
 			true
 		],
 		[
@@ -8141,6 +8330,14 @@
 			true
 		],
 		[
+			"Summation",
+			58.66299999999999,
+			63.99599999999999,
+			3,
+			31,
+			true
+		],
+		[
 			"2.03 Lyrics",
 			58.666,
 			69.332,
@@ -8157,6 +8354,14 @@
 			true
 		],
 		[
+			"Summation",
+			63.99599999999999,
+			69.32899999999998,
+			3,
+			31,
+			true
+		],
+		[
 			"2.04A Lyrics",
 			64.00399999999999,
 			74.666,
@@ -8170,6 +8375,14 @@
 			74.62,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			69.32899999999998,
+			74.66199999999998,
+			3,
+			31,
 			true
 		],
 		[
@@ -8202,6 +8415,14 @@
 			79.95000000000002,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			74.66199999999998,
+			79.99499999999998,
+			3,
+			31,
 			true
 		],
 		[
@@ -8242,6 +8463,14 @@
 			85.28000000000003,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			79.99499999999998,
+			85.32799999999997,
+			3,
+			31,
 			true
 		],
 		[
@@ -8293,6 +8522,14 @@
 			true
 		],
 		[
+			"Summation",
+			85.32799999999997,
+			90.66099999999997,
+			3,
+			31,
+			true
+		],
+		[
 			"3.03 Lyrics",
 			85.328,
 			95.99000000000001,
@@ -8314,6 +8551,14 @@
 			95.94000000000005,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			90.66099999999997,
+			95.99399999999997,
+			3,
+			31,
 			true
 		],
 		[
@@ -8357,6 +8602,14 @@
 			true
 		],
 		[
+			"Summation",
+			95.99399999999997,
+			101.32699999999997,
+			3,
+			31,
+			true
+		],
+		[
 			"Oh",
 			99,
 			100.25,
@@ -8370,6 +8623,14 @@
 			106.60000000000008,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			101.32699999999997,
+			106.65999999999997,
+			3,
+			31,
 			true
 		],
 		[
@@ -8413,6 +8674,14 @@
 			true
 		],
 		[
+			"Summation",
+			106.65999999999997,
+			111.99299999999997,
+			3,
+			31,
+			true
+		],
+		[
 			"Oh",
 			107,
 			108.25,
@@ -8450,6 +8719,14 @@
 			117.2600000000001,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			111.99299999999997,
+			117.32599999999996,
+			3,
+			31,
 			true
 		],
 		[
@@ -8509,11 +8786,27 @@
 			true
 		],
 		[
+			"Summation",
+			117.32599999999996,
+			122.65899999999996,
+			3,
+			31,
+			true
+		],
+		[
 			"Machine Drum",
 			122.59000000000012,
 			127.92000000000013,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			122.65899999999996,
+			127.99199999999996,
+			3,
+			31,
 			true
 		],
 		[
@@ -8581,6 +8874,14 @@
 			true
 		],
 		[
+			"Summation",
+			127.99199999999996,
+			133.32499999999996,
+			3,
+			31,
+			true
+		],
+		[
 			"Oh",
 			128.5,
 			129.75,
@@ -8618,6 +8919,14 @@
 			138.58000000000015,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			133.32499999999996,
+			138.65799999999996,
+			3,
+			31,
 			true
 		],
 		[
@@ -8677,6 +8986,14 @@
 			true
 		],
 		[
+			"Summation",
+			138.65799999999996,
+			143.99099999999996,
+			3,
+			31,
+			true
+		],
+		[
 			"Oh",
 			139.25,
 			140.5,
@@ -8714,6 +9031,14 @@
 			149.24000000000018,
 			1,
 			29,
+			true
+		],
+		[
+			"Summation",
+			143.99099999999996,
+			149.32399999999996,
+			3,
+			31,
 			true
 		],
 		[
@@ -8757,6 +9082,14 @@
 			true
 		],
 		[
+			"Summation",
+			149.32399999999996,
+			154.65699999999995,
+			3,
+			31,
+			true
+		],
+		[
 			"Oh",
 			149.5,
 			150.75,
@@ -8797,6 +9130,14 @@
 			true
 		],
 		[
+			"Summation",
+			154.65699999999995,
+			159.98999999999995,
+			3,
+			31,
+			true
+		],
+		[
 			"Oh",
 			155,
 			156.25,
@@ -8834,6 +9175,30 @@
 			162.14598453251023,
 			4,
 			26,
+			true
+		],
+		[
+			"Summation",
+			159.98999999999995,
+			165.32299999999995,
+			3,
+			31,
+			true
+		],
+		[
+			"Summation",
+			165.32299999999995,
+			170.65599999999995,
+			3,
+			31,
+			true
+		],
+		[
+			"Summation",
+			170.65599999999995,
+			175.98899999999995,
+			3,
+			31,
 			true
 		]
 	]
