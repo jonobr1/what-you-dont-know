@@ -45,10 +45,10 @@ Below are more details for each of the pages and how to use them.
   - [ ] Experiment with Field Movement
   - [ ] Experiment with Turbulence
 - [ ] Choreograph Ring
-  - [ ] Experiment with Changing x / z Rotation
-  - [ ] Experiment with x / z Position
-  - [ ] Choreograph Alpha Map Texture Repeat on "Oh" Vocals
-  - [ ] Opacity Inversely Tied to SFX - Alpha Map Intensity
+  - [ ] ~~Experiment with Changing x / z Rotation~~
+  - [ ] ~~Experiment with x / z Position~~
+  - [x] Choreograph Alpha Map Texture Repeat on "Oh" Vocals
+  - [x] Opacity Inversely Tied to SFX - Alpha Map Intensity
   - [ ] ~~Y Position Oscillation Tied to Instrumental~~
 - [ ] Choreograph Backdrop
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
