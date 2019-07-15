@@ -14,6 +14,10 @@
 			[
 				"resources.set( 'params', {",
 				"",
+				"\tring: {",
+				"\t\toffset: 0,",
+				"\t\tamplitude: 0",
+				"\t},",
 				"\tpalette: [",
 				"\t\t{",
 				"\t\t\tname: 'blue',",
@@ -8020,14 +8024,19 @@
 				"\tvar points = spline.points;",
 				"\tvar startPct = ( keyframes[ index - 1 ] || 0 ) / unitDuration;",
 				"\tvar pct = ( currentPct - startPct ) / ( keyframePct - startPct );",
+				"",
+				"\tif ( pct > 1 ) {",
+				"\t\tpct = 1;",
+				"\t}",
+				"",
 				"\tvar amp = Math.sin( Math.PI * pct );",
-				"\tvar radius = 0.33 * TWEEN.Easing.Sinusoidal.InOut( amp );",
+				"\tvar radius = params.ring.amplitude * TWEEN.Easing.Circular.Out( amp );",
 				"",
 				"\tfor ( var i = 0; i < points.length; i++ ) {",
 				"",
 				"\t\tvar v = points[ i ];",
 				"\t\tvar theta = phi * v.theta;",
-				"\t\tvar y = radius * Math.sin( theta );",
+				"\t\tvar y = radius * Math.sin( theta + params.ring.offset );",
 				"",
 				"\t\tring.userData.setPositionY( i, y );",
 				"",
@@ -8035,7 +8044,7 @@
 				"",
 				"\tvar ca = currentIteration < maxIterations;",
 				"\tvar cb = currentIteration === iteration;",
-				"\tvar cc = currentPct > keyframePct;",
+				"\tvar cc = currentPct >= keyframePct;",
 				"",
 				"\tif ( ca && cb && cc ) {",
 				"\t\ttrigger( currentPct );",
@@ -8045,7 +8054,15 @@
 				"",
 				"function trigger( startPct ) {",
 				"",
-				"\tphi = Math.floor( Math.random() * 9 + 1 ) * 2;",
+				"\tphi = Math.floor( Math.random() * 9 + 2 ) * 2;",
+				"",
+				"\tif ( phi === 12 ) {",
+				"\t\tphi = 14;",
+				"\t}",
+				"",
+				"\tif ( Math.random() > 0.5 ) {",
+				"\t\tphi *= - 1;",
+				"\t}",
 				"",
 				"\tindex ++;",
 				"\tif ( index >= keyframes.length ) {",
@@ -8077,6 +8094,44 @@
 				"\t\t}",
 				"\t}",
 				"",
+				"}"
+			]
+		],
+		[
+			"Ramp Up Ring Amplitude",
+			[
+				"var params = resources.get( 'params' );",
+				"var source = 0;",
+				"var target = 0.33;",
+				"",
+				"function start( progress ) {",
+				"\tsource = params.ring.amplitude;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"\tvar t = progress * progress;",
+				"\tparams.ring.amplitude = t * ( target - source ) + source;",
+				"}"
+			]
+		],
+		[
+			"Ramp Down Ring Amplitude",
+			[
+				"var params = resources.get( 'params' );",
+				"var source = 0.33;",
+				"var target = 0;",
+				"",
+				"function start( progress ) {",
+				"\tsource = params.ring.amplitude;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"\tvar t = progress * progress;",
+				"\tparams.ring.amplitude = t * ( target - source ) + source;",
 				"}"
 			]
 		]
@@ -8136,6 +8191,14 @@
 			175.98899999999998,
 			7,
 			1,
+			true
+		],
+		[
+			"",
+			5.333,
+			21.333,
+			2,
+			32,
 			true
 		],
 		[
@@ -9192,6 +9255,14 @@
 			170.65599999999995,
 			3,
 			31,
+			true
+		],
+		[
+			"",
+			165.333,
+			175.999,
+			2,
+			33,
 			true
 		],
 		[
