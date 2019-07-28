@@ -1119,7 +1119,7 @@
 				"\twireframe: false,",
 				"\ttransparent: true,",
 				"\t// depthTest: false,",
-				"\tdepthWrite: false,",
+				"\t// depthWrite: false,",
 				"\tside: THREE.DoubleSide",
 				"} );",
 				"",
@@ -1234,6 +1234,7 @@
 				"",
 				"\t\tmesh.material.uniforms.image.value = texture;",
 				"\t\tmesh.userData.scale = result.scale;",
+				"\t\tmesh.renderOrder = 450;",
 				"",
 				"\t\treturn mesh;",
 				"",
@@ -3274,10 +3275,10 @@
 				"",
 				"\t\tmesh = Text.create( word, styles );",
 				"\t\tmesh.material.uniforms.flipped.value = j > 0;",
-				"\t\tmesh.renderOrder = 110;",
+				"\t\tmesh.material.depthWrite = false;",
 				"",
 				"\t\tmesh.position.x = r * x;",
-				"\t\tmesh.position.y = y;",
+				"\t\tmesh.position.y = y + ( ( i % 2 ) ? - 0.001 : 0.001 );",
 				"\t\tmesh.position.z = r * z;",
 				"\t\tmesh.rotation.y = - theta - HALF_PI;",
 				"",
@@ -3880,6 +3881,9 @@
 				"",
 				"group.userData.update = update;",
 				"group.userData.setTexture = setTexture;",
+				"group.userData.getFrequency = getFrequency;",
+				"group.userData.setFrequency = setFrequency;",
+				"group.userData.material = material;",
 				"",
 				"top.position.y = 2.25;",
 				"top.rotation.x = Math.random() * Math.PI * 2;",
@@ -3887,6 +3891,10 @@
 				"top.rotation.z = Math.random() * Math.PI * 2;",
 				"",
 				"group.add( top );",
+				"",
+				"group.userData.top = top;",
+				"",
+				"//",
 				"",
 				"/*",
 				"var bot = new THREE.Mesh( geometry, material );",
@@ -3897,7 +3905,11 @@
 				"bot.rotation.z = Math.random() * Math.PI * 2;",
 				"",
 				"group.add( bot );",
+				"",
+				"group.userData.bottom = bot;",
 				"*/",
+				"",
+				"//",
 				"",
 				"scene.add( group );",
 				"",
@@ -3911,6 +3923,19 @@
 				"function setTexture( texture ) {",
 				"",
 				"\tmaterial.uniforms.image.value = texture;",
+				"\treturn group;",
+				"",
+				"}",
+				"",
+				"function getFrequency() {",
+				"",
+				"\treturn material.uniforms.frequency.value;",
+				"",
+				"}",
+				"",
+				"function setFrequency( v ) {",
+				"",
+				"\tmaterial.uniforms.frequency.value = v;",
 				"\treturn group;",
 				"",
 				"}",
@@ -7828,12 +7853,15 @@
 				"var playbackRate = 1;",
 				"var drag = params.drag / 8;",
 				"var restingScale = 0.25;",
+				"var track = 'machine-drum';",
 				"",
 				"var keyframes = [",
 				"\t// Taken from Ableton Project",
-				"\t0.000, 0.667, 1.333,",
-				"\t2.000, 2.333, 2.667,",
-				"\t3.332, 4.002, 4.665, 4.999",
+				"\t// Machine Drum \"Up\" Beat",
+				"\t0.000, 0.333,",
+				"\t2.024, 2.172, 2.329,",
+				"\t2.681, 3.011,",
+				"\t4.680, 4.831, 5.006, 5.180, 5.332",
 				"];",
 				"function start( progress ) {",
 				"\treset( progress );",
@@ -7844,7 +7872,7 @@
 				"",
 				"function update( progress ) {",
 				"",
-				"\tvar analysis = manager.filters[ 'machine-drum' ];",
+				"\tvar analysis = manager.filters[ track ];",
 				"",
 				"\tif ( analysis.playbackRate !== playbackRate ) {",
 				"\t\treset( progress );",
@@ -7912,7 +7940,7 @@
 				"",
 				"function reset( progress ) {",
 				"",
-				"\tvar analysis = manager.filters[ 'machine-drum' ];",
+				"\tvar analysis = manager.filters[ track ];",
 				"\tvar unitDuration = manager.unitDuration;",
 				"",
 				"\tplaybackRate = analysis.playbackRate;",
@@ -7986,11 +8014,15 @@
 				"var playbackRate = 1;",
 				"var drag = params.drag / 8;",
 				"var restingScale = 0.25;",
+				"var track = 'machine-drum';",
 				"",
 				"var keyframes = [",
 				"\t// Taken from Ableton Project",
-				"\t0.993, 1.816, 2.668,",
-				"\t3.668, 4.485, 5.333",
+				"\t// Machine Drum Down Beat",
+				"\t0.000, 0.667, 1.335,",
+				"\t2.000, 2.331, 2.667,",
+				"\t3.332, 4.002, 4.665,",
+				"\t4.999, 5.333",
 				"];",
 				"",
 				"function start( progress ) {",
@@ -8002,7 +8034,7 @@
 				"",
 				"function update( progress ) {",
 				"",
-				"\tvar analysis = manager.filters[ 'summation' ];",
+				"\tvar analysis = manager.filters[ track ];",
 				"",
 				"\tif ( analysis.playbackRate !== playbackRate ) {",
 				"\t\treset( progress );",
@@ -8030,6 +8062,7 @@
 				"\t}",
 				"",
 				"\tvar amp = Math.sin( Math.PI * pct );",
+				"",
 				"\tvar radius = params.ring.amplitude * TWEEN.Easing.Circular.Out( amp );",
 				"",
 				"\tfor ( var i = 0; i < points.length; i++ ) {",
@@ -8057,7 +8090,7 @@
 				"\tphi = Math.floor( Math.random() * 9 + 2 ) * 2;",
 				"",
 				"\tif ( phi === 12 ) {",
-				"\t\tphi = 14;",
+				"\t\tphi = 0;",
 				"\t}",
 				"",
 				"\tif ( Math.random() > 0.5 ) {",
@@ -8074,7 +8107,7 @@
 				"",
 				"function reset( progress ) {",
 				"",
-				"\tvar analysis = manager.filters[ 'summation' ];",
+				"\tvar analysis = manager.filters[ track ];",
 				"\tvar unitDuration = manager.unitDuration;",
 				"",
 				"\tplaybackRate = analysis.playbackRate;",
@@ -8232,6 +8265,197 @@
 				"",
 				"}"
 			]
+		],
+		[
+			"Swing Down Ring Amplitude",
+			[
+				"var params = resources.get( 'params' );",
+				"var source;",
+				"var target;",
+				"",
+				"function start( progress ) {",
+				"\tsource = 0.33;",
+				"\ttarget = 0.05;",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"\tvar t = Math.sin( Math.PI * progress );",
+				"\tparams.ring.amplitude = t * ( target - source ) + source;",
+				"}"
+			]
+		],
+		[
+			"Ramp Down Ring Scale",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var sources = [];",
+				"var targets = [];",
+				"",
+				"function start( progress ) {",
+				"",
+				"\tvar spline = ring.userData.splines.scales;",
+				"\tvar points = spline.points;",
+				"",
+				"\tfor ( var i = 0 ; i < points.length; i++ ) {",
+				"\t\tsources[ i ] = points[ i ].y;",
+				"\t\ttargets[ i ] = 0.08;",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar t = TWEEN.Easing.Circular.Out( progress );",
+				"\tvar spline = ring.userData.splines.scales;",
+				"\tvar points = spline.points;",
+				"",
+				"\tfor ( var i = 0 ; i < points.length; i++ ) {",
+				"\t\tvar source = sources[ i ];",
+				"\t\tvar target = targets[ i ];",
+				"\t\tvar y = t * ( target - source ) + source;",
+				"\t\tring.userData.setScale( i, y );",
+				"\t}",
+				"",
+				"}"
+			]
+		],
+		[
+			"Keyframe Polar Sphere Frequency",
+			[
+				"var params = resources.get( 'params' );",
+				"var manager = resources.get( 'audio-manager' );",
+				"var polarSpheres = resources.get( 'polar-spheres' );",
+				"var TWO_PI = Math.PI * 2;",
+				"",
+				"var index = 0;",
+				"var iteration = 0;",
+				"",
+				"var frequency = 1;",
+				"var rotationTop = new THREE.Vector3();",
+				"var rotationBot = new THREE.Vector3();",
+				"",
+				"var playbackRate = 1;",
+				"var drag = params.drag / 8;",
+				"var track = 'summation';",
+				"",
+				"var keyframes = [",
+				"\t// Taken from Ableton Project",
+				"\t// Summation",
+				"\t0.993, 1.816, 2.668,",
+				"\t3.668, 4.485, 5.333",
+				"];",
+				"",
+				"function start( progress ) {",
+				"\treset( progress );",
+				"}",
+				"",
+				"function end( progress ) {",
+				"}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ track ];",
+				"",
+				"\tif ( analysis.playbackRate !== playbackRate ) {",
+				"\t\treset( progress );",
+				"\t}",
+				"",
+				"\tvar unitDuration = manager.unitDuration;",
+				"\tvar maxIterations = Math.ceil( playbackRate );",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"\tvar currentIteration = Math.floor( currentTime / duration );",
+				"",
+				"\tvar keyframePct = keyframes[ index ] / unitDuration;",
+				"\tvar startPct = ( keyframes[ index - 1 ] || 0 ) / unitDuration;",
+				"\tvar pct = ( currentPct - startPct ) / ( keyframePct - startPct );",
+				"",
+				"\tif ( pct > 1 ) {",
+				"\t\tpct = 1;",
+				"\t}",
+				"",
+				"\tvar material = polarSpheres.userData.material;",
+				"\tvar f = material.uniforms.frequency;",
+				"\tf.value += ( frequency - f.value ) * drag;",
+				"",
+				"\tvar mesh = polarSpheres.userData.top;",
+				"\tmesh.rotation.x += ( rotationTop.x - mesh.rotation.x ) * drag;",
+				"\tmesh.rotation.y += ( rotationTop.y - mesh.rotation.y ) * drag;",
+				"\tmesh.rotation.z += ( rotationTop.z - mesh.rotation.z ) * drag;",
+				"",
+				"\tif ( polarSpheres.userData.bottom ) {",
+				"\t\tmesh = polarSpheres.userData.bottom;",
+				"\t\tmesh.rotation.x += ( rotationTop.x - mesh.rotation.x ) * drag;",
+				"\t\tmesh.rotation.y += ( rotationTop.y - mesh.rotation.y ) * drag;",
+				"\t\tmesh.rotation.z += ( rotationTop.z - mesh.rotation.z ) * drag;",
+				"\t}",
+				"",
+				"\tvar ca = currentIteration < maxIterations;",
+				"\tvar cb = currentIteration === iteration;",
+				"\tvar cc = currentPct >= keyframePct;",
+				"",
+				"\tif ( ca && cb && cc ) {",
+				"\t\ttrigger( currentPct );",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function trigger( startPct ) {",
+				"",
+				"\tfrequency = Math.random() * Math.PI;",
+				"",
+				"\trotationTop.x = Math.random() * TWO_PI;",
+				"\trotationTop.y = Math.random() * TWO_PI;",
+				"\trotationTop.z = Math.random() * TWO_PI;",
+				"",
+				"\trotationBot.x = Math.random() * TWO_PI;",
+				"\trotationBot.y = Math.random() * TWO_PI;",
+				"\trotationBot.z = Math.random() * TWO_PI;",
+				"",
+				"\tif ( Math.random() > 0.5 ) {",
+				"\t\tfrequency *= - 1;",
+				"\t}",
+				"",
+				"\tindex ++;",
+				"\tif ( index >= keyframes.length ) {",
+				"\t\tindex = 0;",
+				"\t\titeration ++;",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function reset( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ track ];",
+				"\tvar unitDuration = manager.unitDuration;",
+				"",
+				"\tplaybackRate = analysis.playbackRate;",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"",
+				"\titeration = Math.floor( currentTime / duration );",
+				"",
+				"\tfor ( var i = 0; i < keyframes.length; i++ ) {",
+				"\t\tindex = i;",
+				"\t\tif ( keyframes[ i ] / unitDuration > currentPct ) {",
+				"\t\t\tbreak;",
+				"\t\t}",
+				"\t}",
+				"",
+				"}"
+			]
 		]
 	],
 	"animations": [
@@ -8263,31 +8487,31 @@
 			"Backdrop Reveal",
 			0,
 			5,
-			4,
+			7,
 			2,
-			true
-		],
-		[
-			"Editor View",
-			0,
-			10,
-			6,
-			3,
 			true
 		],
 		[
 			"",
 			0,
 			1,
-			7,
+			8,
 			4,
+			true
+		],
+		[
+			"Editor View",
+			0,
+			10,
+			9,
+			3,
 			true
 		],
 		[
 			"Video",
 			0,
 			175.98899999999998,
-			8,
+			10,
 			1,
 			true
 		],
@@ -8300,7 +8524,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			5.333,
 			10.666,
 			3,
@@ -8309,6 +8533,14 @@
 		],
 		[
 			"Summation",
+			5.333,
+			10.667,
+			5,
+			37,
+			true
+		],
+		[
+			"Machine Drum",
 			10.666,
 			15.999,
 			3,
@@ -8316,15 +8548,23 @@
 			true
 		],
 		[
+			"Summation",
+			10.667,
+			16.000999999999998,
+			5,
+			37,
+			true
+		],
+		[
 			"1.03 Lyrics",
 			15.96875,
 			26.667,
-			5,
+			6,
 			5,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			15.999,
 			21.332,
 			3,
@@ -8333,6 +8573,14 @@
 		],
 		[
 			"Summation",
+			16.000999999999998,
+			21.334999999999994,
+			5,
+			37,
+			true
+		],
+		[
+			"Machine Drum",
 			21.332,
 			26.665,
 			3,
@@ -8343,7 +8591,7 @@
 			"1.04 Lyrics",
 			21.332,
 			32,
-			6,
+			7,
 			6,
 			true
 		],
@@ -8351,12 +8599,20 @@
 			"",
 			21.333,
 			22.333,
-			7,
+			8,
 			4,
 			true
 		],
 		[
 			"Summation",
+			21.334999999999994,
+			26.66899999999999,
+			5,
+			37,
+			true
+		],
+		[
+			"Machine Drum",
 			26.665,
 			31.997999999999998,
 			3,
@@ -8367,12 +8623,20 @@
 			"1.05 Lyrics",
 			26.666,
 			37.332,
-			5,
+			6,
 			7,
 			true
 		],
 		[
 			"Summation",
+			26.66899999999999,
+			32.002999999999986,
+			5,
+			37,
+			true
+		],
+		[
+			"Machine Drum",
 			31.997999999999998,
 			37.330999999999996,
 			3,
@@ -8383,12 +8647,20 @@
 			"1.06 Lyrics",
 			32,
 			42.668,
-			6,
+			7,
 			8,
 			true
 		],
 		[
 			"Summation",
+			32.002999999999986,
+			37.33699999999998,
+			5,
+			37,
+			true
+		],
+		[
+			"Machine Drum",
 			37.330999999999996,
 			42.663999999999994,
 			3,
@@ -8399,20 +8671,28 @@
 			"1.07 Lyrics",
 			37.332,
 			47.998000000000005,
-			5,
+			6,
 			9,
 			true
 		],
 		[
+			"Summation",
+			37.33699999999998,
+			42.67099999999998,
+			5,
+			37,
+			true
+		],
+		[
 			"Machine Drum",
-			42.63999999999999,
-			47.96999999999999,
+			42.574725879770355,
+			47.90472587977035,
 			1,
 			29,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			42.663999999999994,
 			47.99699999999999,
 			3,
@@ -8423,7 +8703,7 @@
 			"",
 			42.667,
 			43.667,
-			7,
+			8,
 			4,
 			true
 		],
@@ -8431,20 +8711,28 @@
 			"1.08 Lyrics",
 			42.668,
 			53.336,
-			6,
+			7,
 			9,
 			true
 		],
 		[
-			"Machine Drum",
-			47.96999999999999,
-			53.29999999999999,
-			1,
-			29,
+			"Summation",
+			42.67099999999998,
+			48.004999999999974,
+			5,
+			37,
 			true
 		],
 		[
-			"Summation",
+			"",
+			47.9,
+			74.62,
+			1,
+			36,
+			true
+		],
+		[
+			"Machine Drum",
 			47.99699999999999,
 			53.32999999999999,
 			3,
@@ -8455,20 +8743,20 @@
 			"2.01 Lyrics",
 			48,
 			58.666,
-			5,
+			6,
 			10,
 			true
 		],
 		[
-			"Machine Drum",
-			53.29999999999999,
-			58.62999999999999,
-			1,
-			29,
+			"Summation",
+			48.004999999999974,
+			53.33899999999997,
+			5,
+			37,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			53.32999999999999,
 			58.66299999999999,
 			3,
@@ -8479,20 +8767,20 @@
 			"2.02 Lyrics",
 			53.336,
 			64.00399999999999,
-			6,
+			7,
 			11,
 			true
 		],
 		[
-			"Machine Drum",
-			58.62999999999999,
-			63.95999999999999,
-			1,
-			29,
+			"Summation",
+			53.33899999999997,
+			58.672999999999966,
+			5,
+			37,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			58.66299999999999,
 			63.99599999999999,
 			3,
@@ -8503,20 +8791,20 @@
 			"2.03 Lyrics",
 			58.666,
 			69.332,
-			5,
+			6,
 			12,
 			true
 		],
 		[
-			"Machine Drum",
-			63.95999999999999,
-			69.28999999999999,
-			1,
-			29,
+			"Summation",
+			58.672999999999966,
+			64.00699999999996,
+			5,
+			37,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			63.99599999999999,
 			69.32899999999998,
 			3,
@@ -8527,20 +8815,20 @@
 			"2.04A Lyrics",
 			64.00399999999999,
 			74.666,
-			6,
+			7,
 			13,
 			true
 		],
 		[
-			"Machine Drum",
-			69.28999999999999,
-			74.62,
-			1,
-			29,
+			"Summation",
+			64.00699999999996,
+			69.34099999999995,
+			5,
+			37,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			69.32899999999998,
 			74.66199999999998,
 			3,
@@ -8551,8 +8839,16 @@
 			"2.04B Lyrics",
 			69.3320000000001,
 			79.99800000000008,
-			5,
+			6,
 			14,
+			true
+		],
+		[
+			"Summation",
+			69.34099999999995,
+			74.67499999999994,
+			5,
+			37,
 			true
 		],
 		[
@@ -8580,7 +8876,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			74.66199999999998,
 			79.99499999999998,
 			3,
@@ -8591,7 +8887,7 @@
 			"3.01 Lyrics",
 			74.666,
 			85.328,
-			6,
+			7,
 			15,
 			true
 		],
@@ -8599,8 +8895,16 @@
 			"",
 			74.667,
 			75.67,
-			7,
+			8,
 			4,
+			true
+		],
+		[
+			"Summation",
+			74.67499999999994,
+			80.00899999999993,
+			5,
+			37,
 			true
 		],
 		[
@@ -8636,7 +8940,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			79.99499999999998,
 			85.32799999999997,
 			3,
@@ -8647,8 +8951,16 @@
 			"3.02 Lyrics",
 			79.99800000000008,
 			90.66400000000006,
-			5,
+			6,
 			16,
+			true
+		],
+		[
+			"Summation",
+			80.00899999999993,
+			85.34299999999992,
+			5,
+			37,
 			true
 		],
 		[
@@ -8692,6 +9004,14 @@
 			true
 		],
 		[
+			"",
+			85.28,
+			127.99,
+			9,
+			35,
+			true
+		],
+		[
 			"Machine Drum",
 			85.28000000000003,
 			90.61000000000004,
@@ -8700,7 +9020,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			85.32799999999997,
 			90.66099999999997,
 			3,
@@ -8711,8 +9031,16 @@
 			"3.03 Lyrics",
 			85.328,
 			95.99000000000001,
-			6,
+			7,
 			15,
+			true
+		],
+		[
+			"Summation",
+			85.34299999999992,
+			90.67699999999991,
+			5,
+			37,
 			true
 		],
 		[
@@ -8740,7 +9068,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			90.66099999999997,
 			95.99399999999997,
 			3,
@@ -8751,8 +9079,16 @@
 			"3.04 Lyrics",
 			90.66400000000006,
 			101.33000000000004,
-			5,
+			6,
 			17,
+			true
+		],
+		[
+			"Summation",
+			90.67699999999991,
+			96.0109999999999,
+			5,
+			37,
 			true
 		],
 		[
@@ -8791,16 +9127,24 @@
 			"3.05  Lyrics",
 			95.99000000000001,
 			106.65200000000002,
-			6,
+			7,
 			15,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			95.99399999999997,
 			101.32699999999997,
 			3,
 			31,
+			true
+		],
+		[
+			"Summation",
+			96.0109999999999,
+			101.34499999999989,
+			5,
+			37,
 			true
 		],
 		[
@@ -8828,7 +9172,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			101.32699999999997,
 			106.65999999999997,
 			3,
@@ -8839,8 +9183,16 @@
 			"4.01 Lyrics",
 			101.33000000000004,
 			111.99600000000002,
-			5,
+			6,
 			17,
+			true
+		],
+		[
+			"Summation",
+			101.34499999999989,
+			106.67899999999987,
+			5,
+			37,
 			true
 		],
 		[
@@ -8879,16 +9231,24 @@
 			"4.02  Lyrics",
 			106.65200000000002,
 			117.31400000000002,
-			6,
+			7,
 			18,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			106.65999999999997,
 			111.99299999999997,
 			3,
 			31,
+			true
+		],
+		[
+			"Summation",
+			106.67899999999987,
+			112.01299999999986,
+			5,
+			37,
 			true
 		],
 		[
@@ -8911,7 +9271,7 @@
 			"",
 			109.333,
 			110.333,
-			7,
+			8,
 			4,
 			true
 		],
@@ -8940,7 +9300,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			111.99299999999997,
 			117.32599999999996,
 			3,
@@ -8951,8 +9311,16 @@
 			"4.03 Lyrics",
 			111.99600000000002,
 			122.662,
-			5,
+			6,
 			19,
+			true
+		],
+		[
+			"Summation",
+			112.01299999999986,
+			117.34699999999985,
+			5,
+			37,
 			true
 		],
 		[
@@ -9007,16 +9375,24 @@
 			"4.04  Lyrics",
 			117.31400000000002,
 			127.97600000000003,
-			6,
+			7,
 			20,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			117.32599999999996,
 			122.65899999999996,
 			3,
 			31,
+			true
+		],
+		[
+			"Summation",
+			117.34699999999985,
+			122.68099999999984,
+			5,
+			37,
 			true
 		],
 		[
@@ -9036,7 +9412,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			122.65899999999996,
 			127.99199999999996,
 			3,
@@ -9047,8 +9423,16 @@
 			"4.05 Lyrics",
 			122.662,
 			133.32799999999997,
-			5,
+			6,
 			21,
+			true
+		],
+		[
+			"Summation",
+			122.68099999999984,
+			128.01499999999982,
+			5,
+			37,
 			true
 		],
 		[
@@ -9103,7 +9487,7 @@
 			"5.01  Lyrics",
 			127.97600000000003,
 			138.63800000000003,
-			6,
+			7,
 			22,
 			true
 		],
@@ -9111,16 +9495,24 @@
 			"",
 			127.98,
 			128.98,
-			7,
+			8,
 			4,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			127.99199999999996,
 			133.32499999999996,
 			3,
 			31,
+			true
+		],
+		[
+			"Summation",
+			128.01499999999982,
+			133.3489999999998,
+			5,
+			37,
 			true
 		],
 		[
@@ -9172,7 +9564,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			133.32499999999996,
 			138.65799999999996,
 			3,
@@ -9183,8 +9575,16 @@
 			"5.02 Lyrics",
 			133.32799999999997,
 			143.99399999999994,
-			5,
+			6,
 			23,
+			true
+		],
+		[
+			"Summation",
+			133.3489999999998,
+			138.68299999999977,
+			5,
+			37,
 			true
 		],
 		[
@@ -9239,16 +9639,24 @@
 			"5.03  Lyrics",
 			138.63800000000003,
 			149.30000000000004,
-			6,
+			7,
 			24,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			138.65799999999996,
 			143.99099999999996,
 			3,
 			31,
+			true
+		],
+		[
+			"Summation",
+			138.68299999999977,
+			144.01699999999974,
+			5,
+			37,
 			true
 		],
 		[
@@ -9300,7 +9708,7 @@
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			143.99099999999996,
 			149.32399999999996,
 			3,
@@ -9311,8 +9719,16 @@
 			"5.04A Lyrics",
 			143.99399999999994,
 			154.6599999999999,
-			5,
+			6,
 			25,
+			true
+		],
+		[
+			"Summation",
+			144.01699999999974,
+			149.35099999999971,
+			5,
+			37,
 			true
 		],
 		[
@@ -9351,16 +9767,24 @@
 			"5.04B  Lyrics",
 			149.30000000000004,
 			159.96200000000005,
-			6,
+			7,
 			14,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			149.32399999999996,
 			154.65699999999995,
 			3,
 			31,
+			true
+		],
+		[
+			"Summation",
+			149.35099999999971,
+			154.6849999999997,
+			5,
+			37,
 			true
 		],
 		[
@@ -9407,16 +9831,32 @@
 			"",
 			154.57,
 			155.57,
-			7,
+			8,
 			4,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
+			154.5700000000002,
+			159.9000000000002,
+			1,
+			29,
+			true
+		],
+		[
+			"Machine Drum",
 			154.65699999999995,
 			159.98999999999995,
 			3,
 			31,
+			true
+		],
+		[
+			"Summation",
+			154.6849999999997,
+			160.01899999999966,
+			5,
+			37,
 			true
 		],
 		[
@@ -9452,15 +9892,23 @@
 			true
 		],
 		[
+			"Machine Drum",
+			159.9000000000002,
+			165.23000000000022,
+			1,
+			29,
+			true
+		],
+		[
 			"",
 			159.96,
 			162.14598453251023,
-			5,
+			6,
 			26,
 			true
 		],
 		[
-			"Summation",
+			"Machine Drum",
 			159.98999999999995,
 			165.32299999999995,
 			3,
@@ -9469,10 +9917,10 @@
 		],
 		[
 			"Summation",
-			165.32299999999995,
-			170.65599999999995,
-			3,
-			31,
+			160.01899999999966,
+			165.35299999999964,
+			5,
+			37,
 			true
 		],
 		[
@@ -9485,10 +9933,18 @@
 		],
 		[
 			"Summation",
-			170.65599999999995,
-			175.98899999999995,
-			3,
-			31,
+			165.35299999999964,
+			170.6869999999996,
+			5,
+			37,
+			true
+		],
+		[
+			"Summation",
+			170.6869999999996,
+			176.0209999999996,
+			5,
+			37,
 			true
 		]
 	]

@@ -31,10 +31,10 @@ Below are more details for each of the pages and how to use them.
 - [x] Add Custom Sound / Noise When Scrubbing
 - [x] ~~Create Clear UI for EQ Changes~~
 - [x] Spatialize Audio Tracks
-- [ ] Choreograph Polar Spheres
-  - [ ] Separate Blob (vertex) Animation and Liquid (fragment) Animation
-  - [ ] Rotate and Position in Relation to the Ring
-  - [ ] Place Initial Position at Normal Viewing Position
+- [x] Choreograph Polar Spheres
+  - [x] Separate Blob (vertex) Animation and Liquid (fragment) Animation
+  - [x] Rotate and Position in Relation to the Ring
+  - [ ] ~~Place Initial Position at Normal Viewing Position~~
   - [x] Set Lyrics and Credits via the `polarSpheres.userData.setTexture` method
 - [x] Choreograph Lyrics
   - [x] Opacity Animation Based on Vocals
@@ -44,13 +44,13 @@ Below are more details for each of the pages and how to use them.
   - [ ] Experiment with size through FFT
   - [ ] Experiment with Field Movement
   - [ ] Experiment with Turbulence
-- [ ] Choreograph Ring
+- [x] Choreograph Ring
   - [ ] ~~Experiment with Changing x / z Rotation~~
   - [ ] ~~Experiment with x / z Position~~
   - [x] Choreograph Alpha Map Texture Repeat on "Oh" Vocals
   - [x] Opacity Inversely Tied to SFX - Alpha Map Intensity
   - [ ] ~~Y Position Oscillation Tied to Instrumental~~
-- [ ] Choreograph Backdrop
+- [ ] ~~Choreograph Backdrop~~
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [ ] Choreograph Boids
   - [ ] Diversify Geometries
