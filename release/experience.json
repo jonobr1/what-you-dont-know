@@ -8090,7 +8090,7 @@
 				"\tphi = Math.floor( Math.random() * 9 + 2 ) * 2;",
 				"",
 				"\tif ( phi === 12 ) {",
-				"\t\tphi = 0;",
+				"\t\tphi = 14;",
 				"\t}",
 				"",
 				"\tif ( Math.random() > 0.5 ) {",
@@ -8453,6 +8453,30 @@
 				"\t\t\tbreak;",
 				"\t\t}",
 				"\t}",
+				"",
+				"}"
+			]
+		],
+		[
+			"Ring & Polar Sphere on the Fritz",
+			[
+				"var ring = resources.get( 'ring' );",
+				"var polarSpheres = resources.get( 'polar-spheres' );",
+				"var target = 0.5;",
+				"var source = 0;",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ) {",
+				"\tring.visible = true;",
+				"\tpolarSpheres.visible = true;",
+				"}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar t = progress * ( target - source ) + source;",
+				"\tring.visible = Math.random() > t;",
+				"\tpolarSpheres.visible = Math.random() > t;",
 				"",
 				"}"
 			]
@@ -9921,6 +9945,14 @@
 			165.35299999999964,
 			5,
 			37,
+			true
+		],
+		[
+			"Outro",
+			165.33,
+			176,
+			3,
+			38,
 			true
 		],
 		[
