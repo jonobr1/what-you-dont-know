@@ -8474,10 +8474,57 @@
 				"",
 				"function update( progress ) {",
 				"",
-				"\tvar t = progress * ( target - source ) + source;",
+				"\tvar t = TWEEN.Easing.Circular.Out( progress );",
+				"\tt = t * ( target - source ) + source;",
+				"",
 				"\tring.visible = Math.random() > t;",
 				"\tpolarSpheres.visible = Math.random() > t;",
 				"",
+				"}"
+			]
+		],
+		[
+			"Randomize Position Y",
+			[
+				"var params = resources.get( 'params' );",
+				"var ring = resources.get( 'ring' );",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){",
+				"\tvar spline = ring.userData.splines.positions;",
+				"\tvar points = spline.points;",
+				"\tfor ( var i = 0; i < points.length; i++ ) {",
+				"\t\tvar v = points[ i ];",
+				"\t\tvar y = params.ring.amplitude * ( Math.random() - 0.5 );",
+				"\t\tring.userData.setPositionY( i, y );",
+				"\t}",
+				"}"
+			]
+		],
+		[
+			"Update Ring Position Y Sans Changes",
+			[
+				"var params = resources.get( 'params' );",
+				"var ring = resources.get( 'ring' );",
+				"",
+				"var drag = params.drag * 0.1;",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){",
+				"\tvar spline = ring.userData.splines.positions;",
+				"\tvar points = spline.points;",
+				"\tfor ( var i = 0; i < points.length; i++ ) {",
+				"\t\tvar v = points[ i ];",
+				"\t\tvar y = v.y;",
+				"\t\ty += ( 0 - v.y ) * drag;",
+				"\t\tring.userData.setPositionY( i, y );",
+				"\t}",
 				"}"
 			]
 		]
@@ -9852,6 +9899,14 @@
 			true
 		],
 		[
+			"Machine Drum",
+			154.57,
+			159.9,
+			3,
+			39,
+			true
+		],
+		[
 			"",
 			154.57,
 			155.57,
@@ -9865,14 +9920,6 @@
 			159.9000000000002,
 			1,
 			29,
-			true
-		],
-		[
-			"Machine Drum",
-			154.65699999999995,
-			159.98999999999995,
-			3,
-			31,
 			true
 		],
 		[
@@ -9917,6 +9964,14 @@
 		],
 		[
 			"Machine Drum",
+			159.9,
+			165.23000000000002,
+			3,
+			39,
+			true
+		],
+		[
+			"Machine Drum",
 			159.9000000000002,
 			165.23000000000022,
 			1,
@@ -9932,14 +9987,6 @@
 			true
 		],
 		[
-			"Machine Drum",
-			159.98999999999995,
-			165.32299999999995,
-			3,
-			31,
-			true
-		],
-		[
 			"Summation",
 			160.01899999999966,
 			165.35299999999964,
@@ -9948,19 +9995,27 @@
 			true
 		],
 		[
+			"",
+			165.23,
+			175.999,
+			1,
+			33,
+			true
+		],
+		[
 			"Outro",
-			165.33,
+			165.23,
 			176,
-			3,
+			2,
 			38,
 			true
 		],
 		[
-			"",
-			165.333,
-			175.999,
-			2,
-			33,
+			"Machine Drum",
+			165.23000000000002,
+			176,
+			3,
+			40,
 			true
 		],
 		[
