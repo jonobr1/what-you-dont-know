@@ -2974,6 +2974,7 @@
 			"Boids",
 			[
 				"var manager = resources.get( 'audio-manager' );",
+				"var scene = resources.get( 'scene' );",
 				"var backdrop = resources.get( 'backdrop' );",
 				"var ring = resources.get( 'ring' );",
 				"",
@@ -2991,7 +2992,7 @@
 				"group.userData.update = update;",
 				"group.userData.Tween = new TWEEN.Group();",
 				"",
-				"ring.add( group );",
+				"scene.add( group );",
 				"",
 				"var geometry = new THREE.BoxBufferGeometry( 0.025, 0.025, 0.20 );",
 				"var material = new THREE.MeshPhysicalMaterial( {",
