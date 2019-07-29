@@ -18,6 +18,9 @@
 				"\t\toffset: 0,",
 				"\t\tamplitude: 0",
 				"\t},",
+				"\tboids: {",
+				"\t\tamount: 1",
+				"\t},",
 				"\tpalette: [",
 				"\t\t{",
 				"\t\t\tname: 'blue',",
@@ -2971,7 +2974,6 @@
 			"Boids",
 			[
 				"var manager = resources.get( 'audio-manager' );",
-				"var scene = resources.get( 'scene' );",
 				"var backdrop = resources.get( 'backdrop' );",
 				"var ring = resources.get( 'ring' );",
 				"",
@@ -2989,9 +2991,9 @@
 				"group.userData.update = update;",
 				"group.userData.Tween = new TWEEN.Group();",
 				"",
-				"scene.add( group );",
+				"ring.add( group );",
 				"",
-				"var geometry = new THREE.BoxBufferGeometry( 0.05, 0.05, 0.5 );",
+				"var geometry = new THREE.BoxBufferGeometry( 0.025, 0.025, 0.20 );",
 				"var material = new THREE.MeshPhysicalMaterial( {",
 				"\tcolor: 0xcccccc",
 				"} );",
@@ -3036,9 +3038,6 @@
 				"\t  \tvar eased = TWEEN.Easing.Circular.InOut( elapsed );",
 				"\t  \tvar scale = 0.999 * Math.sin( eased * Math.PI ) + 0.001;",
 				"",
-				"\t  \t// ring.userData.splines.rotations.getPoint( t, vector );",
-				"\t  \t// var offsetAngle = ring.userData.normalToRadians( vector.y );",
-				"",
 				"\t  \tring.userData.splines.positions.getPoint( t, mesh.position );",
 				"\t  \tring.userData.splines.positions.getPoint( t + 0.001, vector );",
 				"",
@@ -3047,7 +3046,6 @@
 				"\t  \tmesh.rotation.x = Math.asin( opposite / hypotenuse );",
 				"",
 				"\t  \tring.userData.splines.scales.getPoint( t, vector );",
-				"\t  \t// mesh.scale.x = scale;",
 				"\t  \tmesh.scale.z = scale;",
 				"",
 				"\t  \t// Place on the surface of ring",
@@ -3059,10 +3057,8 @@
 				"",
 				"\t  \tvar ca = Math.cos( angle );",
 				"\t  \tvar cs = Math.sin( angle );",
-				"\t  \t// var amplitude = 0.5 * boxDepth",
-				"\t\t// + ( thickness * vector.y ) * 0.5;",
-				"\t  \tvar amplitude = thickness * vector.y * 0.5;",
 				"",
+				"\t  \tvar amplitude = thickness * vector.y * 0.5;",
 				"\t  \tamplitude *= mesh.userData.distanceScalar;",
 				"",
 				"\t  \tvar x = amplitude * weightX * ca;",
@@ -3074,7 +3070,7 @@
 				"",
 				"\t  \t// Rotate mesh as if it was rolling",
 				"\t  \tmesh.rotation.y = HALF_PI + Math.atan2( - mesh.position.x, - mesh.position.z );",
-				"\t  \tmesh.rotation.z = Math.atan2( - cs, - ca );",
+				"\t\tmesh.rotation.z = angle;",
 				"",
 				"\t}",
 				"",
@@ -3095,6 +3091,7 @@
 				"\tmesh.userData.startAngle = 0;",
 				"\tmesh.userData.endAngle = 1;",
 				"\tmesh.userData.distanceScalar = 1;",
+				"\tmesh.userData.normalScalar = 1;",
 				"\tmesh.userData.mesh = mesh;",
 				"",
 				"\tmesh.castShadow = true;",
@@ -3122,11 +3119,9 @@
 				"\t\tmesh.userData.originAngle = Math.random() * TWO_PI;",
 				"\t\tmesh.userData.elapsed = 0;",
 				"\t\tmesh.userData.startAngle = Math.random();",
-				"\t\tmesh.userData.endAngle = mesh.userData.startAngle",
-				"\t\t\t+ range;",
-				"\t\t// + ( Math.random() > 0.5 ? range : - range );",
+				"\t\tmesh.userData.endAngle = mesh.userData.startAngle + range;",
 				"",
-				"\t\tmesh.userData.distanceScalar = 1.25 * Math.random() + 0.75;",
+				"\t\tmesh.userData.distanceScalar = 0.5 * Math.random() + 1;",
 				"\t\tmesh.userData.tweens.in.start( time );",
 				"",
 				"\t}",
@@ -8527,6 +8522,122 @@
 				"\t}",
 				"}"
 			]
+		],
+		[
+			"Trigger Boid to Beat",
+			[
+				"var params = resources.get( 'params' );",
+				"var manager = resources.get( 'audio-manager' );",
+				"var boids = resources.get( 'boids' );",
+				"",
+				"var index = 0;",
+				"var iteration = 0;",
+				"",
+				"var playbackRate = 1;",
+				"var drag = params.drag / 8;",
+				"var track = 'blips';",
+				"",
+				"var keyframes = [",
+				"\t// Taken from Ableton Project",
+				"\t// Blips",
+				"\t0.245, 0.577, 0.932,",
+				"\t1.244, 1.451, 1.762,",
+				"\t2.102, 2.448, 2.578,",
+				"\t2.950, 3.245, 3.597,",
+				"\t3.912, 4.250, 4.464,",
+				"\t4.798, 5.096, 5.257",
+				"];",
+				"function start( progress ) {",
+				"\treset( progress );",
+				"}",
+				"",
+				"function end( progress ) {",
+				"}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ track ];",
+				"",
+				"\tif ( analysis.playbackRate !== playbackRate ) {",
+				"\t\treset( progress );",
+				"\t}",
+				"",
+				"\tvar unitDuration = manager.unitDuration;",
+				"\tvar maxIterations = Math.ceil( playbackRate );",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"\tvar currentIteration = Math.floor( currentTime / duration );",
+				"",
+				"\tvar keyframe = keyframes[ index ] / unitDuration;",
+				"",
+				"\tvar ca = currentIteration < maxIterations;",
+				"\tvar cb = currentIteration === iteration;",
+				"\tvar cc = currentPct >= keyframe;",
+				"",
+				"\tif ( ca && cb && cc ) {",
+				"\t\ttrigger( currentPct );",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function trigger( startPct ) {",
+				"",
+				"\tfor ( var i = 0; i < params.boids.amount; i++ ) {",
+				"\t\tvar boid = boids.userData.next();",
+				"\t\tboid.userData.start();",
+				"\t}",
+				"",
+				"\tindex ++;",
+				"\tif ( index >= keyframes.length ) {",
+				"\t\tindex = 0;",
+				"\t\titeration ++;",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function reset( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ track ];",
+				"\tvar unitDuration = manager.unitDuration;",
+				"",
+				"\tplaybackRate = analysis.playbackRate;",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"",
+				"\titeration = Math.floor( currentTime / duration );",
+				"",
+				"\tfor ( var i = 0; i < keyframes.length; i++ ) {",
+				"\t\tindex = i;",
+				"\t\tif ( keyframes[ i ] / unitDuration > currentPct ) {",
+				"\t\t\tbreak;",
+				"\t\t}",
+				"\t}",
+				"",
+				"}"
+			]
+		],
+		[
+			"Crescendo Boids Amount",
+			[
+				"var params = resources.get( 'params' );",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ) {",
+				"}",
+				"",
+				"function update( progress ) {",
+				"\tparams.boids.amount = Math.floor( 12 * progress * progress ) + 1;",
+				"}"
+			]
 		]
 	],
 	"animations": [
@@ -8574,7 +8685,7 @@
 			"Editor View",
 			0,
 			10,
-			9,
+			10,
 			3,
 			true
 		],
@@ -8582,7 +8693,7 @@
 			"Video",
 			0,
 			175.98899999999998,
-			10,
+			12,
 			1,
 			true
 		],
@@ -8947,6 +9058,22 @@
 			true
 		],
 		[
+			"Blips",
+			74.66,
+			79.99,
+			9,
+			41,
+			true
+		],
+		[
+			"",
+			74.66,
+			154.57,
+			11,
+			42,
+			true
+		],
+		[
 			"Machine Drum",
 			74.66199999999998,
 			79.99499999999998,
@@ -9008,6 +9135,14 @@
 			85.28000000000003,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			79.99,
+			85.32,
+			9,
+			41,
 			true
 		],
 		[
@@ -9078,7 +9213,7 @@
 			"",
 			85.28,
 			127.99,
-			9,
+			10,
 			35,
 			true
 		],
@@ -9088,6 +9223,14 @@
 			90.61000000000004,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			85.32,
+			90.64999999999999,
+			9,
+			41,
 			true
 		],
 		[
@@ -9136,6 +9279,14 @@
 			95.94000000000005,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			90.64999999999999,
+			95.97999999999999,
+			9,
+			41,
 			true
 		],
 		[
@@ -9195,6 +9346,14 @@
 			true
 		],
 		[
+			"Blips",
+			95.97999999999999,
+			101.30999999999999,
+			9,
+			41,
+			true
+		],
+		[
 			"3.05  Lyrics",
 			95.99000000000001,
 			106.65200000000002,
@@ -9240,6 +9399,14 @@
 			106.60000000000008,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			101.30999999999999,
+			106.63999999999999,
+			9,
+			41,
 			true
 		],
 		[
@@ -9296,6 +9463,14 @@
 			111.93000000000009,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			106.63999999999999,
+			111.96999999999998,
+			9,
+			41,
 			true
 		],
 		[
@@ -9371,6 +9546,14 @@
 			true
 		],
 		[
+			"Blips",
+			111.96999999999998,
+			117.29999999999998,
+			9,
+			41,
+			true
+		],
+		[
 			"Machine Drum",
 			111.99299999999997,
 			117.32599999999996,
@@ -9443,6 +9626,14 @@
 			true
 		],
 		[
+			"Blips",
+			117.29999999999998,
+			122.62999999999998,
+			9,
+			41,
+			true
+		],
+		[
 			"4.04  Lyrics",
 			117.31400000000002,
 			127.97600000000003,
@@ -9480,6 +9671,14 @@
 			127.92000000000013,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			122.62999999999998,
+			127.95999999999998,
+			9,
+			41,
 			true
 		],
 		[
@@ -9552,6 +9751,14 @@
 			133.25000000000014,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			127.95999999999998,
+			133.28999999999996,
+			9,
+			41,
 			true
 		],
 		[
@@ -9635,6 +9842,14 @@
 			true
 		],
 		[
+			"Blips",
+			133.28999999999996,
+			138.61999999999995,
+			9,
+			41,
+			true
+		],
+		[
 			"Machine Drum",
 			133.32499999999996,
 			138.65799999999996,
@@ -9704,6 +9919,14 @@
 			143.91000000000017,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			138.61999999999995,
+			143.94999999999993,
+			9,
+			41,
 			true
 		],
 		[
@@ -9779,6 +10002,14 @@
 			true
 		],
 		[
+			"Blips",
+			143.94999999999993,
+			149.27999999999992,
+			9,
+			41,
+			true
+		],
+		[
 			"Machine Drum",
 			143.99099999999996,
 			149.32399999999996,
@@ -9832,6 +10063,14 @@
 			154.5700000000002,
 			1,
 			29,
+			true
+		],
+		[
+			"Blips",
+			149.27999999999992,
+			154.6099999999999,
+			9,
+			41,
 			true
 		],
 		[
@@ -9923,6 +10162,14 @@
 			true
 		],
 		[
+			"Blips",
+			154.6099999999999,
+			159.93999999999988,
+			9,
+			41,
+			true
+		],
+		[
 			"Summation",
 			154.6849999999997,
 			160.01899999999966,
@@ -9979,6 +10226,14 @@
 			true
 		],
 		[
+			"Blips",
+			159.93999999999988,
+			165.26999999999987,
+			9,
+			41,
+			true
+		],
+		[
 			"",
 			159.96,
 			162.14598453251023,
@@ -10019,11 +10274,27 @@
 			true
 		],
 		[
+			"Blips",
+			165.26999999999987,
+			170.59999999999985,
+			9,
+			41,
+			true
+		],
+		[
 			"Summation",
 			165.35299999999964,
 			170.6869999999996,
 			5,
 			37,
+			true
+		],
+		[
+			"Blips",
+			170.59999999999985,
+			175.92999999999984,
+			9,
+			41,
 			true
 		],
 		[
