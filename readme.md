@@ -24,6 +24,7 @@ Below are more details for each of the pages and how to use them.
 - [ ] Choreograph Multiple Camera Angles for non VR Contexts
 - [ ] Account for Portrait Screen Sizes on Page Load (Design)
 - [ ] Make UI Text All Same Size
+- [ ] Update to r107
 - [x] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) • [Reference 2](https://www.are.na/block/2122776))
 - [x] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
