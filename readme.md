@@ -21,6 +21,8 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
+- [ ] Choreograph Multiple Camera Angles for non VR Contexts
+- [ ] Account for Portrait Screen Sizes on Page Load (Design)
 - [x] Add Polar Spheres ([Reference 1](https://www.are.na/block/2122848) • [Reference 2](https://www.are.na/block/2122776))
 - [x] Add Title Page (UX)
 - [x] Make Playhead First Read (UX)
@@ -34,41 +36,40 @@ Below are more details for each of the pages and how to use them.
 - [x] Choreograph Polar Spheres
   - [x] Separate Blob (vertex) Animation and Liquid (fragment) Animation
   - [x] Rotate and Position in Relation to the Ring
-  - [ ] ~~Place Initial Position at Normal Viewing Position~~
+  - [x] ~~Place Initial Position at Normal Viewing Position~~
   - [x] Set Lyrics and Credits via the `polarSpheres.userData.setTexture` method
 - [x] Choreograph Lyrics
   - [x] Opacity Animation Based on Vocals
-- [ ] Choreograph Debris
-  - [ ] Experiment with amount of visible Debris
-  - [ ] Experiment with regions of Debris
-  - [ ] Experiment with size through FFT
-  - [ ] Experiment with Field Movement
-  - [ ] Experiment with Turbulence
+- [x] ~~Choreograph Debris~~
+  - [x] ~~Experiment with amount of visible Debris~~
+  - [x] ~~Experiment with regions of Debris~~
+  - [x] ~~Experiment with size through FFT~~
+  - [x] ~~Experiment with Field Movement~~
+  - [x] ~~Experiment with Turbulence~~
 - [x] Choreograph Ring
-  - [ ] ~~Experiment with Changing x / z Rotation~~
-  - [ ] ~~Experiment with x / z Position~~
+  - [x] ~~Experiment with Changing x / z Rotation~~
+  - [x] ~~Experiment with x / z Position~~
   - [x] Choreograph Alpha Map Texture Repeat on "Oh" Vocals
   - [x] Opacity Inversely Tied to SFX - Alpha Map Intensity
-  - [ ] ~~Y Position Oscillation Tied to Instrumental~~
-- [ ] ~~Choreograph Backdrop~~
-- [ ] Choreograph Multiple Camera Angles for non VR Contexts
+  - [x] ~~Y Position Oscillation Tied to Instrumental~~
+- [x] ~~Choreograph Backdrop~~
 - [x] Choreograph Boids
-  - [ ] ~~Diversify Geometries~~
-  - [ ] Animate / Oscillate Distance from Ring
+  - [x] ~~Diversify Geometries~~
+  - [x] ~~Animate / Oscillate Distance from Ring~~
   - [x] Three Part Melody Should Trigger Boids
   - [x] Tie `TWEEN` of Boids to `player.currentTime` not `requestAnimationFrame`
-- [ ] Add Custom `THREE.LightProbe`
+- [x] ~~Add Custom `THREE.LightProbe`~~
 - [x] Remove `playbackRate` Change on Playhead (keep it simple)
-- [ ] ~~Make Text Geometry Based Instead of Based out of a Texture~~
+- [x] ~~Make Text Geometry Based Instead of Based out of a Texture~~
 - [x] Add Lyrics
 - [x] Add Meta-Lines around Lyrics
 - [x] Add Child Shapes to Ring
-- [ ] ~~Add Lyric Interaction~~
+- [x] ~~Add Lyric Interaction~~
 - [x] Hide Controller on Leaving VR
 - [x] Add Ghostly Logo
-- [ ] ~~Instance Green Buttons~~
+- [x] ~~Instance Green Buttons~~
 - [x] Add `renderer.initMaterial( material )` to All Materials on Setup
-- [ ] ~~Add Reset Button to Each filter~~
+- [x] ~~Add Reset Button to Each filter~~
 - [x] Add Label to Each Filter
 - [x] Add Compass to Orient the World Based on Audio Time
 - [x] Fix Orientation Offset by Compass on Playhead + Lights Animations
@@ -82,7 +83,7 @@ Below are more details for each of the pages and how to use them.
 - [x] Make Biquad Filter More Apparent (audio & visual)
 - [x] Add Color Palette Changes on Speed Modification
 - [x] Modify OrbitControls to Ease Rotation
-- [ ] ~~Modify Materials on Buttons to be from Pixar 130~~
+- [x] ~~Modify Materials on Buttons to be from Pixar 130~~
 - [x] Fix Multiple VR Controllers
 - [x] Fix Safari Playback Issues
 - [x] Fix touch events for Paddles

@@ -91,7 +91,7 @@
 				"\t'vocals': [],",
 				"\t'vocals-a': [],",
 				"\t'vocals-b': [],",
-				"\t'vocals-c': [],",
+				"\t'vocals-c': [], ",
 				"\t'vocals-d': [],",
 				"\t'vocals-e': [],",
 				"\t'machine-drum-a': [],",
@@ -2948,7 +2948,7 @@
 				"});",
 				"",
 				"var debris = new THREE.Points( geometry, material );",
-				"debris.scale.setScalar( 7.5 );",
+				"debris.scale.setScalar( 10 );",
 				"debris.renderOrder = 150;",
 				"debris.userData.update = update;",
 				"debris.userData.amplitude = material.uniforms.amplitude.value;",
@@ -3957,6 +3957,80 @@
 				"resources.set( 'polar-spheres', group );"
 			]
 		],
+    [
+      "Orbit",
+      [
+        "var backdrop = resources.get( 'backdrop' );",
+        "",
+        "var TWO_PI = Math.PI * 2;",
+        "var color = 0x000000;",
+        "var geometries = {",
+        "\tring: new THREE.BufferGeometry(),",
+        "\tsphere: new THREE.SphereBufferGeometry( 0.01, 16, 16 )",
+        "};",
+        "var materials = {",
+        "\tring: new THREE.LineBasicMaterial( {",
+        "\t\tcolor: color",
+        "\t} ),",
+        "\tsphere: new THREE.MeshBasicMaterial( {",
+        "\t\tcolor: color",
+        "\t} )",
+        "};",
+        "",
+        "var vertices = [];",
+        "var resolution = 64;",
+        "",
+        "for ( var i = 0; i < resolution; i++ ) {",
+        "",
+        "\tvar pct = i / ( resolution - 1 );",
+        "\tvar theta = TWO_PI * pct;",
+        "\tvar x = Math.cos( theta );",
+        "\tvar y = 0;",
+        "\tvar z = Math.sin( theta );",
+        "",
+        "\tvertices.push( x, y, z );",
+        "",
+        "}",
+        "",
+        "var positionAttribute = new THREE.Float32BufferAttribute( vertices, 3 );",
+        "geometries.ring.addAttribute( 'position', positionAttribute );\t",
+        "",
+        "var material = new THREE.LineBasicMaterial( {",
+        "\tcolor: 'black'",
+        "} );",
+        "",
+        "var group = new THREE.Group();",
+        "var amount = 4;",
+        "",
+        "for ( var i = 0; i < amount; i++ ) {",
+        "",
+        "\tvar distance = i + 4;",
+        "\tvar scale = i * Math.random() * 4 + 3;",
+        "\tvar opacity = 0.9 - ( i / amount ) * 0.8;",
+        "\tvar type = Math.random() > 0.5 ? 'Line' : 'LineSegments';",
+        "",
+        "\tvar sphere = new THREE.Mesh( geometries.sphere, materials.sphere );",
+        "\tvar ring = new THREE[ type ]( geometries.ring, materials.ring );",
+        "",
+        "\tsphere.position.x = 1;",
+        "",
+        "\tring.rotation.x = Math.random() * TWO_PI;",
+        "\tring.rotation.y = Math.random() * TWO_PI;",
+        "\tring.rotation.z = Math.random() * TWO_PI;",
+        "",
+        "\tsphere.scale.set( scale, scale, scale );",
+        "\tring.scale.set( distance, distance, distance );",
+        "",
+        "\tring.add( sphere );",
+        "\tgroup.add( ring );",
+        "",
+        "}",
+        "",
+        "backdrop.add( group );",
+        "",
+        "resources.set( 'orbit', group );"
+      ]
+    ],
 		[
 			"Title Screen (WebVR)",
 			[
@@ -4782,7 +4856,7 @@
 				"\t\t\tcamera, renderer.domElement );",
 				"\t\tcamera.userData.controls.enableDamping = true;",
 				"\t\tcamera.userData.controls.enablePan = false;",
-				"\t\tcamera.userData.controls.maxDistance = 10;",
+				"\t\tcamera.userData.controls.maxDistance = 9;",
 				"\t\tcamera.userData.controls.dampingFactor = params.drag;",
 				"\t\tcamera.userData.controls.rotateSpeed = 0.1;",
 				"\t}",
@@ -8657,6 +8731,124 @@
 				"\tparams.boids.amount = Math.floor( 12 * progress * progress ) + 1;",
 				"}"
 			]
+		],
+		[
+			"Keyframe Orbit Rotation",
+			[
+				"var params = resources.get( 'params' );",
+				"var manager = resources.get( 'audio-manager' );",
+				"var orbit = resources.get( 'orbit' );",
+				"",
+				"var TWO_PI = Math.PI * 2;",
+				"var index = 0;",
+				"var iteration = 0;",
+				"var drag = params.drag * 2;",
+				"",
+				"var target = new THREE.Vector3();",
+				"var child;",
+				"",
+				"var playbackRate = 1;",
+				"var track = 'instrumental';",
+				"",
+				"var keyframes = [",
+				"\t// Taken from Ableton Project",
+				"\t// Melody Whip",
+				"\t1.500, 2.000, 3.900, 4.300",
+				"];",
+				"",
+				"function start( progress ) {",
+				"\treset( progress );",
+				"}",
+				"",
+				"function end( progress ) {",
+				"}",
+				"",
+				"function update( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ track ];",
+				"",
+				"\tif ( analysis.playbackRate !== playbackRate ) {",
+				"\t\treset( progress );",
+				"\t}",
+				"",
+				"\tvar unitDuration = manager.unitDuration;",
+				"\tvar maxIterations = Math.ceil( playbackRate );",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"\tvar currentIteration = Math.floor( currentTime / duration );",
+				"",
+				"\tvar keyframePct = keyframes[ index ] / unitDuration;",
+				"",
+				"\tvar startPct = ( keyframes[ index - 1 ] || 0 ) / unitDuration;",
+				"\tvar pct = ( currentPct - startPct ) / ( keyframePct - startPct );",
+				"",
+				"\tif ( pct > 1 ) {",
+				"\t\tpct = 1;",
+				"\t}",
+				"",
+				"\tif ( child ) {",
+				"\t\tchild.rotation.x += ( target.x - child.rotation.x ) * drag;",
+				"\t\tchild.rotation.y += ( target.y - child.rotation.y ) * drag;",
+				"\t\tchild.rotation.z += ( target.z - child.rotation.z ) * drag;",
+				"\t}",
+				"",
+				"\tvar ca = currentIteration < maxIterations;",
+				"\tvar cb = currentIteration === iteration;",
+				"\tvar cc = currentPct >= keyframePct;",
+				"",
+				"\tif ( ca && cb && cc ) {",
+				"\t\ttrigger( currentPct );",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function trigger( startPct ) {",
+				"",
+				"\tvar id = Math.floor( Math.random() * orbit.children.length );",
+				"",
+				"\tchild = orbit.children[ id ];",
+				"\ttarget.copy( child.rotation );",
+				"",
+				"\ttarget.x += ( Math.random() - 0.5 ) * Math.PI;",
+				"\ttarget.y += ( Math.random() - 0.5 ) * Math.PI;",
+				"\ttarget.z += ( Math.random() - 0.5 ) * Math.PI;",
+				"",
+				"\tindex ++;",
+				"\tif ( index >= keyframes.length ) {",
+				"\t\tindex = 0;",
+				"\t\titeration ++;",
+				"\t}",
+				"",
+				"}",
+				"",
+				"function reset( progress ) {",
+				"",
+				"\tvar analysis = manager.filters[ track ];",
+				"\tvar unitDuration = manager.unitDuration;",
+				"",
+				"\tplaybackRate = analysis.playbackRate;",
+				"",
+				"\tvar animationDuration = unitDuration;",
+				"\tvar duration = unitDuration / playbackRate;",
+				"\tvar currentTime = progress * animationDuration;",
+				"\tvar projectedTime = currentTime % duration;",
+				"\tvar currentPct = projectedTime / duration;",
+				"",
+				"\titeration = Math.floor( currentTime / duration );",
+				"",
+				"\tfor ( var i = 0; i < keyframes.length; i++ ) {",
+				"\t\tindex = i;",
+				"\t\tif ( keyframes[ i ] / unitDuration > currentPct ) {",
+				"\t\t\tbreak;",
+				"\t\t}",
+				"\t}",
+				"",
+				"}"
+			]
 		]
 	],
 	"animations": [
@@ -8712,7 +8904,7 @@
 			"Video",
 			0,
 			175.98899999999998,
-			12,
+			13,
 			1,
 			true
 		],
@@ -8882,6 +9074,14 @@
 			42.67099999999998,
 			5,
 			37,
+			true
+		],
+		[
+			"Melody",
+			42.57,
+			47.9,
+			12,
+			43,
 			true
 		],
 		[
@@ -9093,6 +9293,14 @@
 			true
 		],
 		[
+			"Melody",
+			74.66,
+			79.99,
+			12,
+			43,
+			true
+		],
+		[
 			"Machine Drum",
 			74.66199999999998,
 			79.99499999999998,
@@ -9162,6 +9370,14 @@
 			85.32,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			79.99,
+			85.32,
+			12,
+			43,
 			true
 		],
 		[
@@ -9253,6 +9469,14 @@
 			true
 		],
 		[
+			"Melody",
+			85.32,
+			90.64999999999999,
+			12,
+			43,
+			true
+		],
+		[
 			"Machine Drum",
 			85.32799999999997,
 			90.66099999999997,
@@ -9306,6 +9530,14 @@
 			95.97999999999999,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			90.64999999999999,
+			95.97999999999999,
+			12,
+			43,
 			true
 		],
 		[
@@ -9373,6 +9605,14 @@
 			true
 		],
 		[
+			"Melody",
+			95.97999999999999,
+			101.30999999999999,
+			12,
+			43,
+			true
+		],
+		[
 			"3.05  Lyrics",
 			95.99000000000001,
 			106.65200000000002,
@@ -9426,6 +9666,14 @@
 			106.63999999999999,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			101.30999999999999,
+			106.63999999999999,
+			12,
+			43,
 			true
 		],
 		[
@@ -9490,6 +9738,14 @@
 			111.96999999999998,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			106.63999999999999,
+			111.96999999999998,
+			12,
+			43,
 			true
 		],
 		[
@@ -9573,6 +9829,14 @@
 			true
 		],
 		[
+			"Melody",
+			111.96999999999998,
+			117.29999999999998,
+			12,
+			43,
+			true
+		],
+		[
 			"Machine Drum",
 			111.99299999999997,
 			117.32599999999996,
@@ -9653,6 +9917,14 @@
 			true
 		],
 		[
+			"Melody",
+			117.29999999999998,
+			122.62999999999998,
+			12,
+			43,
+			true
+		],
+		[
 			"4.04  Lyrics",
 			117.31400000000002,
 			127.97600000000003,
@@ -9698,6 +9970,14 @@
 			127.95999999999998,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			122.62999999999998,
+			127.95999999999998,
+			12,
+			43,
 			true
 		],
 		[
@@ -9778,6 +10058,14 @@
 			133.28999999999996,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			127.95999999999998,
+			133.28999999999996,
+			12,
+			43,
 			true
 		],
 		[
@@ -9869,6 +10157,14 @@
 			true
 		],
 		[
+			"Melody",
+			133.28999999999996,
+			138.61999999999995,
+			12,
+			43,
+			true
+		],
+		[
 			"Machine Drum",
 			133.32499999999996,
 			138.65799999999996,
@@ -9946,6 +10242,14 @@
 			143.94999999999993,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			138.61999999999995,
+			143.94999999999993,
+			12,
+			43,
 			true
 		],
 		[
@@ -10029,6 +10333,14 @@
 			true
 		],
 		[
+			"Melody",
+			143.94999999999993,
+			149.27999999999992,
+			12,
+			43,
+			true
+		],
+		[
 			"Machine Drum",
 			143.99099999999996,
 			149.32399999999996,
@@ -10090,6 +10402,14 @@
 			154.6099999999999,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			149.27999999999992,
+			154.6099999999999,
+			12,
+			43,
 			true
 		],
 		[
@@ -10189,6 +10509,14 @@
 			true
 		],
 		[
+			"Melody",
+			154.6099999999999,
+			159.93999999999988,
+			12,
+			43,
+			true
+		],
+		[
 			"Summation",
 			154.6849999999997,
 			160.01899999999966,
@@ -10250,6 +10578,14 @@
 			165.26999999999987,
 			9,
 			41,
+			true
+		],
+		[
+			"Melody",
+			159.93999999999988,
+			165.26999999999987,
+			12,
+			43,
 			true
 		],
 		[
