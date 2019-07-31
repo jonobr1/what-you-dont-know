@@ -8742,7 +8742,7 @@
 				"var TWO_PI = Math.PI * 2;",
 				"var index = 0;",
 				"var iteration = 0;",
-				"var drag = params.drag * 2;",
+				"var drag = params.drag;",
 				"",
 				"var target = new THREE.Vector3();",
 				"var child;",
