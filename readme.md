@@ -21,8 +21,8 @@ Below are more details for each of the pages and how to use them.
 
 ### Roadmap
 
-- [ ] Fix Animation Skipping on Sped up Tracks
-- [ ] Choreograph Multiple Camera Angles for non VR Contexts
+- [x] Fix Animation Skipping on Sped up Tracks
+- [x] ~~Choreograph Multiple Camera Angles for non VR Contexts~~
 - [x] Account for Portrait Screen Sizes on Page Load (Design)
 - [x] Make UI Text All Same Size
 - [x] Update to r107
