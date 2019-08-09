@@ -5,7 +5,8 @@ A WebVR interactive music video only on WITHIN. With music by Matthew Dear.
 
 There are three main resources for this project:
 + [/inspiration](./inspiration): Visual inspiration links for the project
-+ [/release](./release): The current build for the project
++ [/release](./release): The current stable build for the project
++ [/staging](./staging): The latest build for the project
 + [/editor](./editor): A WYSIWYG timeline editor for the project
 + [/prototypes](./prototypes): All interaction prototypes
 
