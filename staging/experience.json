@@ -49,7 +49,9 @@
 				"\t\t}",
 				"\t],",
 				"",
-				"\tdrag: 0.2",
+				"\tdrag: 0.2,",
+				"",
+				"\trootPath: '//web-cdn.with.in/WEBSITE/wydk'",
 				"",
 				"} );",
 				"",
@@ -70,11 +72,10 @@
 				"",
 				"\tthis.panner = this.context.createPanner();",
 				"\tthis.panner.panningModel = 'HRTF';",
-				"\t// this.panner.connect( this.gain );",
+				"",
 				"\tthis.panner.connect( listener.getInput() );",
 				"",
 				"\tthis.gain = gain;",
-				"\t// this.gain.connect( listener.getInput() );",
 				"\tthis.gain.connect( this.panner );",
 				"",
 				"}",
@@ -87,6 +88,7 @@
 		[
 			"AudioManager",
 			[
+				"var params = resources.get( 'params' );",
 				"var tracks = {",
 				"\t'vocals': [],",
 				"\t'vocals-a': [],",
@@ -1049,7 +1051,7 @@
 				"}",
 				"",
 				"function getURL( name ) {",
-				"\treturn '../assets/v2/' + name + '.' + extension;",
+				"\treturn params.rootPath + '/v2/' + name + '.' + extension;",
 				"}",
 				"",
 				"resources.set( 'audio-manager', manager );"
@@ -1882,6 +1884,7 @@
 		[
 			"Playhead & Timeline",
 			[
+				"var params = resources.get( 'params' );",
 				"var ring = resources.get( 'ring' );",
 				"var scene = resources.get( 'scene' );",
 				"var interaction = resources.get( 'interaction' );",
@@ -1951,7 +1954,7 @@
 				"\t\tcolor: 0xffffff,",
 				"\t\ttransparent: true,",
 				"\t\tside: THREE.BackSide,",
-				"\t\tmap: loader.load( '../assets/textures/baseline.gif' ),",
+				"\t\tmap: loader.load( params.rootPath + '/textures/baseline.gif' ),",
 				"\t\topacity: 0,",
 				"\t\tdepthWrite: false",
 				"\t} )",
@@ -8218,12 +8221,13 @@
 		[
 			"Set Polar Spheres WYDK Texture",
 			[
+				"var params = resources.get( 'params' );",
 				"var polarSpheres = resources.get( 'polar-spheres' );",
 				"var titleScreen = resources.get( 'title-screen' );",
 				"var ring = resources.get( 'ring' );",
 				"",
 				"var loader = new THREE.TextureLoader();",
-				"var texture = loader.load( '../assets/textures/wydk-title.png', resources.queue() );",
+				"var texture = loader.load( params.rootPath + '/textures/wydk-title.png', resources.queue() );",
 				"texture.flipY = true;",
 				"",
 				"var target = 0.5;",
@@ -9188,6 +9192,20 @@
 				"\t}",
 				"",
 				"}"
+			]
+		],
+		[
+			"Effect",
+			[
+				"var parameters = {",
+				"\tvalue: new FRAME.Parameters.Float( 'Value', 1.0 )",
+				"};",
+				"",
+				"function start( progress ){}",
+				"",
+				"function end( progress ){}",
+				"",
+				"function update( progress ){}"
 			]
 		]
 	],
