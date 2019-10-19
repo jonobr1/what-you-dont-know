@@ -19,16 +19,16 @@ These folders all require you run a local server on your computer. A good cross-
 Below are more details for each of the pages and how to use them.
 
 ### /release
-[http://within-unlimited.github.io/what-you-dont-know/release/](http://within-unlimited.github.io/what-you-dont-know/release/) is the most current place to see our current build of the project.
+[Release](http://within-unlimited.github.io/what-you-dont-know/release/) is the most current place to see our current build of the project.
 
 ### /staging
-[http://within-unlimited.github.io/what-you-dont-know/staging/](http://within-unlimited.github.io/what-you-dont-know/release/) is the build used for WITHIN's staging website.
+[Staging](http://within-unlimited.github.io/what-you-dont-know/release/) is the build used for WITHIN's staging website.
 
 ### /editor
-[http://within-unlimited.github.io/what-you-dont-know/editor/](http://within-unlimited.github.io/what-you-dont-know/editor/) gives you an empty viewport to see and manipulate how we're choreographing _What You Don't Know_. Once this is open in your web browser go to `File > Reset` to insure the a clean version of the project is loaded. When doing this, the editor loads `/release/experience.json` into the editor, insuring that what you're working with is the published version of the project. Similar to video editing software you can hit the spacebar to play and pause the video with some additional controls to see how animations are laid out.
+[Editor](http://within-unlimited.github.io/what-you-dont-know/editor/) gives you an empty viewport to see and manipulate how we're choreographing _What You Don't Know_. Once this is open in your web browser go to `File > Reset` to insure the a clean version of the project is loaded. When doing this, the editor loads `/release/experience.json` into the editor, insuring that what you're working with is the published version of the project. Similar to video editing software you can hit the spacebar to play and pause the video with some additional controls to see how animations are laid out.
 
 ### /prototypes
-[http://within-unlimited.github.io/what-you-dont-know/prototypes/](http://within-unlimited.github.io/what-you-dont-know/prototypes/) is a list of one off HTML5 webpages exploring different interactions, graphics, interfaces, and previous builds.
+[Prototypes](http://within-unlimited.github.io/what-you-dont-know/prototypes/) is a directory of one off HTML5 webpages exploring different interactions, graphics, interfaces, and previous builds.
 
 ### Roadmap
 
