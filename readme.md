@@ -30,7 +30,7 @@ Below are more details for each of the pages and how to use them.
 ### /prototypes
 [Prototypes](http://within-unlimited.github.io/what-you-dont-know/prototypes/) is a directory of one off HTML5 webpages exploring different interactions, graphics, interfaces, and previous builds.
 
-### Roadmap
+## Roadmap
 
 - [ ] Exiting VR Bug in Oculus Browser
 - [x] Fix Animation Skipping on Sped up Tracks
