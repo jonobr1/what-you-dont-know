@@ -109,6 +109,19 @@
 
 				editor.fromJSON( JSON.parse( state ) );
 
+			} else {
+
+				var file = '../release/experience.json';
+
+				var xhr = new XMLHttpRequest();
+				xhr.addEventListener( 'load', function ( event ) {
+
+					editor.fromJSON( JSON.parse( event.target.responseText ) );
+
+				} );
+				xhr.open( 'GET' , file );
+				xhr.send();
+
 			}
 
 			// Short-cuts

@@ -1,7 +1,9 @@
 # What You Don't Know
-A WebVR interactive music video only on WITHIN. With music by Matthew Dear.
+A interactive music video made for VR only on [WITHIN](http://with.in/) in partnership with [Ghostly International](http://ghostly.com/). With music by [Matthew Dear](https://ghostly.com/artists/matthew-dear).
 
-## Environment
+Experience it for yourself here: [http://with.in/watch/what-you-dont-know/](http://with.in/watch/what-you-dont-know/)
+
+## Project Environment
 
 There are three main resources for this project:
 + [/inspiration](./inspiration): Visual inspiration links for the project
@@ -15,10 +17,16 @@ These folders all require you run a local server on your computer. A good cross-
 Below are more details for each of the pages and how to use them.
 
 ### /release
-[http://localhost:8080/release/](http://localhost:8080/release/) is the most current place to see our current build of the project.
+[http://within-unlimited.github.io/what-you-dont-know/release/](http://within-unlimited.github.io/what-you-dont-know/release/) is the most current place to see our current build of the project.
+
+### /staging
+[http://within-unlimited.github.io/what-you-dont-know/staging/](http://within-unlimited.github.io/what-you-dont-know/release/) is the build used for WITHIN's staging website.
 
 ### /editor
-[http://localhost:8080/editor/](http://localhost:8080/editor/) gives you an empty viewport to see and manipulate how we're choreographing What You Don't Know. Once this is open in your web browser go to `File > New` to make a blank project. Then drag `/release/what-you-dont-know.json` over the window to load timeline data to the project. Similar to video editing software you can hit the spacebar to play and pause the video with some additional controls to see how animations are laid out.
+[http://within-unlimited.github.io/what-you-dont-know/editor/](http://within-unlimited.github.io/what-you-dont-know/editor/) gives you an empty viewport to see and manipulate how we're choreographing _What You Don't Know_. Once this is open in your web browser go to `File > Reset` to insure the a clean version of the project is loaded. When doing this, the editor loads `/release/experience.json` into the editor, insuring that what you're working with is the published version of the project. Similar to video editing software you can hit the spacebar to play and pause the video with some additional controls to see how animations are laid out.
+
+### /prototypes
+[http://within-unlimited.github.io/what-you-dont-know/prototypes/](http://within-unlimited.github.io/what-you-dont-know/prototypes/) is a list of one off HTML5 webpages exploring different interactions, graphics, interfaces, and previous builds.
 
 ### Roadmap
 
