@@ -68,7 +68,17 @@
           timeline.compile( resources, player );
 
           var renderer = resources.get( 'renderer' );
-          renderer.setAnimationLoop( animate );
+          if ( renderer ) {
+            renderer.setAnimationLoop( animate );
+          } else {
+            var startTime = Date.now();
+            var loop = function() {
+              var elapsed = Date.now() - startTime;
+              animate( elapsed );
+              requestAnimationFrame( loop );
+            }
+            loop();
+          }
 
         } );
 
