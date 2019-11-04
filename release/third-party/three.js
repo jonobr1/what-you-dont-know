@@ -22498,9 +22498,11 @@
 
 			for ( var i = 0; i < controllers.length; i ++ ) {
 
-				var controller = controllers[ i ];
 
 				var gamepad = findGamepad( i );
+
+				var controller = controllers[ i ];
+				controller.userData.gamepad = gamepad;
 
 				if ( gamepad !== undefined && gamepad.pose !== undefined ) {
 
