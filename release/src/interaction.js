@@ -20,8 +20,8 @@ function Interaction ( renderer, camera ) {
 	this.XRControllers = [];
 	this.raycaster = new THREE.Raycaster();
 
-	setupController( renderer.vr.getController( 0 ) );
-	setupController( renderer.vr.getController( 1 ) );
+	setupController( renderer.xr.getController( 0 ) );
+	setupController( renderer.xr.getController( 1 ) );
 
 	this.mousedown = function ( event ) {
 
@@ -212,7 +212,7 @@ function Interaction ( renderer, camera ) {
 
 		scope.add( controller );
 
-		controller.standingMatrix = renderer.vr.getStandingMatrix();
+		// controller.standingMatrix = renderer.xr.getStandingMatrix();
 		scope.controllers[ controller.uuid ] = controller;
 
 		var laser = Interaction.Laser.clone();
@@ -455,7 +455,7 @@ Interaction.prototype.update = function() {
 		return;
 	}
 
-	if ( renderer.vr.isPresenting() && this.XRControllers.length > 0 ) {
+	if ( renderer.xr.isPresenting && this.XRControllers.length > 0 ) {
 
 		for ( i = 0; i < this.XRControllers.length; i++ ) {
 
@@ -643,7 +643,7 @@ Interaction.prototype.vibrate = function ( value, duration ) {
 
 	for ( var i = 0; i < 2; i ++ ) {
 
-		var controller = renderer.vr.getController( i );
+		var controller = renderer.xr.getController( i );
 		var gamepad = controller.userData.gamepad;
 
 		if ( gamepad ) {
