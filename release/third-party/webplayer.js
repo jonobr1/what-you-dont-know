@@ -169,7 +169,7 @@
       a.target = '_blank';
       li.appendChild(a);
 
-      var url = 'https://with.in/watch/what-you-dont-know/';
+      var url = 'https://within-unlimited.github.io/what-you-dont-know/';
       var text = encodeURIComponent('Check out “What You Don’t Know” — a #VR Experience on @WITHIN:');
 
       switch (name) {
