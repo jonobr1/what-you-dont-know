@@ -3,7 +3,7 @@ A interactive music video made for VR only on [WITHIN](http://with.in/) in partn
 
 With music by [Matthew Dear](https://ghostly.com/artists/matthew-dear).
 
-Experience it for yourself here: [http://with.in/watch/what-you-dont-know/](http://with.in/watch/what-you-dont-know/)
+Experience it for yourself here: [http://within-unlimited.github.io/what-you-dont-know/release/](http://within-unlimited.github.io/what-you-dont-know/release/)
 
 ## Project Environment
 
