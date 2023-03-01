@@ -1,5 +1,5 @@
 # What You Don't Know
-A interactive music video made for VR only on [WITHIN](http://with.in/) in partnership with [Ghostly International](http://ghostly.com/).
+An interactive music video made for VR only on [WITHIN](http://with.in/) in partnership with [Ghostly International](http://ghostly.com/).
 
 With music by [Matthew Dear](https://ghostly.com/artists/matthew-dear).
 
